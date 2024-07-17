@@ -1,0 +1,34 @@
+
+<div class="cover">
+    {# title #}
+    <h1 class="page-title"> {{ page.meta.title | d(config.site_name, true) }} </h1>
+    <span class="md-source-file__fact">
+        <span class="md-icon" title="{{ lang.t('source.file.date.updated') }}">
+        {% if page.meta.git_revision_date_localized_raw_iso_date %}
+            {% include ".icons/material/clock-edit-outline.svg" %}
+        {% endif %}
+        </span>
+        {{ page.meta.git_revision_date_localized_raw_iso_date }} 
+        {% if page.meta and page.meta.category %}
+             | 
+            <span class="md-icon" title="分類">
+                {% include ".icons/material/folder-open.svg" %}
+            </span>
+            {{ page.meta.category }}
+        {% endif %}
+    </span>
+    {# description #}
+    {% if page.meta and page.meta.description %}
+        <p class="page-description">
+            {{ page.meta.description }}
+        </p>
+    {% endif %}
+    {% if "material/tags" in config.plugins and tags %}
+    {% include "partials/tags.html" %}
+    {% endif %}
+    {% include "partials/actions.html" %}
+</div>
+{{ page.content }}
+{% include "partials/source-file.html" %}
+{% include "partials/feedback.html" %}
+{% include "partials/comments.html" %}

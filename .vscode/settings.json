@@ -1,0 +1,31 @@
+{
+    "editor.fontSize": 16,
+     //編輯區字體大小
+    "terminal.integrated.fontSize": 16,
+      //終端機字體大小
+    "terminal.integrated.fontFamily": "MesloLGS NF",
+     //終端機字體，因使用powerlevel10k故需指定此字型才可正確顯示圖樣
+    "workbench.iconTheme": "material-icon-theme",
+    //檔案圖示佈景主題
+    "workbench.colorTheme": "Visual Studio Dark",
+    "liveServer.settings.donotShowInfoMsg": true,
+    "ctlorem.includeLanguages": "md",
+    //色彩佈景主題
+    "yaml.schemas": {
+      "https://squidfunk.github.io/mkdocs-material/schema.json": "mkdocs.yml"
+    },
+    "yaml.customTags": [ 
+      "!ENV scalar",
+      "!ENV sequence",
+      "!relative scalar",
+      "tag:yaml.org,2002:python/name:material.extensions.emoji.to_svg",
+      "tag:yaml.org,2002:python/name:material.extensions.emoji.twemoji",
+      "tag:yaml.org,2002:python/name:pymdownx.superfences.fence_code_format"
+    ],
+    "editor.guides.bracketPairs": true,
+    // Mkdocs-Material mkdocs.yml設定檢查
+    "markdown.copyFiles.destination": {
+      "/docs/**/*": "images/${documentBaseName}.png"
+    }
+    // Markdown Copy File設定
+}

@@ -1,0 +1,7 @@
+mkdocs-material # mkdocs佈景主題套件
+jieba # 中文分詞套件，用於搜尋
+markdown-customblocks # 可以使用:::來建立<div>標籤
+mkdocs-git-revision-date-localized-plugin # 用以顯示git commit日期
+mkdocs-glightbox # 可以點擊圖片並以燈箱方式放大圖片
+mkdocs-awesome-pages-plugin # 將導覽列設定分散至各層級
+

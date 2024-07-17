@@ -1,0 +1,4 @@
+nav:
+  - Home: index.md
+  - Projects: projects
+  - Tags: tags.md

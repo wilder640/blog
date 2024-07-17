@@ -1,0 +1,71 @@
+{% extends "main.html" %}
+{% block extrahead %}
+<style>
+.md-typeset details {
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+    font-size: unset;
+    margin: 1em 0;
+    padding: 0.5em 1em;
+}
+.md-typeset summary {
+    border: none;
+    background-color: transparent;
+    margin: 0.25em 0;
+    padding: 0;
+}
+.md-typeset summary:before {
+    left: 0;
+    top: 0;
+    height: 1.2rem;
+    width: 1.2rem;
+}
+.md-typeset summary:after {
+    right: 0;
+    top: 0;
+}
+.md-typeset details > *:not summary {
+    padding-left: 1.8rem;
+}
+
+.md-typeset details {
+    margin-bottom: 0.5em !important;
+}
+.md-typeset details:not([open]) {
+    padding-bottom: 0.5em;
+}
+.md-typeset details:not([open]) summary {
+    font-weight: normal;
+}
+html .md-typeset details>:last-child,
+html .md-typeset summary:last-child {
+    margin-bottom: 0.25em;
+}
+.md-typeset .tag > summary::before {
+  -webkit-mask-image: var(--md-admonition-icon--tag);
+          mask-image: var(--md-admonition-icon--tag);
+}
+.md-typeset .tags {
+    max-width: 50rem; 
+    margin: 0 auto;
+}
+.md-typeset .tags details {
+    padding: 0.5em 1em;
+    }
+.md-typeset .tag summary::before {
+    height: 1rem;
+    width: 1rem;
+    margin-top: 0.25em;
+}
+</style>
+{% endblock %}
+{% block content %}
+
+    </style>
+    <div class="tags">
+        {% include "partials/tag-cloud.html" %}
+        <hr>
+        {% include "partials/tag-page-list.html" %}
+    </div>
+{% endblock %}
