@@ -57,6 +57,7 @@ plugins:
       pagination_per_page: 10
   - git-revision-date-localized: # 跟蹤文章git提交日期，並可設定顯示於文章底部
       type: date
+      locale: zh
       fallback_to_build_date: true
       enable_creation_date: true
       enabled: true
