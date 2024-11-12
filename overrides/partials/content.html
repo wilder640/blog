@@ -9,12 +9,14 @@
         {% endif %}
         </span>
         {{ page.meta.git_revision_date_localized_raw_iso_date }} 
-        {% if page.meta and page.meta.category %}
-             | 
-            <span class="md-icon" title="分類">
-                {% include ".icons/material/folder-open.svg" %}
-            </span>
-            {{ page.meta.category }}
+        {% if page.meta and page.meta.categories %}
+             |
+            {% for category in page.meta.categories %} 
+                <span class="md-icon" title="分類">
+                    {% include ".icons/material/folder-open.svg" %}
+                </span>
+                {{ category }}
+            {% endfor %}
         {% endif %}
     </span>
     {# description #}

@@ -122,22 +122,18 @@ body[data-md-color-scheme="slate"] {
     margin-top: 0;
 }
 /* captions */
-.md-typeset figcaption {
-    max-width: unset;
-    margin: 0.5em auto;
-}
-.md-typeset figure img {
+.md-typeset p:has(img) {
+    text-align: center;
+    border: thin #c0c0c0 solid;
+    padding: 5px;
     margin: auto;
 }
-.md-typeset figure {
-    margin-top: 0;
-    margin-bottom: 0;
+
+.md-typeset img {
+    max-height: 600px;
 }
 
 /* table */
-.md-typeset__table {
-    display: block;
-}
 .md-typeset table:not([class]) {
     font-size: 0.95em;
     display: table;
@@ -145,6 +141,42 @@ body[data-md-color-scheme="slate"] {
 .md-typeset table:not([class]) th {
     background-color: var(--color);
     color: white;
+}
+
+.md-typeset__table {
+    font-size: 0.95em;
+    display: table;
+    width: 100%;
+}
+
+/* columns */
+.md-typeset .row {
+    display: flex;
+    flex-direction: row;
+}
+.md-typeset .row .col {
+    width: 100%;
+    padding: 0 1em;
+}
+.md-typeset .row.bordered .col {
+    border: 1px solid lightgray;
+}
+.md-typeset .row.bordered .col {
+    border: 1px solid lightgray;
+}
+.md-typeset .row .col:first-of-type {
+    padding-left: 0;
+}
+.md-typeset .row .col:last-of-type {
+    padding-right: 0;
+}
+@media (max-width: 800px) {
+    .md-typeset .row {
+        flex-direction: column;
+    }
+    .md-typeset .row .col {
+        padding: 0;
+    }
 }
 
 /* button */
@@ -166,4 +198,19 @@ body[data-md-color-scheme="slate"] {
     height: 1.25em;
     width: 1.25em;
 }
+
+/*Print PDF*/
+@media print {
+    /* 隱藏不需要在列印時顯示的元素 */
+    .no-print {
+      display: none;
+    }
+  
+    /* 設定分頁點 */
+    .page-break {
+      page-break-before: always; /* 在此元素之前開始新頁 */
+    }
+  }
+  
+
 

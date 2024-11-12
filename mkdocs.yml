@@ -1,5 +1,5 @@
 site_name: Wilder's IT 沉浮日誌
-site_url: https://wilder640.github.io/blog/blog/ # 網站位置
+site_url: https://wilder640.github.io/blog/ # 網站位置
 #repo_url: https://github.com/wilder640/blog # Github Repository位置，用於content.action.view設定
 #edit_uri: edit/main/docs/ # Github Repository編輯位置，用於content.action.edit設定
 
@@ -28,6 +28,7 @@ theme:
       python: material/language-python
       vmware: simple/vmware
       fortinet: simple/fortinet
+      paloalto: simple/paloaltonetworks
 
   features:
     - search.suggest # 輸入搜尋字元時會依據打的字元顯示下一個可能的字元
@@ -35,7 +36,7 @@ theme:
     - navigation.tabs # 於上方加入導航列並新增top-section內容
     - navigation.top # 顯示back-to-top按鈕
     - navigation.indexes # 當資料夾內僅有一個檔案時就直接顯示該檔案而不是資料夾->檔案
-    - toc.integrate # 文章內容右側導航整併到左側文章導航內
+    #- toc.integrate # 文章內容右側導航整併到左側文章導航內
     - content.tooltips # 啟用tooltips功能
     - content.code.copy # 啟用程式碼區塊複製功能
     - content.code.annotate # 啟用程式碼區塊註解告警功能
@@ -46,11 +47,13 @@ theme:
 plugins:
   - search: # 搜尋插件，在沒有設定plugin情況下預設會啟用，但若有設定的話要手動加入否則不會啟用
       separator: '[\s\u200b\-]' # 繁體中文分隔方式（空白或沒有寬度的空白或連字符-）
+  - awesome-pages:
+      collapse_single_pages: false
   - blog: # 部落格插件
       enabled: true
       post_readtime: true # 是否依據字數計算預計閱讀時間並顯示
-      archive: false # 是否顯示存檔頁面
-      post_url_format: "{file}" # 設定blog post的url格式，預設為{date}/{slug}，故會加上日期，故若要在該篇文章引用同目錄其他元素時會有問題
+      archive: true # 是否顯示存檔頁面
+      post_url_format: "{categories}/{file}" # 設定blog post的url格式，預設為{date}/{slug}，故會加上日期，故若要在該篇文章引用同目錄其他元素時會有問題
       pagination_per_page: 10
   - git-revision-date-localized: # 跟蹤文章git提交日期，並可設定顯示於文章底部
       type: date
@@ -74,8 +77,6 @@ plugins:
   - tags: # 啟用tag功能
       enabled: true
       tags_file: tags.md
-  - awesome-pages:
-      collapse_single_pages: false
 
 # Markdown Extensions
 markdown_extensions:
@@ -84,7 +85,11 @@ markdown_extensions:
   - admonition # 啟用告警框功能
   - pymdownx.details
   - pymdownx.highlight # 程式區塊程式語法凸顯功能
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+      - name: mermaid
+        class: mermaid
+        format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.inlinehilite # 啟用一般區域凸顯一段程式碼功能
   - pymdownx.tabbed: # 啟用表格頁籤功能
       alternate_style: true
@@ -94,11 +99,23 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - toc:
       permalink: "#" # 於標題右側新增錨點符號
+      toc_depth: 3 # 標題僅顯示幾層
       slugify: !!python/object/apply:pymdownx.slugs.slugify #轉換slug為HTML相容的文字，沒有設定的話toc產生的連結會無法顯示
         kwds:
           case: lower
+  - def_list # 啟用定義列表功能
   - pymdownx.tasklist: # 使任務列表的勾選框變成圖示
       custom_checkbox: true
+  - footnotes # 啟用註腳功能
+  # Text Formatting
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+
+  - customblocks
+
 # Custom styles and scripts
 extra_css: # 自定義的CSS檔案
   - assets/stylesheets/extra.css
@@ -112,5 +129,6 @@ extra:
     Python: python
     Vmware: vmware
     Fortinet: fortinet
+    Paloalto: paloalto
 
 
