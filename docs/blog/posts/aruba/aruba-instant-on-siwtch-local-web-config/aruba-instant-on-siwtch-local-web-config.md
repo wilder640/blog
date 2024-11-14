@@ -143,12 +143,12 @@ draft: false
 此交換器沒有所謂的Port Type為Access、Trunk等設定，故若要達到一樣效果設定方式如下
 
 - Access：
-    1. 於[Vlan Membership](#設定vlan-membership)中設定Untagged VLAN為想要設定的VLAN ID，Tagged VLAN(s)則為空白
-    2. 於[Vlan Interface Configuration](#設定vlan-interface-configuration)中設定該Interface的Acceptable Frame Type為Untagged Only
+    1. 於[Vlan Membership](#353-設定vlan-membership)中設定Untagged VLAN為想要設定的VLAN ID，Tagged VLAN(s)則為空白
+    2. 於[Vlan Interface Configuration](#354-設定vlan-interface-configuration)中設定該Interface的Acceptable Frame Type為Untagged Only
     3. 設定Port VLAN ID與Untagged VLAN ID相同
 - Trunk：
-    1. 於[Vlan Membership](#設定vlan-membership)中設定Untagged VLAN為想要設定的VLAN ID或None，Tagged VLAN(s)為想要的VLAN ID列表
-    2. 於[Vlan Interface Configuration](#設定vlan-interface-configuration)中設定該Interface的Acceptable Frame Type為All或Tagged Only
+    1. 於[Vlan Membership](#353-設定vlan-membership)中設定Untagged VLAN為想要設定的VLAN ID或None，Tagged VLAN(s)為想要的VLAN ID列表
+    2. 於[Vlan Interface Configuration](#354-設定vlan-interface-configuration)中設定該Interface的Acceptable Frame Type為All或Tagged Only
     3. 若設定為All且也有設定Untagged VLAN ID則Port VLAN ID需與Untagged VLAN ID相同
 
 #### 3.5.1. 新增VLAN

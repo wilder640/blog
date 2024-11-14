@@ -125,6 +125,7 @@ body[data-md-color-scheme="slate"] {
 /* captions */
 .md-typeset figure:has(img) {
     border: thin #c0c0c0 solid;
+    padding: 5px;
     margin: auto;
 }
 
