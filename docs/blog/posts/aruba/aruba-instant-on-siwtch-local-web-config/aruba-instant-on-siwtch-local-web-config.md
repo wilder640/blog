@@ -64,15 +64,11 @@ draft: false
 
 !!! info
     部分設定修改後需要Apply才會在running config生效
-
-![Apply Config](images/img-21.png)
-*Apply config*
+    ![Apply Config](images/img-21.png)
 
 !!! info
     最後一定要save config才不會導致重開後設定遺失
-
-![save config](images/img-22.png)
-*Save config*
+    ![Save config](images/img-22.png)
 
 <div class="page-break"/>
 
@@ -81,12 +77,10 @@ draft: false
 #### 3.2.1. 選擇For Local management
 
 ![choose one of these options](images/img.png)
-*Choose one of these options*
 
 #### 3.2.2. 登入系統
 
 ![login](images/img-1.png)
-*Login*
 
 | 編號 |   欄位名稱   | 欄位描述                |
 | :--: | :----------: | ----------------------- |
@@ -95,7 +89,6 @@ draft: false
 #### 3.2.3. 建立帳號
 
 ![change user and password](images/img-2.png)
-*Change user and password*
 
 | 編號 |   欄位名稱   | 欄位描述                                |
 | :--: | :----------: | --------------------------------------- |
