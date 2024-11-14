@@ -121,11 +121,10 @@ body[data-md-color-scheme="slate"] {
 .md-typeset li > .highlight pre {
     margin-top: 0;
 }
+
 /* captions */
-.md-typeset p:has(img) {
-    text-align: center;
+.md-typeset figure:has(img) {
     border: thin #c0c0c0 solid;
-    padding: 5px;
     margin: auto;
 }
 
