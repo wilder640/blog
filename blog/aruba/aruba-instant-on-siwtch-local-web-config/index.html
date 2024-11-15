@@ -1,0 +1,1140 @@
+
+
+<!doctype html>
+<html lang="zh-TW" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Aruba Instant On Switch可以使用Instant On Cloud設定或者是Local Web，本篇主要紀錄Local Web方式">
+      
+      
+      
+        <link rel="canonical" href="https://wilder640.github.io/blog/blog/aruba/aruba-instant-on-siwtch-local-web-config/">
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
+    
+    
+      
+        <title>Aruba Instant On Switch使用Local Web安裝設定 - Wilder's IT 沉浮日誌</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+  
+  
+    
+    
+      
+    
+    
+  
+    
+    
+      
+    
+    
+  
+    
+    
+      
+    
+    
+  
+    
+    
+      
+    
+    
+  
+    
+    
+      
+    
+    
+  
+    
+    
+      
+    
+    
+  
+    
+    
+      
+    
+    
+  
+    
+    
+      
+    
+    
+  
+  
+  <style>.md-tag.md-tag--html{--md-tag-icon:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="m0 32 34.9 395.8L191.5 480l157.6-52.2L384 32zm308.2 127.9H124.4l4.1 49.4h175.6l-13.6 148.4-97.9 27v.3h-1.1l-98.7-27.3-6-75.8h47.7L138 320l53.5 14.5 53.7-14.5 6-62.2H84.3L71.5 112.2h241.1z"/></svg>');}.md-tag.md-tag--js{--md-tag-icon:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M0 32v448h448V32zm243.8 349.4c0 43.6-25.6 63.5-62.9 63.5-33.7 0-53.2-17.4-63.2-38.5l34.3-20.7c6.6 11.7 12.6 21.6 27.1 21.6 13.8 0 22.6-5.4 22.6-26.5V237.7h42.1zm99.6 63.5c-39.1 0-64.4-18.6-76.7-43l34.3-19.8c9 14.7 20.8 25.6 41.5 25.6 17.4 0 28.6-8.7 28.6-20.8 0-14.4-11.4-19.5-30.7-28l-10.5-4.5c-30.4-12.9-50.5-29.2-50.5-63.5 0-31.6 24.1-55.6 61.6-55.6 26.8 0 46 9.3 59.8 33.7L368 290c-7.2-12.9-15-18-27.1-18-12.3 0-20.1 7.8-20.1 18 0 12.6 7.8 17.7 25.9 25.6l10.5 4.5c35.8 15.3 55.9 31 55.9 66.2 0 37.8-29.8 58.6-69.7 58.6"/></svg>');}.md-tag.md-tag--css{--md-tag-icon:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="m480 32-64 368-223.3 80L0 400l19.6-94.8h82l-8 40.6L210 390.2l134.1-44.4 18.8-97.1H29.5l16-82h333.7l10.5-52.7H56.3l16.3-82z"/></svg>');}.md-tag.md-tag--kubernetes{--md-tag-icon:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.95 13.5h-.23c-.18.11-.26.32-.18.5l.86 2.11c.83-.53 1.46-1.32 1.79-2.25l-2.23-.36zm-3.45.29a.415.415 0 0 0-.38-.29h-.08l-2.22.37c.33.92.96 1.7 1.79 2.23l.85-2.07V14c.04-.05.04-.14.04-.21m1.83.81a.38.38 0 0 0-.51-.15c-.07.05-.12.08-.15.15h-.01l-1.09 1.97c.78.26 1.62.31 2.43.12.14-.03.29-.07.43-.12l-1.09-1.97zm3.45-4.57L14.1 11.5l.01.03a.37.37 0 0 0-.04.53q.075.09.18.12l.01.01 2.17.62c.07-.97-.14-1.95-.65-2.78m-3.11.16c.01.21.18.37.39.36.08 0 .15-.02.21-.05h.01l1.83-1.31a4.45 4.45 0 0 0-2.57-1.24zm-1.94.31c.17.11.4.08.52-.09.05-.06.07-.13.08-.21h.01l.12-2.25c-.15.02-.3.05-.46.08-.8.18-1.54.58-2.12 1.16l1.84 1.31zm-.99 1.69c.2-.05.32-.26.26-.46 0-.08-.05-.14-.11-.19v-.01L8.21 10c-.52.86-.74 1.84-.63 2.82l2.16-.62zm1.64.66.62.3.62-.3.15-.67-.43-.53h-.69l-.43.53zm10.89 1.32L20.5 6.5c-.09-.42-.37-.76-.74-.94l-7.17-3.43c-.37-.17-.81-.17-1.19 0L4.24 5.56c-.37.18-.65.52-.74.94l-1.77 7.67c-.05.2-.05.4 0 .59.01.06.03.12.05.18.03.09.08.19.13.27.03.04.05.08.09.11l4.95 6.18c.02 0 .05.04.05.06.1.09.19.16.28.22.12.08.26.14.4.17.11.05.23.05.32.05h8.12c.07 0 .14-.03.2-.05.05-.01.1-.03.14-.04.04-.02.07-.03.11-.05.05-.02.1-.05.15-.08.12-.08.23-.18.33-.28l.15-.2 4.8-5.98c.1-.12.17-.25.22-.38.02-.06.04-.12.05-.18.05-.19.05-.4 0-.59m-7.43 2.99c.02.06.04.12.07.17-.04.08-.06.17-.03.26.12.24.23.46.38.68.08.11.16.23.24.34 0 .03.03.08.04.12.12.2.06.46-.15.59s-.47.05-.59-.15c-.01-.03-.02-.05-.03-.08-.02-.03-.04-.09-.06-.09-.05-.15-.09-.28-.12-.41-.09-.25-.17-.49-.3-.72a.38.38 0 0 0-.21-.14l-.08-.16c-1.29.48-2.7.48-3.97-.01l-.1.18c-.07.01-.14.04-.19.09-.14.24-.24.49-.33.77-.03.13-.07.26-.12.4-.02 0-.04.07-.06.1a.43.43 0 0 1-.81-.29c.01-.03.03-.05.04-.08.04-.03.04-.08.04-.11.09-.12.16-.23.24-.35.16-.21.29-.45.39-.69a.54.54 0 0 0-.03-.25l.07-.18a5.6 5.6 0 0 1-2.47-3.09l-.2.03a.4.4 0 0 0-.23-.09c-.27.05-.51.13-.77.22-.11.06-.24.11-.37.15-.03.01-.07.02-.13.03a.44.44 0 0 1-.54-.27c-.07-.23.04-.47.28-.55.02 0 .05-.01.08-.01v-.01h.01l.11-.02c.14-.04.28-.04.41-.04.26 0 .52-.06.77-.12.08-.05.14-.11.19-.19l.19-.05c-.21-1.36.1-2.73.86-3.87l-.14-.12c0-.09-.03-.18-.08-.25-.2-.17-.41-.32-.64-.45q-.18-.09-.36-.21c-.02-.02-.06-.05-.08-.07l-.01-.01c-.2-.16-.25-.42-.11-.63.09-.1.21-.15.35-.15q.165.015.3.12l.09.07c.1.09.19.2.28.3.18.19.37.37.58.52.08.04.17.05.26.03l.15.11c.75-.8 1.73-1.36 2.8-1.6.25-.06.52-.1.78-.12l.01-.18a.45.45 0 0 0 .14-.23c.01-.26-.01-.52-.05-.77-.03-.13-.05-.27-.06-.41V5.1c-.02-.24.15-.45.39-.48s.44.15.47.38v.22c-.01.14-.03.28-.06.41-.04.25-.06.51-.05.77.02.1.07.17.14.22l.01.19c1.36.12 2.62.73 3.56 1.72l.16-.12c.09.02.18.01.26-.03.21-.15.41-.33.58-.52.09-.1.18-.2.28-.3.03-.02.07-.06.1-.06.17-.18.44-.18.59 0 .19.16.18.43 0 .6 0 .02-.03.04-.06.06a2.495 2.495 0 0 1-.44.28c-.23.13-.45.28-.64.45-.06.07-.09.15-.08.24l-.16.14a5.44 5.44 0 0 1 .88 3.86l.19.05c.04.08.11.14.19.18.25.07.51.11.77.14h.41c.03.03.08.04.12.05.24.03.4.25.37.49-.05.23-.24.4-.48.37-.03-.01-.07-.01-.07-.02v-.01c-.06 0-.1-.01-.14-.02q-.195-.06-.36-.15c-.26-.1-.5-.17-.77-.21-.09 0-.17 0-.23.08-.07-.01-.13-.02-.19-.03-.41 1.31-1.31 2.41-2.47 3.11"/></svg>');}.md-tag.md-tag--python{--md-tag-icon:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.14 7.5A2.86 2.86 0 0 1 22 10.36v3.78A2.86 2.86 0 0 1 19.14 17H12c0 .39.32.96.71.96H17v1.68a2.86 2.86 0 0 1-2.86 2.86H9.86A2.86 2.86 0 0 1 7 19.64v-3.75a2.85 2.85 0 0 1 2.86-2.85h5.25a2.85 2.85 0 0 0 2.85-2.86V7.5zm-4.28 11.79c-.4 0-.72.3-.72.89s.32.71.72.71a.71.71 0 0 0 .71-.71c0-.59-.32-.89-.71-.89m-10-1.79A2.86 2.86 0 0 1 2 14.64v-3.78A2.86 2.86 0 0 1 4.86 8H12c0-.39-.32-.96-.71-.96H7V5.36A2.86 2.86 0 0 1 9.86 2.5h4.28A2.86 2.86 0 0 1 17 5.36v3.75a2.85 2.85 0 0 1-2.86 2.85H8.89a2.85 2.85 0 0 0-2.85 2.86v2.68zM9.14 5.71c.4 0 .72-.3.72-.89s-.32-.71-.72-.71c-.39 0-.71.12-.71.71s.32.89.71.89"/></svg>');}.md-tag.md-tag--vmware{--md-tag-icon:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.5 10.1a.5.5 0 0 0-.197.048.497.497 0 0 0-.25.68l1.138 2.475c.179.38.38.592.721.592.342 0 .542-.22.72-.592l1.003-2.186a.144.144 0 0 1 .144-.092.16.16 0 0 1 .157.16v2.118a.535.535 0 1 0 1.066 0v-1.73a.53.53 0 0 1 .566-.552.52.52 0 0 1 .541.551v1.73a.53.53 0 0 0 .53.593.54.54 0 0 0 .535-.592v-1.73a.53.53 0 0 1 .564-.552.52.52 0 0 1 .543.551v1.73a.53.53 0 0 0 .528.593.535.535 0 0 0 .535-.592v-1.969a1.234 1.234 0 0 0-1.283-1.23 1.65 1.65 0 0 0-1.14.486 1.26 1.26 0 0 0-1.095-.483 1.8 1.8 0 0 0-1.074.483 1.29 1.29 0 0 0-.961-.483 1.18 1.18 0 0 0-1.158.786l-.729 1.716-.933-2.203.011-.004A.505.505 0 0 0 .5 10.1m18.43.06a.27.27 0 0 0-.266.274h.002v3.142a.27.27 0 1 0 .535 0v-1.222c0-1.037.571-1.56 1.27-1.643a.266.266 0 0 0 .238-.274.26.26 0 0 0-.266-.269 1.47 1.47 0 0 0-1.242.88v-.614a.266.266 0 0 0-.271-.274m-6.735.008a.27.27 0 0 0-.25.217l-.912 2.627-.902-2.62a.28.28 0 0 0-.274-.22.266.266 0 0 0-.27.258.5.5 0 0 0 .034.144l1.09 3.037.02-.007a.32.32 0 0 0 .298.242.3.3 0 0 0 .293-.242l.903-2.583.896 2.583a.3.3 0 0 0 .293.242h.018a.32.32 0 0 0 .293-.242l1.097-3.038a.5.5 0 0 0 .033-.144.26.26 0 0 0-.265-.25.26.26 0 0 0-.258.209l-.918 2.63-.904-2.626a.285.285 0 0 0-.278-.217h-.037m10.168.008a1.75 1.75 0 0 0-1.691 1.851 1.765 1.765 0 0 0 1.76 1.858l-.008.013a1.78 1.78 0 0 0 1.33-.539.23.23 0 0 0 .082-.17.228.228 0 0 0-.379-.168 1.44 1.44 0 0 1-1.018.415 1.237 1.237 0 0 1-1.24-1.207h2.555a.247.247 0 0 0 .246-.247c0-.945-.593-1.806-1.637-1.806m-5.744.002a2 2 0 0 0-.158.006 2.4 2.4 0 0 0-1.078.205.22.22 0 0 0-.143.222.24.24 0 0 0 .235.229.3.3 0 0 0 .095-.024 1.8 1.8 0 0 1 .834-.162c.691 0 1.07.334 1.07.979v.125a3.8 3.8 0 0 0-1.103-.15c-.892 0-1.52.4-1.52 1.16l-.003-.004c0 .736.671 1.117 1.34 1.117a1.58 1.58 0 0 0 1.298-.62v.343a.247.247 0 0 0 .254.25.254.254 0 0 0 .258-.262v-1.983a1.42 1.42 0 0 0-.379-1.046 1.57 1.57 0 0 0-1-.385m5.719.43c.714 0 1.085.565 1.139 1.214h-2.278a1.22 1.22 0 0 1 1.139-1.215zm-5.885 1.382a3.8 3.8 0 0 1 1.057.153v.347c0 .57-.539.973-1.2.973-.485 0-.904-.261-.904-.713 0-.467.375-.76 1.047-.76"/></svg>');}.md-tag.md-tag--fortinet{--md-tag-icon:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 9.785h6.788v4.454H0zm8.666-6.33h6.668v4.453H8.666zm0 12.637h6.668v4.454H8.666zm8.522-6.307H24v4.454h-6.812zM2.792 3.455C1.372 3.814.265 5.404 0 7.425v.506h6.788V3.454zM0 16.091v.554c.24 1.926 1.276 3.466 2.624 3.9h4.188v-4.454zm24-8.184v-.506c-.265-1.998-1.372-3.587-2.792-3.972h-4.02v4.454H24zM21.376 20.57c1.324-.458 2.36-1.974 2.624-3.9v-.554h-6.812v4.454Z"/></svg>');}.md-tag.md-tag--paloalto{--md-tag-icon:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m10.278 15.443 1.705 1.705-3.426 3.426-3.427-3.426 8.592-8.591-1.705-1.705 3.426-3.426 3.427 3.426zM0 12.017l3.426 3.426 8.591-8.59-3.426-3.427zm11.983 5.13 3.426 3.427L24 11.983l-3.426-3.426z"/></svg>');}</style>
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+   <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-環境說明" class="md-skip">
+          跳轉到
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="頁首">
+    <a href="../../.." title="Wilder&#39;s IT 沉浮日誌" class="md-header__button md-logo" aria-label="Wilder's IT 沉浮日誌" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Wilder's IT 沉浮日誌
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Aruba Instant On Switch使用Local Web安裝設定
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="開啟深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="開啟深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="關閉深色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="關閉深色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜尋" placeholder="搜尋" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="搜尋">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清除" aria-label="清除" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜尋引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="標籤" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../tags/" class="md-tabs__link">
+        
+  
+    
+  
+  Tags
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="導覽列" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Wilder&#39;s IT 沉浮日誌" class="md-nav__button md-logo" aria-label="Wilder's IT 沉浮日誌" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Wilder's IT 沉浮日誌
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tags/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tags
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-環境說明" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 環境說明
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-連接方式" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 連接方式
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 設定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-注意事項" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1. 注意事項
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-初始化設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2. 初始化設定
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-設備資訊設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3. 設備資訊設定
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-時間設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4. 時間設定
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-vlan設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.5. VLAN設定
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-routing設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.6. Routing設定
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#37-link-aggregation設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.7. Link Aggregation設定
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#38-重新開機" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.8. 重新開機
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#39-回覆原廠預設值" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.9. 回覆原廠預設值
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#310-設備升級" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.10. 設備升級
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../" class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    回到主頁
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    元數據
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2024-08-07 00:00:00" class="md-ellipsis">2024年8月7日</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            於
+                            
+                              <a href="../../category/aruba/">Aruba</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              需要 4 分鐘閱讀時間
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+<div class="cover">
+    
+    <h1 class="page-title"> Aruba Instant On Switch使用Local Web安裝設定 </h1>
+    <span class="md-source-file__fact">
+        <span class="md-icon" title="最後更新">
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+        
+        </span>
+        2024-11-15 
+        
+             |
+             
+                <span class="md-icon" title="分類">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 20H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h7a2 2 0 0 1 2 2H4v10l2.14-8h17.07l-2.28 8.5c-.23.87-1.01 1.5-1.93 1.5"/></svg>
+                </span>
+                Aruba
+            
+        
+    </span>
+    
+    
+        <p class="page-description">
+            Aruba Instant On Switch可以使用Instant On Cloud設定或者是Local Web，本篇主要紀錄Local Web方式
+        </p>
+    
+    
+    
+  
+
+<nav class="md-tags" >
+  
+    
+    
+      
+      
+    
+    
+      <a href="../../../tags/#aruba" class="md-tag md-tag-icon">Aruba</a>
+    
+  
+    
+    
+      
+      
+    
+    
+      <a href="../../../tags/#switch" class="md-tag md-tag-icon">Switch</a>
+    
+  
+</nav>
+    
+    
+</div>
+<h2>目錄</h2>
+
+<ul>
+<li><a href="#1-%E7%92%B0%E5%A2%83%E8%AA%AA%E6%98%8E">1. 環境說明</a></li>
+<li><a href="#2-%E9%80%A3%E6%8E%A5%E6%96%B9%E5%BC%8F">2. 連接方式</a></li>
+<li><a href="#3-%E8%A8%AD%E5%AE%9A">3. 設定</a></li>
+<li><a href="#31-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A0%85">3.1. 注意事項</a></li>
+<li><a href="#32-%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A8%AD%E5%AE%9A">3.2. 初始化設定</a><ul>
+<li><a href="#321-%E9%81%B8%E6%93%87for-local-management">3.2.1. 選擇For Local management</a></li>
+<li><a href="#322-%E7%99%BB%E5%85%A5%E7%B3%BB%E7%B5%B1">3.2.2. 登入系統</a></li>
+<li><a href="#323-%E5%BB%BA%E7%AB%8B%E5%B8%B3%E8%99%9F">3.2.3. 建立帳號</a></li>
+</ul>
+</li>
+<li><a href="#33-%E8%A8%AD%E5%82%99%E8%B3%87%E8%A8%8A%E8%A8%AD%E5%AE%9A">3.3. 設備資訊設定</a></li>
+<li><a href="#34-%E6%99%82%E9%96%93%E8%A8%AD%E5%AE%9A">3.4. 時間設定</a><ul>
+<li><a href="#341-%E6%89%8B%E5%8B%95%E8%A8%AD%E5%AE%9A%E6%99%82%E9%96%93">3.4.1. 手動設定時間</a></li>
+<li><a href="#342-sntp%E5%90%8C%E6%AD%A5%E6%99%82%E9%96%93">3.4.2. SNTP同步時間</a></li>
+</ul>
+</li>
+<li><a href="#35-vlan%E8%A8%AD%E5%AE%9A">3.5. VLAN設定</a><ul>
+<li><a href="#351-%E6%96%B0%E5%A2%9Evlan">3.5.1. 新增VLAN</a></li>
+<li><a href="#352-%E5%88%AA%E9%99%A4vlan">3.5.2. 刪除VLAN</a></li>
+<li><a href="#353-%E8%A8%AD%E5%AE%9Avlan-membership">3.5.3. 設定VLAN Membership</a></li>
+<li><a href="#354-%E8%A8%AD%E5%AE%9Avlan-interface-configuration">3.5.4. 設定VLAN Interface Configuration</a></li>
+</ul>
+</li>
+<li><a href="#36-routing%E8%A8%AD%E5%AE%9A">3.6. Routing設定</a><ul>
+<li><a href="#361-%E5%95%9F%E7%94%A8routing%E5%8A%9F%E8%83%BD">3.6.1. 啟用Routing功能</a></li>
+<li><a href="#362-vlan-ip%E8%A8%AD%E5%AE%9A">3.6.2. VLAN IP設定</a></li>
+<li><a href="#363-%E8%A8%AD%E5%AE%9A%E9%A0%90%E8%A8%AD%E9%96%98%E9%81%93">3.6.3. 設定預設閘道</a></li>
+</ul>
+</li>
+<li><a href="#37-link-aggregation%E8%A8%AD%E5%AE%9A">3.7. Link Aggregation設定</a><ul>
+<li><a href="#371-global-configuration">3.7.1. Global Configuration</a></li>
+<li><a href="#372-%E6%96%B0%E5%A2%9Einterface%E8%87%B3link-aggregation-group%E5%85%A7">3.7.2. 新增Interface至Link Aggregation Group內</a></li>
+</ul>
+</li>
+<li><a href="#38-%E9%87%8D%E6%96%B0%E9%96%8B%E6%A9%9F">3.8. 重新開機</a></li>
+<li><a href="#39-%E5%9B%9E%E8%A6%86%E5%8E%9F%E5%BB%A0%E9%A0%90%E8%A8%AD%E5%80%BC">3.9. 回覆原廠預設值</a></li>
+<li><a href="#310-%E8%A8%AD%E5%82%99%E5%8D%87%E7%B4%9A">3.10. 設備升級</a></li>
+</ul>
+<div class="page-break"></div>
+
+<h2 id="1-環境說明">1. 環境說明<a class="headerlink" href="#1-%E7%92%B0%E5%A2%83%E8%AA%AA%E6%98%8E" title="Permanent link">#</a></h2>
+<ul>
+<li>設備：Aruba Instant On 1930 24G Class4 PoE 4SFP/SFP+ 370W Switch JL684B</li>
+<li>版本： 2.6.0</li>
+</ul>
+<h2 id="2-連接方式">2. 連接方式<a class="headerlink" href="#2-%E9%80%A3%E6%8E%A5%E6%96%B9%E5%BC%8F" title="Permanent link">#</a></h2>
+<ol>
+<li>電腦使用網路線連接Switch的任一Port</li>
+<li>電腦設定為192.168.1.0/24任一個IP，但不要是192.168.1.1</li>
+<li>使用瀏覽器連線<a href="http://192.168.1.1:8080">http://192.168.1.1:8080</a></li>
+</ol>
+<div class="page-break"></div>
+
+<h2 id="3-設定">3. 設定<a class="headerlink" href="#3-%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<h3 id="31-注意事項">3.1. 注意事項<a class="headerlink" href="#31-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A0%85" title="Permanent link">#</a></h3>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>部分設定修改後需要Apply才會在running config生效
+<figure id="_figure-1"><a class="glightbox" href="images/img-21.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Apply Config" src="images/img-21.png"></a><figcaption>Figure 1: Apply Config</figcaption></figure></p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>最後一定要save config才不會導致重開後設定遺失
+<figure id="_figure-2"><a class="glightbox" href="images/img-22.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="Save config" src="images/img-22.png"></a><figcaption>Figure 2: Save config</figcaption></figure></p>
+</div>
+<div class="page-break"></div>
+
+<h3 id="32-初始化設定">3.2. 初始化設定<a class="headerlink" href="#32-%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h3>
+<h4 id="321-選擇for-local-management">3.2.1. 選擇For Local management<a class="headerlink" href="#321-%E9%81%B8%E6%93%87for-local-management" title="Permanent link">#</a></h4>
+<p><figure id="_figure-3"><a class="glightbox" href="images/img.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="choose one of these options" src="images/img.png"></a><figcaption>Figure 3: choose one of these options</figcaption></figure></p>
+<h4 id="322-登入系統">3.2.2. 登入系統<a class="headerlink" href="#322-%E7%99%BB%E5%85%A5%E7%B3%BB%E7%B5%B1" title="Permanent link">#</a></h4>
+<p><figure id="_figure-4"><a class="glightbox" href="images/img-1.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="login" src="images/img-1.png"></a><figcaption>Figure 4: login</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>Username</strong></td>
+<td>使用者帳號，預設為admin</td>
+</tr>
+</tbody>
+</table>
+<h4 id="323-建立帳號">3.2.3. 建立帳號<a class="headerlink" href="#323-%E5%BB%BA%E7%AB%8B%E5%B8%B3%E8%99%9F" title="Permanent link">#</a></h4>
+<p><figure id="_figure-5"><a class="glightbox" href="images/img-2.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="change user and password" src="images/img-2.png"></a><figcaption>Figure 5: change user and password</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>Username</strong></td>
+<td>使用者帳號，可自定義也可輸入預設值admin</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>Password</strong></td>
+<td>使用者密碼</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><strong>Confirm</strong></td>
+<td>使用者密碼確認</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break"></div>
+
+<h3 id="33-設備資訊設定">3.3. 設備資訊設定<a class="headerlink" href="#33-%E8%A8%AD%E5%82%99%E8%B3%87%E8%A8%8A%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h3>
+<p><figure id="_figure-6"><a class="glightbox" href="images/img-3.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="system info" src="images/img-3.png"></a><figcaption>Figure 6: system info</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>System Name</strong></td>
+<td>設備名稱</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><strong>System Location</strong></td>
+<td>設備位置(optional)</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;"><strong>System Contact</strong></td>
+<td>設備保管人(optional)</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break"></div>
+
+<h3 id="34-時間設定">3.4. 時間設定<a class="headerlink" href="#34-%E6%99%82%E9%96%93%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h3>
+<p>可選擇手動設定時間或SNTP同步時間</p>
+<h4 id="341-手動設定時間">3.4.1. 手動設定時間<a class="headerlink" href="#341-%E6%89%8B%E5%8B%95%E8%A8%AD%E5%AE%9A%E6%99%82%E9%96%93" title="Permanent link">#</a></h4>
+<p><figure id="_figure-7"><a class="glightbox" href="images/img-4.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="manual time setting" src="images/img-4.png"></a><figcaption>Figure 7: manual time setting</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;"><strong>Time</strong></td>
+<td>時間</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;"><strong>Date</strong></td>
+<td>日期</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;"><strong>Time Zone</strong></td>
+<td>時區</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;"><strong>Acronym</strong></td>
+<td>時區縮寫，可自定義</td>
+</tr>
+</tbody>
+</table>
+<h4 id="342-sntp同步時間">3.4.2. SNTP同步時間<a class="headerlink" href="#342-sntp%E5%90%8C%E6%AD%A5%E6%99%82%E9%96%93" title="Permanent link">#</a></h4>
+<p><figure id="_figure-8"><a class="glightbox" href="images/img-5.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="sntp server setting" src="images/img-5.png"></a><figcaption>Figure 8: sntp server setting</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;"><strong>SNTP Server</strong></td>
+<td>SNTP Server IP位址</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;"><strong>Server Port</strong></td>
+<td>SNTP Server Port</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;"><strong>Time Zone</strong></td>
+<td>時區</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;"><strong>Acronym</strong></td>
+<td>時區縮寫，可自定義</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break"></div>
+
+<h3 id="35-vlan設定">3.5. VLAN設定<a class="headerlink" href="#35-vlan%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h3>
+<h4 id="351-新增vlan">3.5.1. 新增VLAN<a class="headerlink" href="#351-%E6%96%B0%E5%A2%9Evlan" title="Permanent link">#</a></h4>
+<p><figure id="_figure-9"><a class="glightbox" href="images/img-6.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="add vlan-1" src="images/img-6.png"></a><figcaption>Figure 9: add vlan-1</figcaption></figure></p>
+<p><figure id="_figure-10"><a class="glightbox" href="images/img-7.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="add vlan-2" src="images/img-7.png"></a><figcaption>Figure 10: add vlan-2</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>VLAN ID</strong></td>
+<td>VLAN ID</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>VLAN Name</strong></td>
+<td>VLAN名稱(optional)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="352-刪除vlan">3.5.2. 刪除VLAN<a class="headerlink" href="#352-%E5%88%AA%E9%99%A4vlan" title="Permanent link">#</a></h4>
+<p><figure id="_figure-11"><a class="glightbox" href="images/img-8.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="delete vlan" src="images/img-8.png"></a><figcaption>Figure 11: delete vlan</figcaption></figure></p>
+<h4 id="353-設定vlan-membership">3.5.3. 設定VLAN Membership<a class="headerlink" href="#353-%E8%A8%AD%E5%AE%9Avlan-membership" title="Permanent link">#</a></h4>
+<p><figure id="_figure-12"><a class="glightbox" href="images/img-9.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="config vlan membership-1" src="images/img-9.png"></a><figcaption>Figure 12: config vlan membership-1</figcaption></figure></p>
+<p><figure id="_figure-13"><a class="glightbox" href="images/img-10.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="config vlan membership-2" src="images/img-10.png"></a><figcaption>Figure 13: config vlan membership-2</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>Tagged VLAN(s)</strong></td>
+<td>封包由此介面<mark class="critic">出去</mark>時需要加Tag的VLAN ID，可設定多個VLAN</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>Untagged VLAN</strong></td>
+<td>封包由此介面<mark class="critic">出去</mark>時不需要加Tag的VLAN ID，僅能設定一個VLAN</td>
+</tr>
+</tbody>
+</table>
+<h4 id="354-設定vlan-interface-configuration">3.5.4. 設定VLAN Interface Configuration<a class="headerlink" href="#354-%E8%A8%AD%E5%AE%9Avlan-interface-configuration" title="Permanent link">#</a></h4>
+<p><figure id="_figure-14"><a class="glightbox" href="images/img-11.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="vlan interface configuration-1" src="images/img-11.png"></a><figcaption>Figure 14: vlan interface configuration-1</figcaption></figure></p>
+<p><figure id="_figure-15"><a class="glightbox" href="images/img-12.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="vlan interface configuration-2" src="images/img-12.png"></a><figcaption>Figure 15: vlan interface configuration-2</figcaption></figure></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>Port VLAN ID</strong></td>
+<td>封包從此介面<mark class="critic">進來</mark>時若沒有VLAN Tag則會加上此VLAN ID的Tag。此部分設定要與Untagged VLAN ID設定相同，不然會造成進來的封包是被轉發到Port VLAN ID而要出去的Untagged封包則會是Untagged VLAN ID</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>Acceptable Frame Type</strong></td>
+<td>封包由此介面<mark class="critic">進來</mark>時允許的類型</td>
+</tr>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><strong>- All</strong></td>
+<td>不論是Tagged或Untagged封包均允許</td>
+</tr>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><strong>- Tagged Only</strong></td>
+<td>只允許Tagged封包，若是Untagged封包則丟棄</td>
+</tr>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><strong>- Untagged Only</strong></td>
+<td>只允許Untagged封包，若是Tagged封包則丟棄</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><strong>Ingress Filtering</strong></td>
+<td>是否針對進入封包篩選實施篩選，若是啟用則進入的封包若沒有在介面設定的VLAN ID範圍內則丟棄</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">此交換器沒有所謂的Port Type為Access、Trunk等設定，故若要達到一樣效果設定方式如下</p>
+<ul>
+<li>Access：<ol>
+<li>於<a href="#353-%E8%A8%AD%E5%AE%9Avlan-membership">Vlan Membership</a>中設定Untagged VLAN為想要設定的VLAN ID，Tagged VLAN(s)則為空白</li>
+<li>於<a href="#354-%E8%A8%AD%E5%AE%9Avlan-interface-configuration">Vlan Interface Configuration</a>中設定該Interface的Acceptable Frame Type為Untagged Only</li>
+<li>設定Port VLAN ID與Untagged VLAN ID相同</li>
+</ol>
+</li>
+<li>Trunk：<ol>
+<li>於<a href="#353-%E8%A8%AD%E5%AE%9Avlan-membership">Vlan Membership</a>中設定Untagged VLAN為想要設定的VLAN ID或None，Tagged VLAN(s)為想要的VLAN ID列表</li>
+<li>於<a href="#354-%E8%A8%AD%E5%AE%9Avlan-interface-configuration">Vlan Interface Configuration</a>中設定該Interface的Acceptable Frame Type為All或Tagged Only</li>
+<li>若設定為All且也有設定Untagged VLAN ID則Port VLAN ID需與Untagged VLAN ID相同</li>
+</ol>
+</li>
+</ul>
+</div>
+<div class="page-break"></div>
+
+<h3 id="36-routing設定">3.6. Routing設定<a class="headerlink" href="#36-routing%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h3>
+<h4 id="361-啟用routing功能">3.6.1. 啟用Routing功能<a class="headerlink" href="#361-%E5%95%9F%E7%94%A8routing%E5%8A%9F%E8%83%BD" title="Permanent link">#</a></h4>
+<p><figure id="_figure-16"><a class="glightbox" href="images/img-13.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="enable routing" src="images/img-13.png"></a><figcaption>Figure 16: enable routing</figcaption></figure></p>
+<div class="admonition info">
+<p class="admonition-title">啟用Routing</p>
+<p>此設備就可以擔任路由器功能，做為其他設備的閘道時，可依據路由表路由封包至外部閘道</p>
+</div>
+<div class="admonition info">
+<p class="admonition-title">不啟用Routing</p>
+<p>此設備僅具有交換器功能，做為其他設備的閘道時，不會依據路由表路由封包至外部閘道，但自己本身的封包仍可依據路由表路由至外部，故若單純只是要可以在不同網段管理此台設備的話並不需要啟用Routing</p>
+</div>
+<h4 id="362-vlan-ip設定">3.6.2. VLAN IP設定<a class="headerlink" href="#362-vlan-ip%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h4>
+<p><figure id="_figure-17"><a class="glightbox" href="images/img-14.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="vlan ip setting-1" src="images/img-14.png"></a><figcaption>Figure 17: vlan ip setting-1</figcaption></figure></p>
+<p><figure id="_figure-18"><a class="glightbox" href="images/img-15.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="vlan ip setting-2" src="images/img-15.png"></a><figcaption>Figure 18: vlan ip setting-2</figcaption></figure></p>
+<h4 id="363-設定預設閘道">3.6.3. 設定預設閘道<a class="headerlink" href="#363-%E8%A8%AD%E5%AE%9A%E9%A0%90%E8%A8%AD%E9%96%98%E9%81%93" title="Permanent link">#</a></h4>
+<p><figure id="_figure-19"><a class="glightbox" href="images/img-16.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="add default gateway-1" src="images/img-16.png"></a><figcaption>Figure 19: add default gateway-1</figcaption></figure></p>
+<p><figure id="_figure-20"><a class="glightbox" href="images/img-17.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="add default gateway-2" src="images/img-17.png"></a><figcaption>Figure 20: add default gateway-2</figcaption></figure></p>
+<div class="page-break"></div>
+
+<h3 id="37-link-aggregation設定">3.7. Link Aggregation設定<a class="headerlink" href="#37-link-aggregation%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h3>
+<h4 id="371-global-configuration">3.7.1. Global Configuration<a class="headerlink" href="#371-global-configuration" title="Permanent link">#</a></h4>
+<p><figure id="_figure-21"><a class="glightbox" href="images/img-18.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="link aggregation global configuration" src="images/img-18.png"></a><figcaption>Figure 21: link aggregation global configuration</figcaption></figure></p>
+<h4 id="372-新增interface至link-aggregation-group內">3.7.2. 新增Interface至Link Aggregation Group內<a class="headerlink" href="#372-%E6%96%B0%E5%A2%9Einterface%E8%87%B3link-aggregation-group%E5%85%A7" title="Permanent link">#</a></h4>
+<p>原有Interface上的VLAN相關設定將會無效，會以TRK介面設定為主，故可至<a href="#%E8%A8%AD%E5%AE%9Avlan-membership">VLAN Membership</a>設定TRK介面VLAN</p>
+<p><figure id="_figure-22"><a class="glightbox" href="images/img-19.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="images/img-19.png"></a><figcaption>Figure 22: alt text</figcaption></figure></p>
+<p><figure id="_figure-23"><a class="glightbox" href="images/img-20.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="alt text" src="images/img-20.png"></a><figcaption>Figure 23: alt text</figcaption></figure></p>
+<div class="page-break"></div>
+
+<h3 id="38-重新開機">3.8. 重新開機<a class="headerlink" href="#38-%E9%87%8D%E6%96%B0%E9%96%8B%E6%A9%9F" title="Permanent link">#</a></h3>
+<p><figure id="_figure-24"><a class="glightbox" href="images/img-23.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="reboot" src="images/img-23.png"></a><figcaption>Figure 24: reboot</figcaption></figure></p>
+<div class="page-break"></div>
+
+<h3 id="39-回覆原廠預設值">3.9. 回覆原廠預設值<a class="headerlink" href="#39-%E5%9B%9E%E8%A6%86%E5%8E%9F%E5%BB%A0%E9%A0%90%E8%A8%AD%E5%80%BC" title="Permanent link">#</a></h3>
+<p><figure id="_figure-25"><a class="glightbox" href="images/img-24.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="reset to factory defaults" src="images/img-24.png"></a><figcaption>Figure 25: reset to factory defaults</figcaption></figure></p>
+<div class="page-break"></div>
+
+<h3 id="310-設備升級">3.10. 設備升級<a class="headerlink" href="#310-%E8%A8%AD%E5%82%99%E5%8D%87%E7%B4%9A" title="Permanent link">#</a></h3>
+<p><figure id="_figure-26"><a class="glightbox" href="images/img-25.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="upgrade" src="images/img-25.png"></a><figcaption>Figure 26: upgrade</figcaption></figure></p>
+<p><figure id="_figure-27"><a class="glightbox" href="images/img-26.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="upgrade" src="images/img-26.png"></a><figcaption>Figure 27: upgrade</figcaption></figure></p>
+<p><figure id="_figure-28"><a class="glightbox" href="images/img-27.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="upgrade" src="images/img-27.png"></a><figcaption>Figure 28: upgrade</figcaption></figure></p>
+<p><figure id="_figure-29"><a class="glightbox" href="images/img-28.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="upgrade" src="images/img-28.png"></a><figcaption>Figure 29: upgrade</figcaption></figure></p>
+<p><figure id="_figure-30"><a class="glightbox" href="images/img-29.png" data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom"><img alt="upgrade" src="images/img-29.png"></a><figcaption>Figure 30: upgrade</figcaption></figure></p>
+
+
+  
+
+
+
+  <h2 id="__comments" class="no-print">留言</h2>
+  <!-- Insert generated snippet here -->
+  <script src="https://giscus.app/client.js"
+  data-repo="wilder640/blog-comment"
+  data-repo-id="R_kgDOMXc0AQ"
+  data-category="Announcements"
+  data-category-id="DIC_kwDOMXc0Ac4Cg2f3"
+  data-mapping="title"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="1"
+  data-input-position="top"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-TW"
+  crossorigin="anonymous"
+  async>
+</script>
+  <!-- Synchronize Giscus theme with palette -->
+  <script>
+    var giscus = document.querySelector("script[src*=giscus]")
+
+    // Set palette on initial load
+    var palette = __md_get("__palette")
+    if (palette && typeof palette.color === "object") {
+      var theme = palette.color.scheme === "slate"
+        ? "transparent_dark"
+        : "light"
+
+      // Instruct Giscus to set theme
+      giscus.setAttribute("data-theme", theme) 
+    }
+
+    // Register event handlers after documented loaded
+    document.addEventListener("DOMContentLoaded", function() {
+      var ref = document.querySelector("[data-md-component=palette]")
+      ref.addEventListener("change", function() {
+        var palette = __md_get("__palette")
+        if (palette && typeof palette.color === "object") {
+          var theme = palette.color.scheme === "slate"
+            ? "transparent_dark"
+            : "light"
+
+          // Instruct Giscus to change theme
+          var frame = document.querySelector(".giscus-frame")
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme } } },
+            "https://giscus.app"
+          )
+        }
+      })
+    })
+  </script>
+
+      
+    </article>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到頂端
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["search.suggest", "search.highlight", "navigation.tabs", "navigation.top", "navigation.indexes", "content.tooltips", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "tags": {"CSS": "css", "Fortinet": "fortinet", "HTML": "html", "JavaScript": "js", "Kubernetes": "kubernetes", "Paloalto": "paloalto", "Python": "python", "Vmware": "vmware"}, "translations": {"clipboard.copied": "\u5df2\u8907\u88fd", "clipboard.copy": "\u8907\u88fd", "search.result.more.one": "\u6b64\u9801\u5c1a\u6709 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.more.other": "\u6b64\u9801\u5c1a\u6709 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.none": "\u6c92\u6709\u7b26\u5408\u7684\u9805\u76ee", "search.result.one": "\u627e\u5230 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.other": "\u627e\u5230 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.placeholder": "\u6253\u5b57\u9032\u884c\u641c\u5c0b", "search.result.term.missing": "\u7f3a\u5c11\u5b57\u8a5e", "select.version": "\u9078\u64c7\u7248\u672c"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  <script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body>
+</html>
