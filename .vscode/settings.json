@@ -30,7 +30,7 @@
     // Markdown Copy File設定    
     "markdownlint.config": {
       "MD033": {
-        "allowed_elements": ["div"]
+        "allowed_elements": ["div","h2"]
       }
     },
     // 針對MD033- inline HTML檢查規則關閉不需檢查的元素

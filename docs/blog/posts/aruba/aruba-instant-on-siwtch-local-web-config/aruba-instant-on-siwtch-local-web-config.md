@@ -140,17 +140,6 @@ draft: false
 
 ### 3.5. VLAN設定
 
-此交換器沒有所謂的Port Type為Access、Trunk等設定，故若要達到一樣效果設定方式如下
-
-- Access：
-    1. 於[Vlan Membership](#353-設定vlan-membership)中設定Untagged VLAN為想要設定的VLAN ID，Tagged VLAN(s)則為空白
-    2. 於[Vlan Interface Configuration](#354-設定vlan-interface-configuration)中設定該Interface的Acceptable Frame Type為Untagged Only
-    3. 設定Port VLAN ID與Untagged VLAN ID相同
-- Trunk：
-    1. 於[Vlan Membership](#353-設定vlan-membership)中設定Untagged VLAN為想要設定的VLAN ID或None，Tagged VLAN(s)為想要的VLAN ID列表
-    2. 於[Vlan Interface Configuration](#354-設定vlan-interface-configuration)中設定該Interface的Acceptable Frame Type為All或Tagged Only
-    3. 若設定為All且也有設定Untagged VLAN ID則Port VLAN ID需與Untagged VLAN ID相同
-
 #### 3.5.1. 新增VLAN
 
 ![add vlan-1](images/img-6.png)
@@ -174,8 +163,8 @@ draft: false
 
 | 編號 |      欄位名稱      | 欄位描述                                                     |
 | :--: | :----------------: | ------------------------------------------------------------ |
-|  1   | **Tagged VLAN(s)** | 封包由此介面**出去**時需要加Tag的VLAN ID，可設定多個VLAN     |
-|  2   | **Untagged VLAN**  | 封包由此介面**出去**時不需要加Tag的VLAN ID，僅能設定一個VLAN |
+|  1   | **Tagged VLAN(s)** | 封包由此介面{==出去==}時需要加Tag的VLAN ID，可設定多個VLAN     |
+|  2   | **Untagged VLAN**  | 封包由此介面{==出去==}時不需要加Tag的VLAN ID，僅能設定一個VLAN |
 
 #### 3.5.4. 設定VLAN Interface Configuration
 
@@ -185,12 +174,22 @@ draft: false
 
 | 編號 |         欄位名稱          | 欄位描述                                                                                |
 | :--: | :-----------------------: | --------------------------------------------------------------------------------------- |
-|  1   |     **Port VLAN ID**      | 封包從此介面**進來**時若沒有VLAN Tag則會加上此VLAN ID的Tag。此部分設定要與Untagged VLAN ID設定相同，不然會造成進來的封包是被轉發到Port VLAN ID而要出去的Untagged封包則會是Untagged VLAN ID                              |
-|  2   | **Acceptable Frame Type** | 封包由此介面**進來**時允許的類型                                                            |
+|  1   |     **Port VLAN ID**      | 封包從此介面{==進來==}時若沒有VLAN Tag則會加上此VLAN ID的Tag。此部分設定要與Untagged VLAN ID設定相同，不然會造成進來的封包是被轉發到Port VLAN ID而要出去的Untagged封包則會是Untagged VLAN ID                              |
+|  2   | **Acceptable Frame Type** | 封包由此介面{==進來==}時允許的類型                                                            |
 |      |         **- All**         | 不論是Tagged或Untagged封包均允許                                                        |
 |      |     **- Tagged Only**     | 只允許Tagged封包，若是Untagged封包則丟棄                                                |
 |      |    **- Untagged Only**    | 只允許Untagged封包，若是Tagged封包則丟棄                                                |
 |  3   |   **Ingress Filtering**   | 是否針對進入封包篩選實施篩選，若是啟用則進入的封包若沒有在介面設定的VLAN ID範圍內則丟棄 |
+
+!!! tip "此交換器沒有所謂的Port Type為Access、Trunk等設定，故若要達到一樣效果設定方式如下"
+      - Access：
+          1. 於[Vlan Membership](#353-設定vlan-membership)中設定Untagged VLAN為想要設定的VLAN ID，Tagged VLAN(s)則為空白
+          2. 於[Vlan Interface Configuration](#354-設定vlan-interface-configuration)中設定該Interface的Acceptable Frame Type為Untagged Only
+          3. 設定Port VLAN ID與Untagged VLAN ID相同
+      - Trunk：
+          1. 於[Vlan Membership](#353-設定vlan-membership)中設定Untagged VLAN為想要設定的VLAN ID或None，Tagged VLAN(s)為想要的VLAN ID列表
+          2. 於[Vlan Interface Configuration](#354-設定vlan-interface-configuration)中設定該Interface的Acceptable Frame Type為All或Tagged Only
+          3. 若設定為All且也有設定Untagged VLAN ID則Port VLAN ID需與Untagged VLAN ID相同
 
 <div class="page-break"/>
 

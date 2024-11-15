@@ -199,6 +199,14 @@ body[data-md-color-scheme="slate"] {
     width: 1.25em;
 }
 
+/*Font Formating*/
+.critic {
+    color: red !important;
+    font-size: larger !important;
+    background-color: transparent !important;
+    font-weight: bold;
+}
+
 /*Print PDF*/
 @media print {
     /* 隱藏不需要在列印時顯示的元素 */
