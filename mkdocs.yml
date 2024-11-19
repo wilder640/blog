@@ -78,7 +78,7 @@ plugins:
   - tags: # 啟用tag功能
       enabled: true
       tags_file: tags.md
-  - social:
+  - social: # 啟用social card功能，可用於分享連結時的顯示
       enabled: true
       cards_layout_options:
         font_family: Noto Sans TC
@@ -120,13 +120,14 @@ markdown_extensions:
   - pymdownx.mark
   - pymdownx.tilde
 
-  - customblocks
-
 # Custom styles and scripts
 extra_css: # 自定義的CSS檔案
   - assets/stylesheets/extra.css
 
 extra:
+  analytics:
+    provider: google
+    property: G-X0N9VY4B09
   tags:
     HTML: html
     JavaScript: js
@@ -136,5 +137,6 @@ extra:
     Vmware: vmware
     Fortinet: fortinet
     Paloalto: paloalto
+
 
 

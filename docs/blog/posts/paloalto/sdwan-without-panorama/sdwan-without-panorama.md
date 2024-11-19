@@ -1,5 +1,5 @@
 ---
-title: Paloalto防火牆在沒有Panorama情況下設定SD-WAN
+title: Paloalto防火牆在 沒有Panorama情 況下設定SD-WAN
 description: 以往Paloalto如果有多條WAN線路情況下僅能藉由Policy Route或Virtual Router去達到線路備援但無法做到負載平衡，後續於9.1開始引入SD-WAN功能但其手冊都是著重於有Panorama情況下的設定，故此篇主要記載如何在沒有Panorama設定SD-WAN功能達到WAN線路的負載平衡
 date: 2024-07-19
 comment: true
