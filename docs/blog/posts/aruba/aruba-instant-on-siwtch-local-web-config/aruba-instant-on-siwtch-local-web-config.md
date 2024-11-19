@@ -227,7 +227,7 @@ draft: false
 
 #### 3.7.2. 新增Interface至Link Aggregation Group內
 
-原有Interface上的VLAN相關設定將會無效，會以TRK介面設定為主，故可至[VLAN Membership](#設定vlan-membership)設定TRK介面VLAN
+原有Interface上的VLAN相關設定將會無效，會以TRK介面設定為主，故可至[VLAN Membership](#353-設定vlan-membership)設定TRK介面VLAN
 
 ![alt text](images/img-19.png)
 

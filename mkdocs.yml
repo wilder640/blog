@@ -78,6 +78,10 @@ plugins:
   - tags: # 啟用tag功能
       enabled: true
       tags_file: tags.md
+  - social:
+      enabled: true
+      cards_layout_options:
+        font_family: Noto Sans TC
   - caption # 圖片或表格貼加標題
 
 # Markdown Extensions
