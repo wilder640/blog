@@ -123,6 +123,8 @@ markdown_extensions:
 # Custom styles and scripts
 extra_css: # 自定義的CSS檔案
   - assets/stylesheets/extra.css
+extra_javascript:
+  - assets/javascripts/stats.js
 
 extra:
   tags:
