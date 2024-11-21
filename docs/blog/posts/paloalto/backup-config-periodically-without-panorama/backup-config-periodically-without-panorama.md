@@ -21,7 +21,16 @@ draft: true
 
 ## 設定
 
-## Script
+### 新增Admin Roles
+
+建立一個新的Admin Roles僅具有使用XML API Export功能，其餘均禁止以達到權限最小化原則
+
+![Add Admin Roles](images/img-1.png)
+
+禁止Web UI所有功能
+![Add Admin Roles](images/img-2.png)
+
+### Script
 
 ``` batch
 @echo off
@@ -35,7 +44,7 @@ set "api_key=LUFRa1F0SQ=="
 :: 獲取日期時間，並將 Year, Month, Day, Hour, Minute, Second 設置為環境變數
 for /f %%i in ('WMIC Path Win32_LocalTime Get /Format:value') do @for /f %%j in ("%%i") do @set %%j
 
-:: 補零處理（若為單位數則補零）
+:: 補零處理（若為個位數則補零）
 set Month=0%Month%
 set Month=%Month:~-2%
 set Day=0%Day%

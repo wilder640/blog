@@ -141,7 +141,7 @@ body[data-md-color-scheme="slate"] {
 .md-typeset figure:has(img) {
     border: thin #c0c0c0 solid;
     padding: 5px;
-    margin: auto;
+    margin: 0;
 }
 
 .md-typeset img {
@@ -161,7 +161,6 @@ body[data-md-color-scheme="slate"] {
 .md-typeset__table {
     font-size: 0.95em;
     display: table;
-    width: 100%;
 }
 
 /* columns */
