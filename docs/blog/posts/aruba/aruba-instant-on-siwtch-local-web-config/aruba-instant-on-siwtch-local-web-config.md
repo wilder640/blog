@@ -172,14 +172,11 @@ draft: false
 
 ![vlan interface configuration-2](images/img-12.png)
 
-| 編號 |         欄位名稱          | 欄位描述                                                                                |
-| :--: | :-----------------------: | --------------------------------------------------------------------------------------- |
-|  1   |     **Port VLAN ID**      | 封包從此介面{==進來==}時若沒有VLAN Tag則會加上此VLAN ID的Tag。此部分設定要與Untagged VLAN ID設定相同，不然會造成進來的封包是被轉發到Port VLAN ID而要出去的Untagged封包則會是Untagged VLAN ID                              |
-|  2   | **Acceptable Frame Type** | 封包由此介面{==進來==}時允許的類型                                                            |
-|      |         **- All**         | 不論是Tagged或Untagged封包均允許                                                        |
-|      |     **- Tagged Only**     | 只允許Tagged封包，若是Untagged封包則丟棄                                                |
-|      |    **- Untagged Only**    | 只允許Untagged封包，若是Tagged封包則丟棄                                                |
-|  3   |   **Ingress Filtering**   | 是否針對進入封包篩選實施篩選，若是啟用則進入的封包若沒有在介面設定的VLAN ID範圍內則丟棄 |
+| 編號 |         欄位名稱          | 欄位描述                                                                                                                                                                                                             |
+| :--: | :-----------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|  1   |     **Port VLAN ID**      | 封包從此介面{==進來==}時若沒有VLAN Tag則會加上此VLAN ID的Tag。此部分設定要與Untagged VLAN ID設定相同，不然會造成進來的封包是被轉發到Port VLAN ID而要出去的Untagged封包則會是Untagged VLAN ID                         |
+|  2   | **Acceptable Frame Type** | 封包由此介面{==進來==}時允許的類型<br/>**- All：**不論是Tagged或Untagged封包均允許<br/>**- Tagged Only：**只允許Tagged封包，若是Untagged封包則丟棄<br/>**- Untagged Only：**只允許Untagged封包，若是Tagged封包則丟棄 |
+|  3   |   **Ingress Filtering**   | 是否針對進入封包篩選實施篩選，若是啟用則進入的封包若沒有在介面設定的VLAN ID範圍內則丟棄                                                                                                                              |
 
 !!! tip "此交換器沒有所謂的Port Type為Access、Trunk等設定，故若要達到一樣效果設定方式如下"
       - Access：

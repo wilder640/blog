@@ -13,24 +13,57 @@ banner: img.png
 draft: true
 ---
 
+<h2>目錄</h2>
+
+- [1. 環境說明](#1-環境說明)
+- [2. 設定](#2-設定)
+  - [2.1. 新增Admin Roles](#21-新增admin-roles)
+  - [2.2. 建立管理者帳號](#22-建立管理者帳號)
+  - [2.3. Script](#23-script)
+  
 ## 1. 環境說明
 
 - 防火牆型號：PA-820
 - 防火牆版本： 2.6.0
 - 執行備份任務腳本電腦作業系統版本： Windows Server 2019
 
-## 設定
+## 2. 設定
 
-### 新增Admin Roles
+### 2.1. 新增Admin Roles
 
 建立一個新的Admin Roles僅具有使用XML API Export功能，其餘均禁止以達到權限最小化原則
 
 ![Add Admin Roles](images/img-1.png)
 
-禁止Web UI所有功能
-![Add Admin Roles](images/img-2.png)
+![設定Admin Role Profile Name](images/img-2.png)
 
-### Script
+| 編號 | 欄位名稱 | 欄位描述       |
+| :--: | :------: | -------------- |
+|  1   | **Name** | 名稱，可自定義 |
+
+![禁止使用Web UI所有功能](images/img-3.png)
+
+![XML API除Export外其餘均禁止](images/img-4.png)
+
+![不賦予Command Line權限](images/img-5.png)
+
+![禁止使用REST API所有功能](images/img-6.png)
+
+### 2.2. 建立管理者帳號
+
+![Add Administrators](images/img-7.png)
+
+![alt text](images/img-8.png)
+
+| 編號 |        欄位名稱        | 欄位描述                                                                                      |
+| :--: | :--------------------: | --------------------------------------------------------------------------------------------- |
+|  1   |        **Name**        | 名稱，可自定義                                                                                |
+|  2   |      **Password**      | 密碼，可自定義                                                                                |
+|  3   |  **Confirm Password**  | 密碼確認                                                                                      |
+|  4   | **Administrator Type** | 管理員權限賦予方式<br>**- Dynamic：**使用內建的管理員角色<br/>**- Role Based：**使用自定義的管理員角色 |
+|  5   |      **Profile**       | 選擇此帳號的權限設定檔                                                                        |
+
+### 2.3. Script
 
 ``` batch
 @echo off

@@ -1,5 +1,6 @@
 {# template #}
 {% extends "main.html" %}
+{% import "partials/nav-item.html" as item with context %}
 
 {# extra head #}
 {% block extrahead %}
@@ -28,7 +29,7 @@
         }
         .md-typeset .post .post-banner {
             margin-top: -1rem;
-            max-width: 8rem; /* 限制最大寬度為 130px */
+            max-width: 7rem; /* 限制最大寬度為*/
             width: 100%; /* 確保圖片寬度不會超過容器寬度 */
             height: auto; /* 自動調整高度，保持比例 */
             max-height: 4rem; /* 保持原有的最大高度限制 */
@@ -38,7 +39,7 @@
         /* 手機端調整 */
         @media (max-width: 800px) {
             .md-typeset .post .post-banner {
-                max-width: 4rem; /* 手機端同樣限制寬度為 130px */
+                max-width: 3rem; /* 手機端同樣限制寬度為 130px */
                 width: 100%; /* 確保寬度不超過容器 */
                 height: auto; /* 自動調整高度，保持比例 */
                 max-height: 2rem; /* 保持原有的手機端最大高度限制 */
