@@ -25,7 +25,7 @@
 
 {% set page_image = config.site_url ~ "assets/banner.jpg" %}
 {% if page and page.meta and page.meta.banner %}
-    {% set page_image = page.canonical_url ~ page.meta.banner %}
+    {% set page_image = page.canonical_url ~ "/images/" ~ page.meta.banner %}
 {% endif %}
 
 {% if page and page.meta and page.meta.tags %}
@@ -46,7 +46,7 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="{{ page_title }} - {{ config.site_name }}" />
-    <meta property="og:description" content="{{ page_description }} - {{ config.site_description }}" />
+    <meta property="og:description" content="{{ page_description }}" />
     <meta property="og:url" content="{{ page_url }}" />
     <meta property="og:image" content="{{ page_image }}" />
     <meta property="og:image:type" content="image/png" />
@@ -56,7 +56,7 @@
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="{{ page_title }} - {{ config.site_name }}" />
-    <meta name="twitter:description" content="{{ page_description }} - {{ config.site_description }}" />
+    <meta name="twitter:description" content="{{ page_description }}" />
     <meta name="twitter:image" content="{{ page_image }}" />
 {% endblock %}
 {# analytics #}
