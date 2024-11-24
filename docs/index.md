@@ -1,5 +1,7 @@
 ---
-
-template: "redirect.html"
-location: "blog/"
+hide:
+  - navigation
+  - toc
 ---
+
+# Home

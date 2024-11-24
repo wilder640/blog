@@ -47,12 +47,15 @@ theme:
 plugins:
   - search: # 搜尋插件，在沒有設定plugin情況下預設會啟用，但若有設定的話要手動加入否則不會啟用
       separator: '[\s\u200b\-]' # 繁體中文分隔方式（空白或沒有寬度的空白或連字符-）
-  - awesome-pages:
-      collapse_single_pages: false
   - blog: # 部落格插件
       enabled: true
+      blog_dir: .
       post_readtime: true # 是否依據字數計算預計閱讀時間並顯示
       archive: true # 是否顯示存檔頁面
+      archive_name: 時間軸
+      archive_date_format: yyyy MMMM
+      categories: true
+      categories_name: 類別
       post_url_format: "{categories}/{file}" # 設定blog post的url格式，預設為{date}/{slug}，故會加上日期，故若要在該篇文章引用同目錄其他元素時會有問題
       pagination_per_page: 10
   - git-revision-date-localized: # 跟蹤文章git提交日期，並可設定顯示於文章底部
