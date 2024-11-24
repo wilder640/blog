@@ -45,6 +45,11 @@ theme:
 
 #Plugins
 plugins:
+  - social:
+      enabled: false
+      cards_layout_options:
+        font_family: Noto Sans TC
+
   - search: # 搜尋插件，在沒有設定plugin情況下預設會啟用，但若有設定的話要手動加入否則不會啟用
       separator: '[\s\u200b\-]' # 繁體中文分隔方式（空白或沒有寬度的空白或連字符-）
   - blog: # 部落格插件
