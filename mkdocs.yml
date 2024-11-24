@@ -1,5 +1,6 @@
 site_name: Wilder's IT 日誌
 site_url: https://wilder640.github.io/blog/ # 網站位置
+site_description: 紀錄工作上各種疑難雜症
 #repo_url: https://github.com/wilder640/blog # Github Repository位置，用於content.action.view設定
 #edit_uri: edit/main/docs/ # Github Repository編輯位置，用於content.action.edit設定
 

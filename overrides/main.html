@@ -19,6 +19,8 @@
     {% set page_description = page.meta.description %}
 {% elif page and page.description and not page.is_homepage %}
     {% set page_description = page.description %}
+{% else %}
+    {% set page_description = config.site_description %}
 {% endif %}
 
 {% set page_url = page.canonical_url %}
