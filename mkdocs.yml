@@ -20,16 +20,6 @@ theme:
         icon: material/weather-sunny
         name: 關閉深色模式
   custom_dir: overrides # 定義複寫佈景主題的元件資料夾
-  icon:
-    tag:
-      html: fontawesome/brands/html5
-      js: fontawesome/brands/js
-      css:  fontawesome/brands/css3
-      kubernetes: material/kubernetes
-      python: material/language-python
-      vmware: simple/vmware
-      fortinet: simple/fortinet
-      paloalto: simple/paloaltonetworks
 
   features:
     - search.suggest # 輸入搜尋字元時會依據打的字元顯示下一個可能的字元
@@ -131,15 +121,6 @@ extra_css: # 自定義的CSS檔案
   - assets/stylesheets/extra.css
 
 extra:
-  tags:
-    HTML: html
-    JavaScript: js
-    CSS: css
-    Kubernetes: kubernetes
-    Python: python
-    Vmware: vmware
-    Fortinet: fortinet
-    Paloalto: paloalto
-
+  generator: false
 
 

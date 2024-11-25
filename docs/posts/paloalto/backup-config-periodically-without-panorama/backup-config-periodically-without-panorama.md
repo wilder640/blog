@@ -10,7 +10,7 @@ tags:
     - Firewall
 comments: true
 banner: img.png
-draft: true
+draft: false
 ---
 
 <h2>目錄</h2>
@@ -19,15 +19,25 @@ draft: true
 - [2. 設定](#2-設定)
   - [2.1. 新增Admin Roles](#21-新增admin-roles)
   - [2.2. 建立管理者帳號](#22-建立管理者帳號)
-  - [2.3. Script](#23-script)
+  - [2.3. 取得帳號API Key](#23-取得帳號api-key)
+  - [2.4. 新增 Batch Script](#24-新增-batch-script)
+  - [2.5. 建立工作排程](#25-建立工作排程)
+  - [2.6. 測試執行情形](#26-測試執行情形)
   
+<div class="page-break"/>
+
 ## 1. 環境說明
 
 - 防火牆型號：PA-820
-- 防火牆版本： 2.6.0
+- 防火牆版本： 10.1.14
 - 執行備份任務腳本電腦作業系統版本： Windows Server 2019
 
+<div class="page-break"/>
+
 ## 2. 設定
+
+!!!warning
+    防火牆變更後記得要commit，設定才會生效
 
 ### 2.1. 新增Admin Roles
 
@@ -41,31 +51,63 @@ draft: true
 | :--: | :------: | -------------- |
 |  1   | **Name** | 名稱，可自定義 |
 
+<div class="page-break"/>
+
 ![禁止使用Web UI所有功能](images/img-3.png)
 
 ![XML API除Export外其餘均禁止](images/img-4.png)
+
+<div class="page-break"/>
 
 ![不賦予Command Line權限](images/img-5.png)
 
 ![禁止使用REST API所有功能](images/img-6.png)
 
+<div class="page-break"/>
+
 ### 2.2. 建立管理者帳號
 
 ![Add Administrators](images/img-7.png)
 
-![alt text](images/img-8.png)
+![Add Administrators](images/img-8.png)
 
 | 編號 |        欄位名稱        | 欄位描述                                                                                      |
 | :--: | :--------------------: | --------------------------------------------------------------------------------------------- |
 |  1   |        **Name**        | 名稱，可自定義                                                                                |
 |  2   |      **Password**      | 密碼，可自定義                                                                                |
 |  3   |  **Confirm Password**  | 密碼確認                                                                                      |
-|  4   | **Administrator Type** | 管理員權限賦予方式<br>**- Dynamic：**使用內建的管理員角色<br/>**- Role Based：**使用自定義的管理員角色 |
+|  4   | **Administrator Type** | 管理員權限賦予方式<br>**- Dynamic：**使用內建的管理員角色<br/>{==**- Role Based：**==}使用自定義的管理員角色 |
 |  5   |      **Profile**       | 選擇此帳號的權限設定檔                                                                        |
 
-### 2.3. Script
+<div class="page-break"/>
 
-``` batch
+### 2.3. 取得帳號API Key
+
+使用瀏覽器開啟以下網址，其中<firewall-ip\>為防火牆IP，<username\>為剛建立的管理者帳號，<password\>為剛建立的管理員密碼
+
+```bash
+https://<firewall-ip>/api/?type=keygen&user=<username>&password=<password>
+```
+
+![Get API Key](images/img-9.png)
+
+!!!info
+    API Key預設不會逾期故管理員密碼變更也不需要重新取得API Key，若要使API Key失效或者要設定有效期間需至Device -> Setup -> Management -> Authentication Settings變更
+
+<div class="page-break"/>
+
+### 2.4. 新增 Batch Script
+
+主要執行備份的語法為
+
+```batch
+ curl -kG "https://<firewall-ip>/api/?type=export&category=configuration&key=<api_key>" > running-config.xml`
+```
+
+為達到可自動依日期儲存及紀錄錯誤可拓展為以下Batch Script，此部分可以需求自行修改存檔命名方式及檢查邏輯並將此Batch Script放置於要執行備份的電腦內
+
+
+``` batch linenums="1" title="backup.bat"
 @echo off
 :: 設定備份目的地，依實際狀況修改
 set "backup_dir=C:\backup"
@@ -110,3 +152,31 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 ```
+
+<div class="page-break"/>
+
+### 2.5. 建立工作排程
+
+![建立工作排程](images/img-10.png)
+
+![建立工作排程](images/img-11.png)
+
+<div class="page-break"/>
+
+![建立工作排程](images/img-12.png)
+
+![建立工作排程](images/img-13.png)
+
+![建立工作排程](images/img-14.png)
+
+![建立工作排程](images/img-15.png)
+
+![建立工作排程](images/img-16.png)
+
+<div class="page-break"/>
+
+### 2.6. 測試執行情形
+
+![測試執行情形](images/img-17.png)
+
+![測試執行情形](images/img-18.png)

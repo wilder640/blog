@@ -76,19 +76,23 @@ draft: false
 
 #### 3.2.1. 選擇For Local management
 
-![choose one of these options](images/img.png)
+![Choose one of these options](images/img.png)
+
+<div class="page-break"/>
 
 #### 3.2.2. 登入系統
 
-![login](images/img-1.png)
+![Login](images/img-1.png)
 
 | 編號 |   欄位名稱   | 欄位描述                |
 | :--: | :----------: | ----------------------- |
 |  1   | **Username** | 使用者帳號，預設為admin |
 
+<div class="page-break"/>
+
 #### 3.2.3. 建立帳號
 
-![change user and password](images/img-2.png)
+![Change user and password](images/img-2.png)
 
 | 編號 |   欄位名稱   | 欄位描述                                |
 | :--: | :----------: | --------------------------------------- |
@@ -100,7 +104,7 @@ draft: false
 
 ### 3.3. 設備資訊設定
 
-![system info](images/img-3.png)
+![System info](images/img-3.png)
 
 | 編號 |      欄位名稱       | 欄位描述             |
 | :--: | :-----------------: | -------------------- |
@@ -116,7 +120,7 @@ draft: false
 
 #### 3.4.1. 手動設定時間
 
-![manual time setting](images/img-4.png)
+![Manual time setting](images/img-4.png)
 
 | 編號 |   欄位名稱    | 欄位描述           |
 | :--: | :-----------: | ------------------ |
@@ -125,9 +129,11 @@ draft: false
 |  6   | **Time Zone** | 時區               |
 |  7   |  **Acronym**  | 時區縮寫，可自定義 |
 
+<div class="page-break"/>
+
 #### 3.4.2. SNTP同步時間
 
-![sntp server setting](images/img-5.png)
+![Sntp server setting](images/img-5.png)
 
 | 編號 |    欄位名稱     | 欄位描述           |
 | :--: | :-------------: | ------------------ |
@@ -142,35 +148,47 @@ draft: false
 
 #### 3.5.1. 新增VLAN
 
-![add vlan-1](images/img-6.png)
+![Add vlan](images/img-6.png)
 
-![add vlan-2](images/img-7.png)
+![Add vlan](images/img-7.png)
+
+<div class="page-break"/>
 
 | 編號 |   欄位名稱    | 欄位描述           |
 | :--: | :-----------: | ------------------ |
 |  1   |  **VLAN ID**  | VLAN ID            |
 |  2   | **VLAN Name** | VLAN名稱(optional) |
 
+<div class="page-break"/>
+
 #### 3.5.2. 刪除VLAN
 
-![delete vlan](images/img-8.png)
+![Delete Vlan](images/img-8.png)
+
+<div class="page-break"/>
 
 #### 3.5.3. 設定VLAN Membership
 
-![config vlan membership-1](images/img-9.png)
+![Config vlan membership](images/img-9.png)
 
-![config vlan membership-2](images/img-10.png)
+![Config vlan membership](images/img-10.png)
+
+<div class="page-break"/>
 
 | 編號 |      欄位名稱      | 欄位描述                                                     |
 | :--: | :----------------: | ------------------------------------------------------------ |
 |  1   | **Tagged VLAN(s)** | 封包由此介面{==出去==}時需要加Tag的VLAN ID，可設定多個VLAN     |
 |  2   | **Untagged VLAN**  | 封包由此介面{==出去==}時不需要加Tag的VLAN ID，僅能設定一個VLAN |
 
+<div class="page-break"/>
+
 #### 3.5.4. 設定VLAN Interface Configuration
 
-![vlan interface configuration-1](images/img-11.png)
+![Vlan interface configuration](images/img-11.png)
 
-![vlan interface configuration-2](images/img-12.png)
+![Vlan interface configuration](images/img-12.png)
+
+<div class="page-break"/>
 
 | 編號 |         欄位名稱          | 欄位描述                                                                                                                                                                                                             |
 | :--: | :-----------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -194,7 +212,7 @@ draft: false
 
 #### 3.6.1. 啟用Routing功能
 
-![enable routing](images/img-13.png)
+![Enable routing](images/img-13.png)
 
 !!! info "啟用Routing"
     此設備就可以擔任路由器功能，做為其他設備的閘道時，可依據路由表路由封包至外部閘道
@@ -202,17 +220,21 @@ draft: false
 !!! info "不啟用Routing"
     此設備僅具有交換器功能，做為其他設備的閘道時，不會依據路由表路由封包至外部閘道，但自己本身的封包仍可依據路由表路由至外部，故若單純只是要可以在不同網段管理此台設備的話並不需要啟用Routing
 
+<div class="page-break"/>
+
 #### 3.6.2. VLAN IP設定
 
-![vlan ip setting-1](images/img-14.png)
+![Vlan ip setting](images/img-14.png)
 
-![vlan ip setting-2](images/img-15.png)
+![Vlan ip setting](images/img-15.png)
+
+<div class="page-break"/>
 
 #### 3.6.3. 設定預設閘道
 
-![add default gateway-1](images/img-16.png)
+![Add default gateway](images/img-16.png)
 
-![add default gateway-2](images/img-17.png)
+![Add default gateway](images/img-17.png)
 
 <div class="page-break"/>
 
@@ -220,13 +242,17 @@ draft: false
 
 #### 3.7.1. Global Configuration
 
-![link aggregation global configuration](images/img-18.png)
+![Link aggregation global configuration](images/img-18.png)
+
+<div class="page-break"/>
 
 #### 3.7.2. 新增Interface至Link Aggregation Group內
 
 原有Interface上的VLAN相關設定將會無效，會以TRK介面設定為主，故可至[VLAN Membership](#353-設定vlan-membership)設定TRK介面VLAN
 
 ![alt text](images/img-19.png)
+
+<div class="page-break"/>
 
 ![alt text](images/img-20.png)
 
@@ -250,8 +276,12 @@ draft: false
 
 ![upgrade](images/img-26.png)
 
+<div class="page-break"/>
+
 ![upgrade](images/img-27.png)
 
 ![upgrade](images/img-28.png)
+
+<div class="page-break"/>
 
 ![upgrade](images/img-29.png)

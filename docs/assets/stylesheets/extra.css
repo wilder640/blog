@@ -149,7 +149,7 @@ body[data-md-color-scheme="slate"] {
 }
 
 .md-typeset img {
-    max-height: 600px;
+    max-width: 100%;
 }
 
 /* table */
@@ -164,6 +164,7 @@ body[data-md-color-scheme="slate"] {
 
 .md-typeset__table {
     font-size: 0.95em;
+    width: 100%;
     display: table;
 }
 
