@@ -57,8 +57,6 @@ draft: false
 
 ![XML API除Export外其餘均禁止](images/img-4.png)
 
-<div class="page-break"/>
-
 ![不賦予Command Line權限](images/img-5.png)
 
 ![禁止使用REST API所有功能](images/img-6.png)
@@ -105,7 +103,6 @@ https://<firewall-ip>/api/?type=keygen&user=<username>&password=<password>
 ```
 
 為達到可自動依日期儲存及紀錄錯誤可拓展為以下Batch Script，此部分可以需求自行修改存檔命名方式及檢查邏輯並將此Batch Script放置於要執行備份的電腦內
-
 
 ``` batch linenums="1" title="backup.bat"
 @echo off
@@ -161,8 +158,6 @@ if %errorlevel% neq 0 (
 
 ![建立工作排程](images/img-11.png)
 
-<div class="page-break"/>
-
 ![建立工作排程](images/img-12.png)
 
 ![建立工作排程](images/img-13.png)
@@ -180,3 +175,9 @@ if %errorlevel% neq 0 (
 ![測試執行情形](images/img-17.png)
 
 ![測試執行情形](images/img-18.png)
+
+<div class="page-break"/>
+
+<h2 class="no-print">參考資料</h2>
+
+- [How To Backup of Config Files Periodically without Panorama](https://knowledgebase.paloaltonetworks.com/KCSArticleDetail?id=kA10g000000Cm7yCAC){:target="_blank" class="no-print"}
