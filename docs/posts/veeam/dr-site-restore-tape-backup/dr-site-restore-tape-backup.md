@@ -11,7 +11,7 @@ tags:
     - DR
 comments: true
 banner: img.png
-draft: true
+draft: false
 ---
 
 <h2>目錄</h2>
