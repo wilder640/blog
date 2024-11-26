@@ -78,7 +78,7 @@ plugins:
       enabled: true
       tags_file: tags.md
   - caption:
-      enabled: false # 圖片或表格貼加標題
+      enabled: true # 圖片或表格貼加標題
 
 # Markdown Extensions
 markdown_extensions:
