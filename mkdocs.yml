@@ -73,7 +73,7 @@ plugins:
       caption_position: bottom
       background: white
       shadow: true
-      manual: !ENV [CI, false]
+      manual: false
   - tags: # 啟用tag功能
       enabled: true
       tags_file: tags.md
