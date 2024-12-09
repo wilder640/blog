@@ -31,11 +31,16 @@
     "markdownlint.config": {
       "MD033": {
         "allowed_elements": ["div","h2","br"]
-      }
+      },
+      "MD007":  {
+        "indent": 4
+      },
     },
     // 針對MD033- inline HTML檢查規則關閉不需檢查的元素
+    // 關閉MD007 List縮排檢查
     "[markdown]": {
       "editor.wordWrap": "off",
       // 關閉編輯器自動換行功能
-    }
+    },
+    "markdown.extension.list.indentationSize": "inherit", //設定markdown extension list的間隔方式
 }

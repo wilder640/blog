@@ -102,7 +102,7 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - toc:
       permalink: "#" # 於標題右側新增錨點符號
-      toc_depth: 3 # 標題僅顯示幾層
+      toc_depth: 4 # 標題僅顯示幾層
       slugify: !!python/object/apply:pymdownx.slugs.slugify #轉換slug為HTML相容的文字，沒有設定的話toc產生的連結會無法顯示
         kwds:
           case: lower
