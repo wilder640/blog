@@ -1,7 +1,7 @@
 ---
 title: Paloalto防火牆Active-Passive HA設定方式
 description: Paloalto High Availability有兩種方式，一種是Active-Active，另一種方式是Active-Passive，本篇僅紀錄Active-Passive設定方式
-date: 2024-12-05
+date: 2024-12-24
 comment: true
 categories:
     - Paloalto
