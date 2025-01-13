@@ -8,6 +8,9 @@ site_description: 紀錄工作上各種疑難雜症
 theme:
   name: material # 使用material佈景主題
   language: zh-TW # 語系設定為繁體中文-台灣
+  font: # 設定字體
+    text:  Noto Sans TC
+    code: Roboto Mono
   palette: # 定義主題色彩
     - scheme: default
       primary: indigo

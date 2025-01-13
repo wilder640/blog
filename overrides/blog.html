@@ -62,16 +62,7 @@
             }
         }
         .md-typeset .post .post-description {
-            margin: 0 1rem 0 0;
-        }
-        .md-typeset .post .post-extra {
-            margin: 0.5rem 1rem 0 0;
-            font-size: small;
-            color: darkgray;
-        }
-        .md-typeset .post .post-tags {
-            margin: 0;
-            text-align: end;
+            margin: 0 1rem 1rem 0;
         }
         .md-typeset .post {
             margin: 0;
@@ -181,28 +172,7 @@
                                     {{ post.meta.description | truncate(200) }}
                                 {% endif %}
                             </p>
-                            <div class="post-extra row">
-                                <div class="col"></div>
-                                <div class="col">
-                                    {% if post.meta and post.meta.tags %}
-                                        <p class="post-tags">
-                                            {% for tag in post.meta.tags %}
-                                            <a class="tag" href="{{ config.site_url }}tags/#{{tag}}">
-                                                <span class="tag-name" style="color:{{ color( loop.index%12) }};">
-                                                    &nbsp; #{{ tag }}
-                                                </span>
-                                            </a>
-                                            {% endfor %}
-                                        </p>
-                                    {% endif %}
-                                </div>
-                            </div>
                         </div>
-                        {% if post_image %}
-                            <a class="glightbox" href='{{ post_image }}' data-type="image" data-width="auto" data-height="auto" data-desc-position="bottom">
-                                <img class="post-banner " src='{{ post_image }}' />
-                            </a>
-                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
