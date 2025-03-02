@@ -8,6 +8,7 @@ categories:
 tags:
     - Paloalto
     - Firewall
+    - Basic Operations
 comments: true
 banner: img.png
 draft: false

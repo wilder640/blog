@@ -35,9 +35,11 @@
       "MD007":  {
         "indent": 4
       },
+      "MD036":false,
     },
     // 針對MD033- inline HTML檢查規則關閉不需檢查的元素
-    // 關閉MD007 List縮排檢查
+    // MD007 List縮排為4個字元
+    // MD036關閉檢查是否使用加粗或斜體代體標題
     "[markdown]": {
       "editor.wordWrap": "off",
       // 關閉編輯器自動換行功能

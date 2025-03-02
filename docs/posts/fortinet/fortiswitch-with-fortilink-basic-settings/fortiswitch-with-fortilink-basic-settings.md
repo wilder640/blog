@@ -914,4 +914,4 @@ config switch-controller managed-switch
 
 <h2 class="no-print">參考資料</h2>
 
-- [FortiLink Guide 7.2.9](https://docs.fortinet.com/document/fortiswitch/7.2.9/fortilink-guide/950458/what-s-new-in-fortios-7-2-9)
+- [FortiLink Guide 7.2.9](https://docs.fortinet.com/document/fortiswitch/7.2.9/fortilink-guide/950458/what-s-new-in-fortios-7-2-9){:target="_blank"}

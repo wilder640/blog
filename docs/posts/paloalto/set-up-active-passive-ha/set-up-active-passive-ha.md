@@ -53,6 +53,7 @@ draft: false
 | FW2  | E1/8 | 192.168.255.2/24  |
 
 <div class="page-break"/>
+
 ## 2. HA Communications
 
 Active-Passive HA溝通共需要以下兩種類型的Link，每種類型的Link都可以額外指定Backup Link用於主要Link故障時使用，因為HA1故障會造成Failover故建議一定要設定Backup Link，HA2故障並不會造成Failover故可以不設定Backup Link
