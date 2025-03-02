@@ -1,4 +1,4 @@
-mkdocs-material # mkdocs佈景主題套件
+mkdocs-material==9.5.49 # mkdocs佈景主題套件
 jieba # 中文分詞套件，用於搜尋
 mkdocs-git-revision-date-localized-plugin # 用以顯示git commit日期
 mkdocs-glightbox # 可以點擊圖片並以燈箱方式放大圖片
