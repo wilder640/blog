@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /blog/tags/
+Disallow: /blog/archive/
+Disallow: /blog/category/
