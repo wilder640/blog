@@ -14,6 +14,19 @@ body[data-md-color-scheme="slate"] {
     --color: CornflowerBlue;
 }
 
+/* 主題：Default */
+body[data-md-color-scheme="default"] [class^="markmap"] div {
+    color: black;
+    font-weight: bold;
+  }
+  
+  /* 主題：Slate (暗色主題) */
+  body[data-md-color-scheme="slate"] [class^="markmap"] div {
+    color: white;
+    font-weight: bold;
+  }
+  
+
 /* logo 
 .md-logo {
     color: orangered;

@@ -82,6 +82,7 @@ plugins:
       tags_file: tags.md
   - caption:
       enabled: true # 圖片或表格貼加標題
+  - markmap
 
 # Markdown Extensions
 markdown_extensions:

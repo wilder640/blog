@@ -81,7 +81,7 @@ draft: false
     - Nutanix Controller VM（CVM）。
 - Nutanix每個Cluster需要2個IP Address
     - Cluster Virtual IP：提供單一IP Address來與 CVM提供的各項服務進行溝通，主要用於 Nutanix Prism Element、API、{==Nutanix Guest Tools==}、Nutanix Objects等。
-    - iSCSI Data Services IP：提供單一IP Address來提供ISCSI儲存功能，如Nutanix Volumes、Objects、Files等均會使用此IP。
+    - iSCSI Data Services IP：提供單一IP Address來提供ISCSI儲存功能，如Nutanix Volumes、Objects、Files、{==Prism Central==}等均會使用此IP。
 - 若有使用以下服務，每個服務也都需要一個IP Address
     - Prism Centeral：多叢集管理及其他Nutanix應用等。
     - Move：跨虛擬化平台的遷移工具。
@@ -90,6 +90,8 @@ draft: false
 !!! warning
     - {==CVM IP、Hypervisor IP、Virtual IP、iSCSI Data Services IP需位於同一個網段中==}。建議除了這些服務以外的任何系統均不得位於該網路中。
     - {==CVM和Hypervisor網段不可以是192.168.5.X==}，因為此網段為CVM和Hypervisor內部溝通使用
+    - Move不可以使用172.17.0.1網段
+    - Prism Central避免使用10.100.0.0/16、10.200.32.0/24網段，因為此為Prism Central微服務預設網段，若需使用可以開CASE請Support協助。
 
 <div class="page-break"/>
 
@@ -749,7 +751,7 @@ Table: Storage
 | 名稱              | 功能                      | 用途                                 | 存取方式        |
 | ----------------- | ------------------------- | ------------------------------------ | --------------- |
 | Storage Pool      | 統一管理所有磁碟資源      | Nutanix 叢集內的基礎存儲池           | 內部自動管理    |
-| Storage Container | 存放VM Disk，管理儲存策略 | Nutanix AHV、VMware ESXi VM 使用     | 透過 NFS、vDisk |
+| Storage Container | 存放VM Disk，管理儲存策略 | Nutanix AHV、VMware ESXi VM 使用     | CIFS、NFS、vDisk |
 | Volume Group      | 提供 iSCSI LUN 給特殊應用 | Windows Failover Cluster、Oracle RAC | iSCSI           |
 
 <div class="page-break"/>

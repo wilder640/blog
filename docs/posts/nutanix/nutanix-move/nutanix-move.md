@@ -24,7 +24,16 @@ draft: true
 
 版本：5.5.2
 
-## 2. 軟體下載
+## 2. 注意事項
+
+- Move 在 Ready to Cutover 階段，會使用 VMware Snapshots 和 CBT 來複製增量快照。如果在 Data Sync 或 Ready to Cutover 階段，CBT 設定被其他軟體（如備份軟體）禁用或重置，則 Move 將無法識別變更的數據區塊，導致 VM 遷移失敗。在這種情況下，您必須放棄當前的遷移，並從頭開始重新遷移。
+若要確保備份軟體能夠與正在進行的 VM 遷移並行運行，Nutanix 建議確保備份軟體不會切換（啟用/禁用）VM 的 CBT 設定。如果備份軟體未使用 VMware Snapshots 和 CBT，則不會影響 VM 遷移或備份操作。
+另一種解決方案是 避免在正在進行的 VM 遷移時執行備份，以降低風險。
+Veeam 是一款可能影響 VM 遷移的備份軟體。如果 Veeam 設置為在備份完成後重置（禁用）CBT，並且該備份時段與 Data Sync 或 Cutover 階段重疊，則遷移將會失敗。
+
+- Windows VM 安裝並運行防毒軟體時，可能會阻止 VirtIO drivers 的安裝。
+
+## 3. 軟體下載
 
 至[Nutanix Software Download](https://portal.nutanix.com/page/downloads/list){:target="_blank"}下載
 
@@ -32,7 +41,7 @@ draft: true
 
 ![Download Move](images/img-1.png)
 
-## 3. Upload Image
+## 4. Upload Image
 
 ![Upload Image](images/img-2.png)
 
@@ -40,7 +49,7 @@ draft: true
 
 ![Upload Image](images/img-4.png)
 
-## 4. Create VM
+## 5. Create VM
 
 ![Create VM](images/img-5.png)
 
@@ -58,11 +67,11 @@ draft: true
 
 ![Create VM](images/img-12.png)
 
-## 5. 設定IP Address
+## 6. 設定IP Address
 
 ![Launch Console](images/img-13.png)
 
-帳號：nutanix，密碼：nutanix/4u
+帳號：admin，密碼：nutanix/4u
 
 ![Login](images/img-14.png)
 
@@ -70,7 +79,7 @@ draft: true
 
 ![IP Address Setting](images/img-16.png)
 
-## 6. 登入
+## 7. 登入
 
 https://move_ip
 
@@ -82,9 +91,9 @@ https://move_ip
 
 ![alt text](images/img-20.png)
 
-## 7. Migration流程
+## 8. Migration流程
 
-## 8. 上傳VDDK Library
+## 9. 上傳VDDK Library
 
 ![Upload VDDK Library](images/img-25.png)
 
@@ -96,7 +105,7 @@ https://move_ip
 
 ![Upload VDDK Library](images/img-28.png)
 
-### 8.1. 新增Enviroments
+### 9.1. 新增Enviroments
 
 ![alt text](images/img-21.png)
 
@@ -106,7 +115,7 @@ https://move_ip
 
 ![alt text](images/img-24.png)
 
-## 9. 建立migration plan
+## 10. 建立migration plan
 
 ![alt text](images/img-29.png)
 
@@ -127,3 +136,9 @@ https://move_ip
 ![alt text](images/img-37.png)
 
 ![alt text](images/img-38.png)
+
+![alt text](images/img-39.png)
+
+![alt text](images/img-40.png)
+
+![alt text](images/img-41.png)
