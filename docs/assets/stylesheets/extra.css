@@ -163,7 +163,7 @@ body[data-md-color-scheme="default"] [class^="markmap"] div {
 
 .md-typeset img {
     max-width: 100%;
-    max-height: 50vh;
+    max-height: 80vh;
 }
 
 /* table */
