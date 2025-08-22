@@ -10,7 +10,7 @@ tags:
     - OSPF
 comments: true
 banner: img.png
-draft: false
+draft: true
 ---
 
 <h2>目錄</h2>
@@ -19,7 +19,7 @@ draft: false
 - [2. OSPF 運作流程](#2-ospf-運作流程)
 - [3. 鄰居與鄰接狀態](#3-鄰居與鄰接狀態)
     - [3.1. 建立鄰居關係](#31-建立鄰居關係)
-        - [3.1.1. OSPF 網路類型](#311-ospf-網路類型)
+        - [3.1.1. 網路類型](#311-網路類型)
         - [3.1.2. Broadcast/Point-to-Point/Point-to-Multipoint](#312-broadcastpoint-to-pointpoint-to-multipoint)
         - [3.1.3. NBMA](#313-nbma)
     - [3.2. 建立鄰接關係](#32-建立鄰接關係)
