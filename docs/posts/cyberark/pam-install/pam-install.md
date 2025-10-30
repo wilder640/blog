@@ -16,7 +16,7 @@ draft: true
 
 - [1. 環境說明](#1-環境說明)
 - [2. 架構](#2-架構)
-- [3. 元件最低需求](#3-元件最低需求)
+- [3. 硬體規格建議](#3-硬體規格建議)
 - [4. 軟體需求](#4-軟體需求)
   - [4.1. Digital Vault](#41-digital-vault)
   - [4.2. Password Vault Web Access (PVWA)](#42-password-vault-web-access-pvwa)
@@ -55,8 +55,8 @@ draft: true
 
 ## 1. 環境說明
 
-- PAM版本： 14.2
-- Windows版本：Windows Server 2019 Standard English Version
+- PAM版本： 14.6
+- Windows版本：Windows Server 2022 Standard English Version
 
 <div class="page-break"/>
 
@@ -70,7 +70,9 @@ draft: true
 | Privileged Session Manager (PSM)  | 允許使用者透過安全的方式連線到目標系統，並自動記錄會話。它能防止特權濫用並支援即時監控                               |
 | Privileged Threat Analytics (PTA) | 用於監控和檢測特權使用的異常行為或潛在威脅，例如未經授權的登入嘗試或異常的操作模式                                   |
 
-## 3. 元件最低需求
+## 3. 硬體規格建議
+
+下方為當管理帳號數量低於 20,000 時建議的規格，可以實際情況修正。
 
 | 元件名稱                          | CPU | Memory | Disk1 | Disk2 | Disk3  |
 | --------------------------------- | --- | ------ | ----- | ----- | ------ |
@@ -78,18 +80,18 @@ draft: true
 | Password Vault Web Access (PVWA)  | 4   | 8      | 80    | 80    |        |
 | Central Policy Manager (CPM)      | 4   | 8      | 80    | 80    |        |
 | Privileged Session Manager (PSM)  | 8   | 8      | 80    | 80    |        |
-| Privileged Threat Analytics (PTA) |     |        |       |       |        |
+| Privileged Threat Analytics (PTA) | 4   | 16     | 500   |       |        |
 
 ## 4. 軟體需求
 
 ### 4.1. Digital Vault
 
-- [Microsoft Visual C++ Redistributable 2022](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2017-2019-and-2022){:target="_blank"}32-bit and 64-bit versions
+- [Microsoft Visual C++ Redistributable 2022](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2017-2019-and-2022){:target="_blank"} 32-bit and 64-bit versions
 - [.NET Framework 4.8 Runtime](https://dotnet.microsoft.com/zh-tw/download/dotnet-framework/net48){:target="_blank"}
 
 ### 4.2. Password Vault Web Access (PVWA)
 
-- [Microsoft Visual C++ Redistributable 2022](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2017-2019-and-2022){:target="_blank"}32-bit and 64-bit versions
+- [Microsoft Visual C++ Redistributable 2022](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2017-2019-and-2022){:target="_blank"} 32-bit and 64-bit versions
 - [.NET Framework 4.8 Runtime](https://dotnet.microsoft.com/zh-tw/download/dotnet-framework/net48){:target="_blank"}
 
 ### 4.3. Central Policy Manager (CPM)
@@ -110,11 +112,11 @@ draft: true
 
 ##### 5.1.1.1. 安裝.NET Framework 4.8 Runtime
 
-下載並完成[.NET Framework 4.8 Runtime](https://dotnet.microsoft.com/zh-tw/download/dotnet-framework/net48){:target="_blank"}安裝
+下載並完成[.NET Framework 4.8 Runtime](https://dotnet.microsoft.com/zh-tw/download/dotnet-framework/net48){:target="_blank"} 安裝
 
 ##### 5.1.1.2. 安裝Microsoft Visual C++ Redistributable for Visual Studio 2015-2022 32-bit and 64-bit versions
 
-下載並完成[Microsoft Visual C++ Redistributable for Visual Studio 2015-2022 32-bit and 64-bit versions](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2017-2019-and-2022){:target="_blank"}安裝
+下載並完成[Microsoft Visual C++ Redistributable for Visual Studio 2015-2022 32-bit and 64-bit versions](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2017-2019-and-2022){:target="_blank"} 安裝
 
 !!! warning
     以上兩項安裝完畢務必要重新開機
