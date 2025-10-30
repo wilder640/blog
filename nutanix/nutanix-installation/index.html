@@ -1,0 +1,2626 @@
+<!DOCTYPE html><html lang="zh-TW" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="本篇使用Nutanix NX系列硬體搭配AHV來說明Nutanix安裝設定方式">
+      
+      
+      
+        <link rel="canonical" href="https://wilder640.github.io/blog/nutanix/nutanix-installation/">
+      
+      
+        <link rel="prev" href="../../fortinet/fortiswitch-with-fortilink-basic-settings/">
+      
+      
+        <link rel="next" href="../../fortinet/fortigate-sslvpn-to-ipsecvpn/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+    <title>Nutanix安裝設定 - Wilder's IT 日誌</title>
+
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+TC:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Noto Sans TC";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+<script defer src="https://cloud.umami.is/script.js" data-website-id="53197f63-8bcf-4ee7-b1dc-3bb98354a997"></script>
+
+      
+
+    
+
+    
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Nutanix安裝設定 - Wilder's IT 日誌">
+    <meta property="og:description" content="本篇使用Nutanix NX系列硬體搭配AHV來說明Nutanix安裝設定方式">
+    <meta property="og:url" content="https://wilder640.github.io/blog/nutanix/nutanix-installation/">
+    <meta property="og:image" content="https://wilder640.github.io/blog/nutanix/nutanix-installation//images/img.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Nutanix安裝設定 - Wilder's IT 日誌">
+    <meta name="twitter:description" content="本篇使用Nutanix NX系列硬體搭配AHV來說明Nutanix安裝設定方式">
+    <meta name="twitter:image" content="https://wilder640.github.io/blog/nutanix/nutanix-installation//images/img.png">
+
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-環境說明" class="md-skip">
+          跳轉到
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="頁首">
+    <a href="../.." title="Wilder's IT 日誌" class="md-header__button md-logo" aria-label="Wilder's IT 日誌" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Wilder's IT 日誌
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Nutanix安裝設定
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="開啟深色模式" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="開啟深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo" aria-label="關閉深色模式" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="關閉深色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜尋" placeholder="搜尋" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="搜尋">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清除" aria-label="清除" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜尋引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="標籤" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../tags/" class="md-tabs__link">
+        
+  
+    
+  
+  Tags
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../archive/2025/" class="md-tabs__link">
+          
+  
+    
+  
+  時間軸
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../category/aruba/" class="md-tabs__link">
+          
+  
+    
+  
+  類別
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="導覽列" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Wilder's IT 日誌" class="md-nav__button md-logo" aria-label="Wilder's IT 日誌" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Wilder's IT 日誌
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tags/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tags
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    時間軸
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            時間軸
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../archive/2025/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2025 10月
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../archive/2024/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2024 12月
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    類別
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            類別
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/aruba/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aruba
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/extreme/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Extreme
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/fortinet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fortinet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/nutanix/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nutanix
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/paloalto/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Paloalto
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/veeam/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Veeam
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/vmware/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vmware
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../.." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+                  <span class="md-ellipsis">
+                    回到主頁
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    元數據
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"></path></svg>
+                        <time datetime="2025-02-19 00:00:00+00:00" class="md-ellipsis">2025年2月19日</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"></path></svg>
+                          <span class="md-ellipsis">
+                            於
+                            
+                              <a href="../../category/nutanix/">Nutanix</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"></path></svg>
+                          <span class="md-ellipsis">
+                            
+                              需要 14 分鐘閱讀時間
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+          </nav>
+          
+            
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-環境說明" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 環境說明
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-先期準備事項" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 先期準備事項
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. 先期準備事項">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-確認安裝所需網路資訊" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1. 確認安裝所需網路資訊
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-完成實體設備網路線路連接" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2. 完成實體設備網路線路連接
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-下載必要軟體" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3. 下載必要軟體
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-foundation安裝" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Foundation安裝
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Foundation安裝">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-介紹" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1. 介紹
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-安裝方式" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2. 安裝方式
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-部署foudation-vm" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.3. 部署Foudation VM
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-新增foudation-vm網卡可選項" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.4. 新增Foudation VM網卡（可選項）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-設定foundation-vm-ip" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.5. 設定Foundation VM IP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-上傳image" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.6. 上傳Image
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-使用foundation-gui部署" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 使用Foundation GUI部署
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-cluster初始化設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Cluster初始化設定
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-cluster基本設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Cluster基本設定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Cluster基本設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-iscsi-data-service-ip" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1. ISCSI Data Service IP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-http-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2. HTTP Proxy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-name-servers" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3. Name Servers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-ntp-servers" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.4. NTP Servers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-manage-vm-high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.5. Manage VM High Availability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-rebuild-capacity-reservation" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.6. Rebuild Capacity Reservation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-修改預設密碼" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. 修改預設密碼
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. 修改預設密碼">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-cvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1. CVM
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-ahv" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2. AHV
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-更改nutanix-nx主機ipmi-admin帳號的密碼" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3. 更改Nutanix NX主機IPMI ADMIN帳號的密碼
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-更改prism-central-nutanix帳號的密碼" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.4. 更改Prism Central nutanix帳號的密碼
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-ncc" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. NCC
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Network
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Network">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-nutanix與vmware術語比較" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.1. Nutanix與Vmware術語比較
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-virtual-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.2. Virtual Switch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-subnet" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.3. Subnet
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Storage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-default-storage-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.1. Default Storage Container
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-新增storage-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.2. 新增Storage Container
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-lcm" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. LCM
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. LCM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      11.1. Inventory
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      11.2. Updates
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-prism-central" class="md-nav__link">
+    <span class="md-ellipsis">
+      12. Prism Central
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Prism Central">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#121-安裝prism-central" class="md-nav__link">
+    <span class="md-ellipsis">
+      12.1. 安裝Prism Central
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#122-註冊prism-central" class="md-nav__link">
+    <span class="md-ellipsis">
+      12.2. 註冊Prism Central
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-其他設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      13. 其他設定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. 其他設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#131-設定cvm-vlan-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      13.1. 設定CVM VLAN Tag
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#132-設定ahv-vlan-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      13.2. 設定AHV VLAN Tag
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+<div class="cover no-print">
+    
+    <h1 class="page-title"> Nutanix安裝設定 </h1>
+    <span class="md-source-file__fact">
+        <span class="md-icon" title="最後更新">
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
+        
+        </span>
+        2025-10-30 
+        
+             |
+             
+                <span class="md-icon" title="分類">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 20H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h7a2 2 0 0 1 2 2H4v10l2.14-8h17.07l-2.28 8.5c-.23.87-1.01 1.5-1.93 1.5"></path></svg>
+                </span>
+                Nutanix
+            
+        
+    </span>
+    
+    
+        <p class="page-description">
+            本篇使用Nutanix NX系列硬體搭配AHV來說明Nutanix安裝設定方式
+        </p>
+    
+    
+    
+  
+
+<nav class="md-tags">
+  
+    
+    
+    
+      <a href="../../tags/#nutanix" class="md-tag">Nutanix</a>
+    
+  
+</nav>
+    
+    
+</div>
+<h2>目錄</h2>
+<ul>
+<li><a href="#1-%E7%92%B0%E5%A2%83%E8%AA%AA%E6%98%8E">1. 環境說明</a></li>
+<li><a href="#2-%E5%85%88%E6%9C%9F%E6%BA%96%E5%82%99%E4%BA%8B%E9%A0%85">2. 先期準備事項</a><ul>
+<li><a href="#21-%E7%A2%BA%E8%AA%8D%E5%AE%89%E8%A3%9D%E6%89%80%E9%9C%80%E7%B6%B2%E8%B7%AF%E8%B3%87%E8%A8%8A">2.1. 確認安裝所需網路資訊</a></li>
+<li><a href="#22-%E5%AE%8C%E6%88%90%E5%AF%A6%E9%AB%94%E8%A8%AD%E5%82%99%E7%B6%B2%E8%B7%AF%E7%B7%9A%E8%B7%AF%E9%80%A3%E6%8E%A5">2.2. 完成實體設備網路線路連接</a></li>
+<li><a href="#23-%E4%B8%8B%E8%BC%89%E5%BF%85%E8%A6%81%E8%BB%9F%E9%AB%94">2.3. 下載必要軟體</a></li>
+</ul>
+</li>
+<li><a href="#3-foundation%E5%AE%89%E8%A3%9D">3. Foundation安裝</a><ul>
+<li><a href="#31-%E4%BB%8B%E7%B4%B9">3.1. 介紹</a></li>
+<li><a href="#32-%E5%AE%89%E8%A3%9D%E6%96%B9%E5%BC%8F">3.2. 安裝方式</a></li>
+<li><a href="#33-%E9%83%A8%E7%BD%B2foudation-vm">3.3. 部署Foudation VM</a></li>
+<li><a href="#34-%E6%96%B0%E5%A2%9Efoudation-vm%E7%B6%B2%E5%8D%A1%E5%8F%AF%E9%81%B8%E9%A0%85">3.4. 新增Foudation VM網卡（可選項）</a></li>
+<li><a href="#35-%E8%A8%AD%E5%AE%9Afoundation-vm-ip">3.5. 設定Foundation VM IP</a></li>
+<li><a href="#36-%E4%B8%8A%E5%82%B3image">3.6. 上傳Image</a></li>
+</ul>
+</li>
+<li><a href="#4-%E4%BD%BF%E7%94%A8foundation-gui%E9%83%A8%E7%BD%B2">4. 使用Foundation GUI部署</a></li>
+<li><a href="#5-cluster%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A8%AD%E5%AE%9A">5. Cluster初始化設定</a></li>
+<li><a href="#6-cluster%E5%9F%BA%E6%9C%AC%E8%A8%AD%E5%AE%9A">6. Cluster基本設定</a><ul>
+<li><a href="#61-iscsi-data-service-ip">6.1. ISCSI Data Service IP</a></li>
+<li><a href="#62-http-proxy">6.2. HTTP Proxy</a></li>
+<li><a href="#63-name-servers">6.3. Name Servers</a></li>
+<li><a href="#64-ntp-servers">6.4. NTP Servers</a></li>
+<li><a href="#65-manage-vm-high-availability">6.5. Manage VM High Availability</a></li>
+<li><a href="#66-rebuild-capacity-reservation">6.6. Rebuild Capacity Reservation</a></li>
+</ul>
+</li>
+<li><a href="#7-%E4%BF%AE%E6%94%B9%E9%A0%90%E8%A8%AD%E5%AF%86%E7%A2%BC">7. 修改預設密碼</a><ul>
+<li><a href="#71-cvm">7.1. CVM</a></li>
+<li><a href="#72-ahv">7.2. AHV</a></li>
+<li><a href="#73-%E6%9B%B4%E6%94%B9nutanix-nx%E4%B8%BB%E6%A9%9Fipmi-admin%E5%B8%B3%E8%99%9F%E7%9A%84%E5%AF%86%E7%A2%BC">7.3. 更改Nutanix NX主機IPMI ADMIN帳號的密碼</a></li>
+<li><a href="#74-%E6%9B%B4%E6%94%B9prism-central-nutanix%E5%B8%B3%E8%99%9F%E7%9A%84%E5%AF%86%E7%A2%BC">7.4. 更改Prism Central nutanix帳號的密碼</a></li>
+</ul>
+</li>
+<li><a href="#8-ncc">8. NCC</a></li>
+<li><a href="#9-network">9. Network</a><ul>
+<li><a href="#91-nutanix%E8%88%87vmware%E8%A1%93%E8%AA%9E%E6%AF%94%E8%BC%83">9.1. Nutanix與Vmware術語比較</a></li>
+<li><a href="#92-virtual-switch">9.2. Virtual Switch</a></li>
+<li><a href="#93-subnet">9.3. Subnet</a></li>
+</ul>
+</li>
+<li><a href="#10-storage">10. Storage</a><ul>
+<li><a href="#101-default-storage-container">10.1. Default Storage Container</a></li>
+<li><a href="#102-%E6%96%B0%E5%A2%9Estorage-container">10.2. 新增Storage Container</a></li>
+</ul>
+</li>
+<li><a href="#11-lcm">11. LCM</a><ul>
+<li><a href="#111-inventory">11.1. Inventory</a></li>
+<li><a href="#112-updates">11.2. Updates</a></li>
+</ul>
+</li>
+<li><a href="#12-prism-central">12. Prism Central</a><ul>
+<li><a href="#121-%E5%AE%89%E8%A3%9Dprism-central">12.1. 安裝Prism Central</a></li>
+<li><a href="#122-%E8%A8%BB%E5%86%8Aprism-central">12.2. 註冊Prism Central</a></li>
+</ul>
+</li>
+<li><a href="#13-%E5%85%B6%E4%BB%96%E8%A8%AD%E5%AE%9A">13. 其他設定</a><ul>
+<li><a href="#131-%E8%A8%AD%E5%AE%9Acvm-vlan-tag">13.1. 設定CVM VLAN Tag</a></li>
+<li><a href="#132-%E8%A8%AD%E5%AE%9Aahv-vlan-tag">13.2. 設定AHV VLAN Tag</a></li>
+</ul>
+</li>
+</ul>
+<div class="page-break">
+<h2 id="1-環境說明">1. 環境說明<a class="headerlink" href="#1-%E7%92%B0%E5%A2%83%E8%AA%AA%E6%98%8E" title="Permanent link">#</a></h2>
+<ul>
+<li>硬體： Nutanix NX-1065-G9</li>
+<li>Foundation版本：5.7.1</li>
+<li>AOS版本：6.10.1</li>
+<li>AHV版本：20230302.103003</li>
+</ul>
+<div class="page-break">
+<h2 id="2-先期準備事項">2. 先期準備事項<a class="headerlink" href="#2-%E5%85%88%E6%9C%9F%E6%BA%96%E5%82%99%E4%BA%8B%E9%A0%85" title="Permanent link">#</a></h2>
+<h3 id="21-確認安裝所需網路資訊">2.1. 確認安裝所需網路資訊<a class="headerlink" href="#21-%E7%A2%BA%E8%AA%8D%E5%AE%89%E8%A3%9D%E6%89%80%E9%9C%80%E7%B6%B2%E8%B7%AF%E8%B3%87%E8%A8%8A" title="Permanent link">#</a></h3>
+<p>完成Table 1 - 3 網路資訊填寫，相關服務資訊及注意事項如下：</p>
+<ul>
+<li>Nutanix每個Node均需要3個 IP Address<ul>
+<li>IPMI。</li>
+<li>Hypervisor Host。</li>
+<li>Nutanix Controller VM（CVM）。</li>
+</ul>
+</li>
+<li>Nutanix每個Cluster需要2個IP Address<ul>
+<li>Cluster Virtual IP：提供單一IP Address來與 CVM提供的各項服務進行溝通，主要用於 Nutanix Prism Element、API、<mark class="critic">Nutanix Guest Tools</mark>、Nutanix Objects等。</li>
+<li>iSCSI Data Services IP：提供單一IP Address來提供ISCSI儲存功能，如Nutanix Volumes、Objects、Files、<mark class="critic">Prism Central</mark>等均會使用此IP。</li>
+</ul>
+</li>
+<li>若有使用以下服務，每個服務也都需要一個IP Address<ul>
+<li>Prism Centeral：多叢集管理及其他Nutanix應用等。</li>
+<li>Move：跨虛擬化平台的遷移工具。</li>
+</ul>
+</li>
+<li>Nutanix Cluster必需的IP數量為 Node數量 X 3（IPMI、Hypervisor Host、CVM）+ Cluster Virtual IP + iSCSI Data Services IP 。</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul>
+<li><mark class="critic">CVM IP、Hypervisor IP、Virtual IP、iSCSI Data Services IP需位於同一個網段中</mark>。建議除了這些服務以外的任何系統均不得位於該網路中。</li>
+<li><mark class="critic">CVM和Hypervisor網段不可以是192.168.5.X</mark>，因為此網段為CVM和Hypervisor內部溝通使用</li>
+<li>Move不可以使用172.17.0.1網段</li>
+<li>Prism Central避免使用10.100.0.0/16、10.200.32.0/24網段，因為此為Prism Central微服務預設網段，若需使用可以開CASE請Support協助。</li>
+</ul>
+</div>
+<div class="page-break">
+<table id="_table-1">
+<caption style="caption-side:bottom">Table 1: IP Addresses Per Node</caption><thead>
+<tr>
+<th style="text-align: center;">Node</th>
+<th style="text-align: center;">Service</th>
+<th style="text-align: center;">IP Address</th>
+<th style="text-align: center;">Username</th>
+<th style="text-align: center;">Default Password</th>
+<th style="text-align: center;">New Password</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Node 1</td>
+<td style="text-align: center;">IPMI</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+<td style="text-align: center;">ADMIN</td>
+<td style="text-align: center;">主機板序號</td>
+<td style="text-align: center;">(Provide the new password)</td>
+</tr>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Hypervisor</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+<td style="text-align: center;">root</td>
+<td style="text-align: center;">nutanix/4u</td>
+<td style="text-align: center;">(Provide the new password)</td>
+</tr>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">CVM</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+<td style="text-align: center;">nutanix</td>
+<td style="text-align: center;">nutanix/4u</td>
+<td style="text-align: center;">(Provide the new password)</td>
+</tr>
+<tr>
+<td style="text-align: center;">Node 2</td>
+<td style="text-align: center;">IPMI</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+<td style="text-align: center;">ADMIN</td>
+<td style="text-align: center;">主機板序號</td>
+<td style="text-align: center;">(Provide the new password)</td>
+</tr>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Hypervisor</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+<td style="text-align: center;">root</td>
+<td style="text-align: center;">nutanix/4u</td>
+<td style="text-align: center;">(Provide the new password)</td>
+</tr>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">CVM</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+<td style="text-align: center;">nutanix</td>
+<td style="text-align: center;">nutanix/4u</td>
+<td style="text-align: center;">(Provide the new password)</td>
+</tr>
+<tr>
+<td style="text-align: center;">Node 3</td>
+<td style="text-align: center;">IPMI</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+<td style="text-align: center;">ADMIN</td>
+<td style="text-align: center;">主機板序號</td>
+<td style="text-align: center;">(Provide the new password)</td>
+</tr>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Hypervisor</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+<td style="text-align: center;">root</td>
+<td style="text-align: center;">nutanix/4u</td>
+<td style="text-align: center;">(Provide the new password)</td>
+</tr>
+<tr>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">CVM</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+<td style="text-align: center;">nutanix</td>
+<td style="text-align: center;">nutanix/4u</td>
+<td style="text-align: center;">(Provide the new password)</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<table id="_table-2">
+<caption style="caption-side:bottom">Table 2: Cluster Information</caption><thead>
+<tr>
+<th style="text-align: center;">Service</th>
+<th style="text-align: center;">IP Address</th>
+<th style="text-align: center;">Username</th>
+<th style="text-align: center;">Default Password</th>
+<th style="text-align: center;">New Password</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Cluster IP</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+<td style="text-align: center;">admin</td>
+<td style="text-align: center;">nutanix/4u</td>
+<td style="text-align: center;">(Provide the new password)</td>
+</tr>
+<tr>
+<td style="text-align: center;">Prism Central(Web)</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+<td style="text-align: center;">admin</td>
+<td style="text-align: center;">Nutanix/4u</td>
+<td style="text-align: center;">(Provide the new password)</td>
+</tr>
+<tr>
+<td style="text-align: center;">Prism Central(SSH)</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">nutanix</td>
+<td style="text-align: center;">nutanix/4u</td>
+<td style="text-align: center;">(Provide the new password)</td>
+</tr>
+<tr>
+<td style="text-align: center;">iSCSI Data Service</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">-</td>
+</tr>
+<tr>
+<td style="text-align: center;">Move</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+<td style="text-align: center;">nutanix</td>
+<td style="text-align: center;">nutanix/4u</td>
+<td style="text-align: center;">(Provide the new password)</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<table id="_table-3">
+<caption style="caption-side:bottom">Table 3: Network Information</caption><thead>
+<tr>
+<th style="text-align: center;">Parameter</th>
+<th style="text-align: center;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">NTP Server</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+</tr>
+<tr>
+<td style="text-align: center;">DNS Server</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+</tr>
+<tr>
+<td style="text-align: center;">IPMI Default Gateway</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+</tr>
+<tr>
+<td style="text-align: center;">IPMI Subnet Mask</td>
+<td style="text-align: center;">(Provide the Netmask)</td>
+</tr>
+<tr>
+<td style="text-align: center;">IPMI VLAN Tag (Optional)</td>
+<td style="text-align: center;">(Provide the VLAN Tag)</td>
+</tr>
+<tr>
+<td style="text-align: center;">CVM/Hypervisor Default Gateway</td>
+<td style="text-align: center;">(Provide the IP address)</td>
+</tr>
+<tr>
+<td style="text-align: center;">CVM/Hypervisor Subnet Mask</td>
+<td style="text-align: center;">(Provide the Netmask)</td>
+</tr>
+<tr>
+<td style="text-align: center;">CVM/Hypervisor VLAN Tag (Optional)</td>
+<td style="text-align: center;">(Provide the VLAN Tag)</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h3 id="22-完成實體設備網路線路連接">2.2. 完成實體設備網路線路連接<a class="headerlink" href="#22-%E5%AE%8C%E6%88%90%E5%AF%A6%E9%AB%94%E8%A8%AD%E5%82%99%E7%B6%B2%E8%B7%AF%E7%B7%9A%E8%B7%AF%E9%80%A3%E6%8E%A5" title="Permanent link">#</a></h3>
+<ul>
+<li>建議可以使用非網管型交換器實施部署以避免交換器設定問題。</li>
+<li>實體設備在初始化部署時建議每個Node最少需接兩條線，第一條是IPMI，第二條是Data Port。</li>
+<li>Nutanix NX系列硬體Port 1通常是Shared IPMI Port，也就是可以同時跑IPMI及Data，但是盡量避免使用此Port作為IPMI，若要使用此Port當作IPMI Port則Switch要支援自動協商100 Mbps速率，因為在關機狀態下此Port僅會以100 Mbps速率運行。</li>
+<li>建議部署時CVM/Hypervisor及IPMI的VLAN為untagged VLAN以降低錯誤配置衍生的問題或查找問題的困難度。</li>
+<li>建議部署時先暫時不設定LACP以降低錯誤配置衍生的問題或查找問題的困難度。</li>
+</ul>
+<p></p><figure id="_figure-1"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-86.png"><img alt="NX-1065-G9" src="images/img-86.png"></a><figcaption>Figure 1: NX-1065-G9</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="23-下載必要軟體">2.3. 下載必要軟體<a class="headerlink" href="#23-%E4%B8%8B%E8%BC%89%E5%BF%85%E8%A6%81%E8%BB%9F%E9%AB%94" title="Permanent link">#</a></h3>
+<ul>
+<li>AOS(Acropolis Operating System)：此為Nutanix Controller VM所使用的作業系統。</li>
+<li>Hypervisor：除AHV的其餘Hypervisor ISO需至各官網自行下載，AOS6.8之前有內建AHV ISO不需要額外下載。</li>
+<li>Foudation：Nutanix 的官方部署軟體。</li>
+<li>VirtIO：AHV環境中的虛擬驅動程式（Virtual Input/Output Driver），主要用於提升AHV上虛擬機的效能與相容性。</li>
+<li>AOS、AHV、Foudation、VirtIO均可以至<a href="https://portal.nutanix.com/page/downloads/list" target="_blank">Nutanix下載頁面</a>下載</li>
+</ul>
+<div class="page-break">
+<p></p><figure id="_figure-2"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-38.png"><img alt="Download Foudation" src="images/img-38.png"></a><figcaption>Figure 2: Download Foudation</figcaption></figure><p></p>
+<p></p><figure id="_figure-3"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-1.png"><img alt="Download Foundation" src="images/img-1.png"></a><figcaption>Figure 3: Download Foundation</figcaption></figure><p></p>
+<div class="page-break">
+<p></p><figure id="_figure-4"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-2.png"><img alt="Download AOS" src="images/img-2.png"></a><figcaption>Figure 4: Download AOS</figcaption></figure><p></p>
+<p></p><figure id="_figure-5"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-3.png"><img alt="Download AOS" src="images/img-3.png"></a><figcaption>Figure 5: Download AOS</figcaption></figure><p></p>
+<div class="page-break">
+<p></p><figure id="_figure-6"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-39.png"><img alt="Download AHV" src="images/img-39.png"></a><figcaption>Figure 6: Download AHV</figcaption></figure><p></p>
+<p></p><figure id="_figure-7"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-40.png"><img alt="Download AHV" src="images/img-40.png"></a><figcaption>Figure 7: Download AHV</figcaption></figure><p></p>
+<div class="page-break">
+<p></p><figure id="_figure-8"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-45.png"><img alt="Download VirtIO" src="images/img-45.png"></a><figcaption>Figure 8: Download VirtIO</figcaption></figure><p></p>
+<p></p><figure id="_figure-9"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-46.png"><img alt="Download VirtIO" src="images/img-46.png"></a><figcaption>Figure 9: Download VirtIO</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="3-foundation安裝">3. Foundation安裝<a class="headerlink" href="#3-foundation%E5%AE%89%E8%A3%9D" title="Permanent link">#</a></h2>
+<h3 id="31-介紹">3.1. 介紹<a class="headerlink" href="#31-%E4%BB%8B%E7%B4%B9" title="Permanent link">#</a></h3>
+<ul>
+<li>Foundation 是 Nutanix 的官方部署軟體。Foundation 允許您配置pre-imaged node，或部署Hypervisor及AOS。</li>
+<li>Hypervisor及AOS支援列表可查看<a href="https://portal.nutanix.com/page/documents/compatibility-interoperability-matrix" target="_blank">Compatibility and Interoperability Matrix</a></li>
+</ul>
+<div class="page-break">
+<h3 id="32-安裝方式">3.2. 安裝方式<a class="headerlink" href="#32-%E5%AE%89%E8%A3%9D%E6%96%B9%E5%BC%8F" title="Permanent link">#</a></h3>
+<ul>
+<li>Node有區分兩種狀態：<ul>
+<li>裸機：無預先安裝好Hypervisor及AOS或DiscoveryOS的Node</li>
+<li>Pre-imaged Node：已有預先安裝好Hypervisor及AOS或DiscoveryOS的Node</li>
+</ul>
+</li>
+<li>Foundation軟體可以區分三種安裝方式，詳述如Table 4，<mark class="critic">建議以Standalone Foundation VM方式安裝，因為此方式較無限制</mark>，本篇安裝說明皆以此方式為主</li>
+</ul>
+<table id="_table-4">
+<caption style="caption-side:bottom">Table 4: Foundation Installation Method</caption><thead>
+<tr>
+<th>項目</th>
+<th>CVM Foundation</th>
+<th>Foundation for Windows/macOS</th>
+<th>Standalone Foundation VM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>摘要</strong></td>
+<td>最受限制的 Foundation 形式。僅用於其他兩種選項都無法使用時。</td>
+<td>最簡單的 Foundation 形式。</td>
+<td>最完整的 Foundation 形式。</td>
+</tr>
+<tr>
+<td><strong>限制</strong></td>
+<td>無法進行裸機映像。</td>
+<td>裸機映像僅限於特定硬體平台。</td>
+<td>無限制。</td>
+</tr>
+<tr>
+<td><strong>硬體</strong></td>
+<td>任何硬體皆可，但無法進行裸機映像。</td>
+<td>- 非裸機映像：任何硬體皆可（但不包含 Cisco UCS）。<br>- 裸機映像僅支援：Nutanix、Dell、HPE</td>
+<td>任何硬體皆可。</td>
+</tr>
+<tr>
+<td><strong>IPv6 被禁用時</strong></td>
+<td>無法映像Node。</td>
+<td>Node需具備 IPMI IPv4。</td>
+<td>Node需具備 IPMI IPv4。</td>
+</tr>
+<tr>
+<td><strong>使用方式</strong></td>
+<td>透過網址 http://CVM_IP:8000/ 存取。</td>
+<td>執行適用於 Windows 10+ 或 macOS 10.13.1+ 的執行檔。</td>
+<td>作為虛擬機部署於 VirtualBox、Fusion、Workstation、AHV、ESX 等環境中。</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h3 id="33-部署foudation-vm">3.3. 部署Foudation VM<a class="headerlink" href="#33-%E9%83%A8%E7%BD%B2foudation-vm" title="Permanent link">#</a></h3>
+<p>依照使用的虛擬化軟體進行OVF部署，以下範例為Vmware ESXI方式</p>
+<p></p><figure id="_figure-10"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-4.png"><img alt="Deploy OVF" src="images/img-4.png"></a><figcaption>Figure 10: Deploy OVF</figcaption></figure><p></p>
+<p></p><figure id="_figure-11"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-5.png"><img alt="Deploy OVF" src="images/img-5.png"></a><figcaption>Figure 11: Deploy OVF</figcaption></figure><p></p>
+<p></p><figure id="_figure-12"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-6.png"><img alt="Deploy OVF" src="images/img-6.png"></a><figcaption>Figure 12: Deploy OVF</figcaption></figure><p></p>
+<p></p><figure id="_figure-13"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-7.png"><img alt="Deploy OVF" src="images/img-7.png"></a><figcaption>Figure 13: Deploy OVF</figcaption></figure><p></p>
+<p></p><figure id="_figure-14"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-8.png"><img alt="Deploy OVF" src="images/img-8.png"></a><figcaption>Figure 14: Deploy OVF</figcaption></figure><p></p>
+<p></p><figure id="_figure-15"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-9.png"><img alt="Deploy OVF" src="images/img-9.png"></a><figcaption>Figure 15: Deploy OVF</figcaption></figure><p></p>
+<p></p><figure id="_figure-16"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-10.png"><img alt="Deploy OVF" src="images/img-10.png"></a><figcaption>Figure 16: Deploy OVF</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="34-新增foudation-vm網卡可選項">3.4. 新增Foudation VM網卡（可選項）<a class="headerlink" href="#34-%E6%96%B0%E5%A2%9Efoudation-vm%E7%B6%B2%E5%8D%A1%E5%8F%AF%E9%81%B8%E9%A0%85" title="Permanent link">#</a></h3>
+<p>僅有當IPMI使用的VLAN與Hypervisor及AOS使用的VLAN不同時才需新增</p>
+<p></p><figure id="_figure-17"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-41.png"><img alt="Add Network Adapter" src="images/img-41.png"></a><figcaption>Figure 17: Add Network Adapter</figcaption></figure><p></p>
+<p></p><figure id="_figure-18"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-42.png"><img alt="Add Network Adapter" src="images/img-42.png"></a><figcaption>Figure 18: Add Network Adapter</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="35-設定foundation-vm-ip">3.5. 設定Foundation VM IP<a class="headerlink" href="#35-%E8%A8%AD%E5%AE%9Afoundation-vm-ip" title="Permanent link">#</a></h3>
+<p>Foundation VM預設帳號為nutanix，密碼為nutanix/4u，登入後可使用GUI或CLI設定IP Address，以下為GUI方式</p>
+<p></p><figure id="_figure-19"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-11.png"><img alt="Edit Network Connections" src="images/img-11.png"></a><figcaption>Figure 19: Edit Network Connections</figcaption></figure><p></p>
+<p></p><figure id="_figure-20"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-12.png"><img alt="Edit Network Connections" src="images/img-12.png"></a><figcaption>Figure 20: Edit Network Connections</figcaption></figure><p></p>
+<p></p><figure id="_figure-21"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-13.png"><img alt="Setting IP Address" src="images/img-13.png"></a><figcaption>Figure 21: Setting IP Address</figcaption></figure><p></p>
+<p><mark class="critic">需重啟網路卡設定才會生效</mark></p>
+<p></p><figure id="_figure-22"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-14.png"><img alt="Restart Network Connection" src="images/img-14.png"></a><figcaption>Figure 22: Restart Network Connection</figcaption></figure><p></p>
+<p></p><figure id="_figure-23"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-15.png"><img alt="Restart Network Connection" src="images/img-15.png"></a><figcaption>Figure 23: Restart Network Connection</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="36-上傳image">3.6. 上傳Image<a class="headerlink" href="#36-%E4%B8%8A%E5%82%B3image" title="Permanent link">#</a></h3>
+<p>使用SCP軟體將以下Image上傳至Foudation VM，若未先上傳，也可以於後續部署步驟透過導引程序上傳</p>
+<ul>
+<li>AOS Image：/home/nutanix/foundation/nos 目錄</li>
+<li>Hypervisor Image（依所要安裝的Hypervisor上傳）：<ul>
+<li>AHV Image：/home/nutanix/foundation/isos/hypervisor/kvm 目錄</li>
+<li>ESXi Image：/home/nutanix/foundation/isos/hypervisor/esx 目錄</li>
+</ul>
+</li>
+</ul>
+<p></p><figure id="_figure-24"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-16.png"><img alt="Upload AOS Image" src="images/img-16.png"></a><figcaption>Figure 24: Upload AOS Image</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="4-使用foundation-gui部署">4. 使用Foundation GUI部署<a class="headerlink" href="#4-%E4%BD%BF%E7%94%A8foundation-gui%E9%83%A8%E7%BD%B2" title="Permanent link">#</a></h2>
+<p>可以於VM內點擊Nutanix Foudation圖示或直接連線http://[Foundation_IP]:8000</p>
+<p></p><figure id="_figure-25"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-43.png"><img alt="Start" src="images/img-43.png"></a><figcaption>Figure 25: Start</figcaption></figure><p></p>
+<div class="page-break">
+<p></p><figure id="_figure-26"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-17.png"><img alt="Start" src="images/img-17.png"></a><figcaption>Figure 26: Start</figcaption></figure><p></p>
+<table id="_table-5">
+<caption style="caption-side:bottom">Table 5: Start</caption><thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>選擇部署的硬體平台。選擇<mark class="critic">Autodetect</mark>即可。</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>是否啟用RDMA passthrough CVM功能。大多數情況下選擇<mark class="critic">No</mark>即可。Nutanix Node 之間的 Storage Replication 網路流量是走標準的 TCP/IP。若需要 High-Performance 和 Low-Latency 時，Nutanix 支援採用 RDMA 技術繞過 TCP/IP Stack，但需要指定的網卡。</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>Node和交換機之間是否使用LACP。大多數情況下選擇<mark class="critic">None</mark>即可。若有需求可於完成部署後再設定。</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>設定CVM/Host的VLAN Tag。若連接的交換器為access port（untagged port）則<mark class="critic">不需填寫</mark>。</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<p></p><figure id="_figure-27"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-18.png"><img alt="Start" src="images/img-18.png"></a><figcaption>Figure 27: Start</figcaption></figure><p></p>
+<table id="_table-6">
+<caption style="caption-side:bottom">Table 6: Start</caption><thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>Host/CVM網路子網遮罩和閘道。</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>IPMI 網路子網遮罩和閘道。</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>若Host/CVM網路及IPMI 網路為不同網段且Foudation VM沒有在這兩個網段都有IP Address，也就是需透過路由才可以到達不同網段時，需要選擇Skip</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>目前Foudation VM IP資訊，若沒有正確抓取到則可以使用Add a new IP Address新增。</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td>新增Foudation VM IP資訊</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<p>Discover Nodes需交換器未禁用IPv6且為pre-image node才可以自動偵測到，因限制較多故建議使用<mark class="critic">Add IPMI Nodes Manually</mark>即可</p>
+<p></p><figure id="_figure-28"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-19.png"><img alt="Nodes" src="images/img-19.png"></a><figcaption>Figure 28: Nodes</figcaption></figure><p></p>
+<div class="page-break">
+<p>一般使用IPMI MAC Address方式，若使用IPMI MAC Address方式有問題時，可以嘗試將Node連接螢幕鍵盤滑鼠然後登入IPMI設定IP Address後，改用IPMI IP Address方式設定</p>
+<p></p><figure id="_figure-29"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-20.png"><img alt="Nodes" src="images/img-20.png"></a><figcaption>Figure 29: Nodes</figcaption></figure><p></p>
+<table id="_table-7">
+<caption style="caption-side:bottom">Table 7: Nodes</caption><thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>Node數量。</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>若IPMI已經有設定IP Address則選擇此選項。</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>若IPMI沒有設定IP Address則選擇此選項。</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<p></p><figure id="_figure-30"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-21.png"><img alt="Nodes" src="images/img-21.png"></a><figcaption>Figure 30: Nodes</figcaption></figure><p></p>
+<table id="_table-8">
+<caption style="caption-side:bottom">Table 8: Nodes</caption><thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>Node編號 。</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>IPMI Mac Address，在Nutanix NX系列會有貼紙註明於設備後方。</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>IPMI要設定的IP Address。</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>Host（Hypervisor）要設定的IP Address。</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td>CVM要設定的IP Address。</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td>Host（Hypervisor）要設定的Hostname。</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td>Node類型。大多數情況都是選擇Hyper-converged，除非Node是特殊類型才選擇是Storage-only或Compute-only。</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<p>選擇要安裝的AOS版本，若未先使用SCP上傳則可點擊Upload New AOS Binary上傳</p>
+<p></p><figure id="_figure-31"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-22.png"><img alt="AOS/Hypervisor" src="images/img-22.png"></a><figcaption>Figure 31: AOS/Hypervisor</figcaption></figure><p></p>
+<p>設定CVM記憶體大小，依據磁碟配置及啟用的功能所需的記憶體不同，可以參考<a href="https://portal.nutanix.com/page/documents/details?targetId=Advanced-Admin-AOS:app-nutanix-cloud-infra-cvm-field-specifications-c.html" target="_blank">Controller VM (CVM) Specifications</a>，若空白則會自動計算所需的大小。</p>
+<p></p><figure id="_figure-32"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-23.png"><img alt="AOS/Hypervisor" src="images/img-23.png"></a><figcaption>Figure 32: AOS/Hypervisor</figcaption></figure><p></p>
+<div class="page-break">
+<p>選擇要安裝的Hypersior類型及版本，若未先使用SCP上傳則可點擊Upload New AHV Binary上傳</p>
+<p></p><figure id="_figure-33"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-24.png"><img alt="AOS/Hypervisor" src="images/img-24.png"></a><figcaption>Figure 33: AOS/Hypervisor</figcaption></figure><p></p>
+<p></p><figure id="_figure-34"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-44.png"><img alt="AOS/Hypervisor" src="images/img-44.png"></a><figcaption>Figure 34: AOS/Hypervisor</figcaption></figure><p></p>
+<div class="page-break">
+<p></p><figure id="_figure-35"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-25.png"><img alt="Cluster" src="images/img-25.png"></a><figcaption>Figure 35: Cluster</figcaption></figure><p></p>
+<table id="_table-9">
+<caption style="caption-side:bottom">Table 9: Cluster</caption><thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>不建立Cluster。通常不需勾選，僅在只有要初始化新增的Node並加入既有的Cluster時使用。</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>是否要將CVM的管理流量及儲存流量分開於不同網段。 選擇後CVM會自動增加一個虛擬網卡，並需額外給予另外一個網段專門給CVM之間資料抄寫使用，此部分可於部署完後再設定。</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>設定Cluster名稱。</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>設定Cluster時區。</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<p></p><figure id="_figure-36"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-26.png"><img alt="Cluster" src="images/img-26.png"></a><figcaption>Figure 36: Cluster</figcaption></figure><p></p>
+<table id="_table-10">
+<caption style="caption-side:bottom">Table 10: Cluster</caption><thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>資料份數。RF2代表資料會有兩份。</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>設定Cluster Virtual IP。</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>設定NTP Server。可於初始化完後再設定。</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>設定DNS Server。可於初始化完後再設定。</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<p>設定Cluster密碼。目前版本密碼僅會修改CVM的nutanix帳號</p>
+<p></p><figure id="_figure-37"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-27.png"><img alt="Security" src="images/img-27.png"></a><figcaption>Figure 37: Security</figcaption></figure><p></p>
+<p>Cluster Lockdown啟用的話就會關閉CVM及AHV的SSH連線。若未啟用Cluster Lockdown則要選擇是使用Public Key或密碼方式進行SSH連線</p>
+<p></p><figure id="_figure-38"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-28.png"><img alt="Security" src="images/img-28.png"></a><figcaption>Figure 38: Security</figcaption></figure><p></p>
+<div class="page-break">
+<p>輸入每個Node的IPMI帳號及密碼，2020年6月之後的Nutanix NX機種，IPMI的帳號為ADMIN（都是大寫），密碼會貼在node後面(主機板序號)，之前的機種則為ADMIN/ADMIN（都是大寫）。</p>
+<p></p><figure id="_figure-39"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-29.png"><img alt="IPMI" src="images/img-29.png"></a><figcaption>Figure 39: IPMI</figcaption></figure><p></p>
+<p>是否禁止安裝過程中Foudation VM進入睡眠模式</p>
+<p></p><figure id="_figure-40"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-30.png"><img alt="IPMI" src="images/img-30.png"></a><figcaption>Figure 40: IPMI</figcaption></figure><p></p>
+<div class="page-break">
+<p></p><figure id="_figure-41"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-31.png"><img alt="Finish" src="images/img-31.png"></a><figcaption>Figure 41: Finish</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="5-cluster初始化設定">5. Cluster初始化設定<a class="headerlink" href="#5-cluster%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<p>連線PRISM Element</p>
+<p>https://[任一個CVM IP或CVM Cluster IP]：9440</p>
+<p></p><figure id="_figure-42"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-37.png"><img alt="Connect to PRISM Element" src="images/img-37.png"></a><figcaption>Figure 42: Connect to PRISM Element</figcaption></figure><p></p>
+<p>輸入Username：admin，Password：nutanix/4u</p>
+<p></p><figure id="_figure-43"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-32.png"><img alt="Login" src="images/img-32.png"></a><figcaption>Figure 43: Login</figcaption></figure><p></p>
+<div class="page-break">
+<p>變更admin密碼</p>
+<p></p><figure id="_figure-44"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-33.png"><img alt="Change Password" src="images/img-33.png"></a><figcaption>Figure 44: Change Password</figcaption></figure><p></p>
+<p>選擇同意EULA協議</p>
+<p></p><figure id="_figure-45"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-34.png"><img alt="Accept EULA" src="images/img-34.png"></a><figcaption>Figure 45: Accept EULA</figcaption></figure><p></p>
+<div class="page-break">
+<p>啟用Pulse服務將會監控收集Cluster必要資訊並於問題發生時主動通知，建議要開啟除非是測試或環境無法對外上網時。</p>
+<p></p><figure id="_figure-46"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-35.png"><img alt="Pulse" src="images/img-35.png"></a><figcaption>Figure 46: Pulse</figcaption></figure><p></p>
+<p></p><figure id="_figure-47"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-36.png"><img alt="Finish" src="images/img-36.png"></a><figcaption>Figure 47: Finish</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="6-cluster基本設定">6. Cluster基本設定<a class="headerlink" href="#6-cluster%E5%9F%BA%E6%9C%AC%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<p><strong>點擊左上方選單 -&gt; Settings</strong></p>
+<p></p><figure id="_figure-48"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-47.png"><img alt="Settings" src="images/img-47.png"></a><figcaption>Figure 48: Settings</figcaption></figure><p></p>
+<h3 id="61-iscsi-data-service-ip">6.1. ISCSI Data Service IP<a class="headerlink" href="#61-iscsi-data-service-ip" title="Permanent link">#</a></h3>
+<p>需與CVM/Hypervisor同網段</p>
+<p></p><figure id="_figure-49"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-48.png"><img alt="ISCSI Data Service IP" src="images/img-48.png"></a><figcaption>Figure 49: ISCSI Data Service IP</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="62-http-proxy">6.2. HTTP Proxy<a class="headerlink" href="#62-http-proxy" title="Permanent link">#</a></h3>
+<p>若安裝環境對外上網需透過Proxy則可在此設定</p>
+<p></p><figure id="_figure-50"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-49.png"><img alt="HTTP Proxy" src="images/img-49.png"></a><figcaption>Figure 50: HTTP Proxy</figcaption></figure><p></p>
+<h3 id="63-name-servers">6.3. Name Servers<a class="headerlink" href="#63-name-servers" title="Permanent link">#</a></h3>
+<p>建議最少設定2個</p>
+<p></p><figure id="_figure-51"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-50.png"><img alt="Name Servers" src="images/img-50.png"></a><figcaption>Figure 51: Name Servers</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="64-ntp-servers">6.4. NTP Servers<a class="headerlink" href="#64-ntp-servers" title="Permanent link">#</a></h3>
+<ul>
+<li>建議設定5個，最少設定3個</li>
+<li>不要使用Windows Server當時間同步來源，可參考<a href="https://portal.nutanix.com/page/documents/kbs/details?targetId=kA032000000TVVyCAO" target="_blank">KB-3851</a>說明</li>
+</ul>
+<p></p><figure id="_figure-52"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-51.png"><img alt="NTP Servers" src="images/img-51.png"></a><figcaption>Figure 52: NTP Servers</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="65-manage-vm-high-availability">6.5. Manage VM High Availability<a class="headerlink" href="#65-manage-vm-high-availability" title="Permanent link">#</a></h3>
+<ul>
+<li>未啟用時，在發生故障的情況下，如果資源可用，將盡最大可能性恢復虛擬機開機狀態。</li>
+<li>啟用時，會以叢集的當前狀態下，保留多達 1/n(n=總Node數)的記憶體以避免在單個Host發生故障時資源不足。</li>
+</ul>
+<p></p><figure id="_figure-53"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-78.png"><img alt="Manage VM High Availability" src="images/img-78.png"></a><figcaption>Figure 53: Manage VM High Availability</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="66-rebuild-capacity-reservation">6.6. Rebuild Capacity Reservation<a class="headerlink" href="#66-rebuild-capacity-reservation" title="Permanent link">#</a></h3>
+<ul>
+<li>若未啟用且使用的空間量超過Resilient Capacity閥值時會告警且這時候發生硬碟故障或Node故障時將無法Rebuild。</li>
+<li>啟用時，叢集將根據容錯、故障域和叢集中的總儲存容量等引數計算所需的重建容量。</li>
+<li>啟用後Storage Summary將僅顯示Resilient Capacity空間（即扣除掉Rebuild需要的空間量）。</li>
+</ul>
+<p></p><figure id="_figure-54"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-79.png"><img alt="Rebuild Capacity Reservation" src="images/img-79.png"></a><figcaption>Figure 54: Rebuild Capacity Reservation</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="7-修改預設密碼">7. 修改預設密碼<a class="headerlink" href="#7-%E4%BF%AE%E6%94%B9%E9%A0%90%E8%A8%AD%E5%AF%86%E7%A2%BC" title="Permanent link">#</a></h2>
+<p>詳細說明可參考<a href="https://portal.nutanix.com/page/documents/kbs/details?targetId=kA00e000000LKXcCAO" target="_blank">KB-6153</a>，下表為各元件預設密碼。</p>
+<table id="_table-11">
+<caption style="caption-side:bottom">Table 11: 預設密碼</caption><thead>
+<tr>
+<th style="text-align: center;"><strong>元件</strong></th>
+<th style="text-align: center;"><strong>登入方式</strong></th>
+<th style="text-align: center;"><strong>帳號</strong></th>
+<th style="text-align: center;"><strong>預設密碼</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>CVM</strong></td>
+<td style="text-align: center;">SSH</td>
+<td style="text-align: center;">nutanix</td>
+<td style="text-align: center;">nutanix/4u</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>AHV</strong></td>
+<td style="text-align: center;">SSH</td>
+<td style="text-align: center;">root</td>
+<td style="text-align: center;">nutanix/4u</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>AHV</strong></td>
+<td style="text-align: center;">SSH</td>
+<td style="text-align: center;">nutanix</td>
+<td style="text-align: center;">none</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>AHV</strong></td>
+<td style="text-align: center;">SSH</td>
+<td style="text-align: center;">admin</td>
+<td style="text-align: center;">none</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>ESXi</strong></td>
+<td style="text-align: center;">Web/SSH</td>
+<td style="text-align: center;">root</td>
+<td style="text-align: center;">nutanix/4u</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>Hyper-V</strong></td>
+<td style="text-align: center;">Console</td>
+<td style="text-align: center;">administrator</td>
+<td style="text-align: center;">nutanix/4u</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>IPMI</strong></td>
+<td style="text-align: center;">Web</td>
+<td style="text-align: center;">ADMIN</td>
+<td style="text-align: center;">主機板序號</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>Prism Element</strong></td>
+<td style="text-align: center;">Web</td>
+<td style="text-align: center;">admin</td>
+<td style="text-align: center;">nutanix/4u</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>Prism Central</strong></td>
+<td style="text-align: center;">Web</td>
+<td style="text-align: center;">admin</td>
+<td style="text-align: center;">Nutanix/4u</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>Prism Central</strong></td>
+<td style="text-align: center;">SSH</td>
+<td style="text-align: center;">nutanix</td>
+<td style="text-align: center;">nutanix/4u</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h3 id="71-cvm">7.1. CVM<a class="headerlink" href="#71-cvm" title="Permanent link">#</a></h3>
+<ul>
+<li>若於安裝Node時已經有設定Cluster Password則可略過此步驟</li>
+<li>SSH登入任一台CVM以指令更改，更改後的密碼會同步至其他CVM</li>
+</ul>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>passwd<span class="w"> </span>nutanix
+</code></pre></div>
+<p></p><figure id="_figure-55"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-52.png"><img alt="Change CVM Password" src="images/img-52.png"></a><figcaption>Figure 55: Change CVM Password</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="72-ahv">7.2. AHV<a class="headerlink" href="#72-ahv" title="Permanent link">#</a></h3>
+<ul>
+<li>SSH登入任一台<mark class="critic">CVM</mark>以指令更改，以下Script會修改Cluster中<mark class="critic">所有Node</mark>的AHV密碼</li>
+</ul>
+<p><strong>更改AHV root帳號的密碼</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"CHANGING ALL AHV HOST ROOT PASSWORDS.\nPlease input new password: "</span><span class="p">;</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-rs<span class="w"> </span>password1<span class="p">;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Confirm new password: "</span><span class="p">;</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-rs<span class="w"> </span>password2<span class="p">;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$password1</span><span class="s2">"</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"</span><span class="nv">$password2</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>hostips<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>Host<span class="w"> </span><span class="nv">$host</span><span class="p">;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$password1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ssh<span class="w"> </span>root@<span class="nv">$host</span><span class="w"> </span><span class="s2">"passwd --stdin root"</span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="p">;</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"The passwords do not match"</span><span class="p">;</span><span class="w"> </span><span class="k">fi</span>
+</code></pre></div>
+<p></p><figure id="_figure-56"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-53.png"><img alt="Change AHV root Password" src="images/img-53.png"></a><figcaption>Figure 56: Change AHV root Password</figcaption></figure><p></p>
+<div class="page-break">
+<p><strong>更改AHV admin帳號的密碼</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"CHANGING ALL AHV HOST ADMIN PASSWORDS.\nPlease input new password: "</span><span class="p">;</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-rs<span class="w"> </span>password1<span class="p">;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Confirm new password: "</span><span class="p">;</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-rs<span class="w"> </span>password2<span class="p">;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$password1</span><span class="s2">"</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"</span><span class="nv">$password2</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>hostips<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>Host<span class="w"> </span><span class="nv">$host</span><span class="p">;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$password1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ssh<span class="w"> </span>root@<span class="nv">$host</span><span class="w"> </span><span class="s2">"passwd --stdin admin"</span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="p">;</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"The passwords do not match"</span><span class="p">;</span><span class="w"> </span><span class="k">fi</span>
+</code></pre></div>
+<p></p><figure id="_figure-57"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-54.png"><img alt="Change AHV admin Password" src="images/img-54.png"></a><figcaption>Figure 57: Change AHV admin Password</figcaption></figure><p></p>
+<div class="page-break">
+<p><strong>更改AHV nutanix帳號的密碼</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">"CHANGING ALL AHV HOST NUTANIX PASSWORDS.\nPlease input new password: "</span><span class="p">;</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-rs<span class="w"> </span>password1<span class="p">;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Confirm new password: "</span><span class="p">;</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-rs<span class="w"> </span>password2<span class="p">;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">"</span><span class="nv">$password1</span><span class="s2">"</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"</span><span class="nv">$password2</span><span class="s2">"</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>hostips<span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>Host<span class="w"> </span><span class="nv">$host</span><span class="p">;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$password1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ssh<span class="w"> </span>root@<span class="nv">$host</span><span class="w"> </span><span class="s2">"passwd --stdin nutanix"</span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="p">;</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"The passwords do not match"</span><span class="p">;</span><span class="w"> </span><span class="k">fi</span>
+</code></pre></div>
+<p></p><figure id="_figure-58"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-55.png"><img alt="Change AHV nutanix Password" src="images/img-55.png"></a><figcaption>Figure 58: Change AHV nutanix Password</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="73-更改nutanix-nx主機ipmi-admin帳號的密碼">7.3. 更改Nutanix NX主機IPMI ADMIN帳號的密碼<a class="headerlink" href="#73-%E6%9B%B4%E6%94%B9nutanix-nx%E4%B8%BB%E6%A9%9Fipmi-admin%E5%B8%B3%E8%99%9F%E7%9A%84%E5%AF%86%E7%A2%BC" title="Permanent link">#</a></h3>
+<p>使用<mark class="critic">root帳號</mark>SSH逐一登入每一台<mark class="critic">AHV</mark>以指令更改或登入IPMI GUI頁面修改，以下為指令方式</p>
+<p><strong>查看帳號ID</strong></p>
+<div class="highlight"><pre><span></span><code>ipmitool<span class="w"> </span>user<span class="w"> </span>list<span class="w"> </span>
+</code></pre></div>
+<p></p><figure id="_figure-59"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-63.png"><img alt="Check User ID" src="images/img-63.png"></a><figcaption>Figure 59: Check User ID</figcaption></figure><p></p>
+<p><strong>修改密碼</strong></p>
+<div class="highlight"><pre><span></span><code>ipmitool<span class="w"> </span>user<span class="w"> </span><span class="nb">set</span><span class="w"> </span>password<span class="w"> </span>user_id<span class="w"> </span>new_password<span class="w">  </span>
+</code></pre></div>
+<p></p><figure id="_figure-60"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-64.png"><img alt="Change Password" src="images/img-64.png"></a><figcaption>Figure 60: Change Password</figcaption></figure><p></p>
+<p><strong>BMC版本高於7.0且密碼長度大於16字元時需使用以下指令</strong></p>
+<div class="highlight"><pre><span></span><code>ipmitool<span class="w"> </span>user<span class="w"> </span><span class="nb">set</span><span class="w"> </span>password<span class="w"> </span>user_id<span class="w"> </span>new_password<span class="w"> </span><span class="m">20</span>
+</code></pre></div>
+<div class="page-break">
+<h3 id="74-更改prism-central-nutanix帳號的密碼">7.4. 更改Prism Central nutanix帳號的密碼<a class="headerlink" href="#74-%E6%9B%B4%E6%94%B9prism-central-nutanix%E5%B8%B3%E8%99%9F%E7%9A%84%E5%AF%86%E7%A2%BC" title="Permanent link">#</a></h3>
+<p>需以SSH登入Prism Central以指令修改。</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>passwd<span class="w"> </span>nutanix
+</code></pre></div>
+<div class="page-break">
+<h2 id="8-ncc">8. NCC<a class="headerlink" href="#8-ncc" title="Permanent link">#</a></h2>
+<ul>
+<li>Nutanix Cluster Check簡稱NCC，是一款診斷與健康檢查工具，用來分析 Nutanix 叢集的狀態，確保系統的穩定性、效能與高可用性。</li>
+<li>建議於安裝後、更新前後手動執行確保系統狀態正常。</li>
+</ul>
+<p><strong>點擊左上方選單 -&gt; Health</strong></p>
+<p></p><figure id="_figure-61"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-56.png"><img alt="Health" src="images/img-56.png"></a><figcaption>Figure 61: Health</figcaption></figure><p></p>
+<p><strong>點擊Actions -&gt; Run NCC Checks</strong></p>
+<p></p><figure id="_figure-62"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-57.png"><img alt="Run NCC Checks" src="images/img-57.png"></a><figcaption>Figure 62: Run NCC Checks</figcaption></figure><p></p>
+<div class="page-break">
+<p><strong>點擊All Checks -&gt; Run</strong></p>
+<p></p><figure id="_figure-63"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-58.png"><img alt="All Checks" src="images/img-58.png"></a><figcaption>Figure 63: All Checks</figcaption></figure><p></p>
+<p><strong>點擊左上方Recent Tasks圖示確認檢查完畢</strong></p>
+<p></p><figure id="_figure-64"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-59.png"><img alt="Recent Tasks" src="images/img-59.png"></a><figcaption>Figure 64: Recent Tasks</figcaption></figure><p></p>
+<div class="page-break">
+<p><strong>針對Failed、Warning、Error逐一點擊查看被檢查到的項目</strong></p>
+<p></p><figure id="_figure-65"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-60.png"><img alt="Check Results" src="images/img-60.png"></a><figcaption>Figure 65: Check Results</figcaption></figure><p></p>
+<p><strong>點擊每個項目查看原因及修正方式</strong></p>
+<p></p><figure id="_figure-66"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-61.png"><img alt="Check Causes of failure and Resolutions" src="images/img-61.png"></a><figcaption>Figure 66: Check Causes of failure and Resolutions</figcaption></figure><p></p>
+<p></p><figure id="_figure-67"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-62.png"><img alt="Check Causes of failure and Resolutions" src="images/img-62.png"></a><figcaption>Figure 67: Check Causes of failure and Resolutions</figcaption></figure><p></p>
+<div class="page-break">
+<p><strong>全部修正完後再重新執行All Checks確保無重大錯誤</strong></p>
+<p></p><figure id="_figure-68"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-65.png"><img alt="All Checks" src="images/img-65.png"></a><figcaption>Figure 68: All Checks</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="9-network">9. Network<a class="headerlink" href="#9-network" title="Permanent link">#</a></h2>
+<h3 id="91-nutanix與vmware術語比較">9.1. Nutanix與Vmware術語比較<a class="headerlink" href="#91-nutanix%E8%88%87vmware%E8%A1%93%E8%AA%9E%E6%AF%94%E8%BC%83" title="Permanent link">#</a></h3>
+<table id="_table-12">
+<caption style="caption-side:bottom">Table 12: Networking Terminology Matrix</caption><thead>
+<tr>
+<th style="text-align: center;"><strong>AHV Term</strong></th>
+<th style="text-align: center;"><strong>VMware Term</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Bridge, Virtual Switch</td>
+<td style="text-align: center;">vSwitch, Distributed Virtual Switch</td>
+</tr>
+<tr>
+<td style="text-align: center;"><mark class="critic">Bond</mark></td>
+<td style="text-align: center;">NIC team</td>
+</tr>
+<tr>
+<td style="text-align: center;">Port or tap</td>
+<td style="text-align: center;">Port</td>
+</tr>
+<tr>
+<td style="text-align: center;"><mark class="critic">Subnet</mark></td>
+<td style="text-align: center;">Port group</td>
+</tr>
+<tr>
+<td style="text-align: center;">Uplink</td>
+<td style="text-align: center;">pNIC or vmnic</td>
+</tr>
+<tr>
+<td style="text-align: center;">VM NIC</td>
+<td style="text-align: center;">vNIC</td>
+</tr>
+<tr>
+<td style="text-align: center;"><mark class="critic">Internal port</mark></td>
+<td style="text-align: center;">VMkernel port</td>
+</tr>
+<tr>
+<td style="text-align: center;">Active-backup</td>
+<td style="text-align: center;">Active-standby</td>
+</tr>
+<tr>
+<td style="text-align: center;">Active-Active with MAC pinning</td>
+<td style="text-align: center;">Route based on source MAC hash combined with route based on physical NIC load</td>
+</tr>
+<tr>
+<td style="text-align: center;">Active-Active</td>
+<td style="text-align: center;">LACP and route based on IP hash</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h3 id="92-virtual-switch">9.2. Virtual Switch<a class="headerlink" href="#92-virtual-switch" title="Permanent link">#</a></h3>
+<p>預設會將所有相同速率實體網路卡綁定至預設的Virtual Switch，故需依造實際需求修改或新增Virtual Switch，以下為修改方式。</p>
+<p></p><figure id="_figure-69"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-66.png"><img alt="Edit Virtual Switch" src="images/img-66.png"></a><figcaption>Figure 69: Edit Virtual Switch</figcaption></figure><p></p>
+<div class="page-break">
+<p></p><figure id="_figure-70"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-67.png"><img alt="General" src="images/img-67.png"></a><figcaption>Figure 70: General</figcaption></figure><p></p>
+<table id="_table-13">
+<caption style="caption-side:bottom">Table 13: General Settings</caption><thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>vSwitch名稱</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>vSwitch描述</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>vSwitch MTU大小</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>vSwitch變更方式<br> - Standard(建議)：Node會進入維護模式並滾動更新。<br>- Quick：Node不會進入維護模式，故有可能影響流量。</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<p></p><figure id="_figure-71"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-68.png"><img alt="Uplink Configuration" src="images/img-68.png"></a><figcaption>Figure 71: Uplink Configuration</figcaption></figure><p></p>
+<table id="_table-14">
+<caption style="caption-side:bottom">Table 14: Uplink Configuration</caption><thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>Bond模式，可區分4種。<br>- Active-Backup：推薦使用，為預設設定。所有流量都透過單一啟用的網路介面卡進行傳輸，當主介面失效時，會自動切換到備援介面。<br>- Active-Active with MAC pinning：該模式將每個 VM NIC 綁定到單一網卡，並根據負載動態分配流量，但不適合多播流量。<br>- Active-Active：即為LACP模式，設定此模式時建議交換器要設定LACP failback。<br>- No Uplink Bond：可配置為0或1張網路介面卡。</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>選擇要修改的主機</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>選擇要顯示的網路介面卡。如只顯示Connected Ports或10G速率的Port。</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>設定此vSwitch在主機要綁定的網路介面卡。</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h3 id="93-subnet">9.3. Subnet<a class="headerlink" href="#93-subnet" title="Permanent link">#</a></h3>
+<p>預設不會有任何Subnet故需於此處新增VM所需使用的網路</p>
+<p></p><figure id="_figure-72"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-69.png"><img alt="Create Subnet" src="images/img-69.png"></a><figcaption>Figure 72: Create Subnet</figcaption></figure><p></p>
+<p></p><figure id="_figure-73"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-70.png"><img alt="Create Subnet" src="images/img-70.png"></a><figcaption>Figure 73: Create Subnet</figcaption></figure><p></p>
+<table id="_table-15">
+<caption style="caption-side:bottom">Table 15: Create Subnet</caption><thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td>Subnet名稱</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td>選擇此Subnet要於哪一個Virtual Switch建立</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td>VLAN ID，若無則輸入0。</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td>此Subnet是否由AHV派送DHCP。</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h2 id="10-storage">10. Storage<a class="headerlink" href="#10-storage" title="Permanent link">#</a></h2>
+<ul>
+<li>Storage Pool<ul>
+<li>定義：Nutanix分散式儲存架構的基礎單位，它將所有節點的物理存儲設備（HDD/SSD/NVMe）組合在一起，形成一個統一的儲存資源池。</li>
+<li>特點：<ul>
+<li>由 多個節點的本地磁碟組成，可以包含 HDD、SSD 或 NVMe。</li>
+<li>所有 Storage Containers 與 Volume Groups 都建立在 Storage Pool 之上。</li>
+<li>支援 RAID-less，透過 Nutanix 的 RF2（Replication Factor 2）或 RF3 來確保數據冗餘與安全性。</li>
+<li>可擴展，當叢集新增節點時，Storage Pool 也會自動擴展。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Storage Container：<ul>
+<li>定義：儲存架構中的邏輯分區，它位於 Storage Pool 之上，用於管理不同類型的數據與存儲策略。</li>
+<li>特點：<ul>
+<li>基於 Storage Pool 建立的邏輯存儲區，概念上類似Windows資料夾而非磁碟分區。</li>
+<li>可設定不同的儲存策略如資料份數、可使用空間上限、壓縮、重複資料刪除等。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Volume Group<ul>
+<li>定義：Nutanix 提供的 iSCSI 目標儲存設備，適用於無法直接使用 Storage Container 的應用。</li>
+<li>特點：<ul>
+<li>基於 Storage Pool 建立，與 Storage Container 並列。</li>
+<li>提供 iSCSI LUN 來存取儲存。</li>
+<li>支援多重存取模式，也就是可以多個VM共同使用此iSCSI LUN</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="page-break">
+<table id="_table-16">
+<caption style="caption-side:bottom">Table 16: Storage</caption><thead>
+<tr>
+<th>名稱</th>
+<th>功能</th>
+<th>用途</th>
+<th>存取方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Storage Pool</td>
+<td>統一管理所有磁碟資源</td>
+<td>Nutanix 叢集內的基礎存儲池</td>
+<td>內部自動管理</td>
+</tr>
+<tr>
+<td>Storage Container</td>
+<td>存放VM Disk，管理儲存策略</td>
+<td>Nutanix AHV、VMware ESXi VM 使用</td>
+<td>CIFS、NFS、vDisk</td>
+</tr>
+<tr>
+<td>Volume Group</td>
+<td>提供 iSCSI LUN 給特殊應用</td>
+<td>Windows Failover Cluster、Oracle RAC</td>
+<td>iSCSI</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h3 id="101-default-storage-container">10.1. Default Storage Container<a class="headerlink" href="#101-default-storage-container" title="Permanent link">#</a></h3>
+<ul>
+<li>Cluster建立完成後會有三個預設的Storage Container，其中NutanixManagementShare及SelfServiceContainer為<mark class="critic">系統使用不可刪除</mark>。</li>
+<li>default-container-xxxx無法改名，因名稱難以識別故可刪除建立新的，若要使用則建議可開啟inline compression功能。</li>
+</ul>
+<p></p><figure id="_figure-74"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-71.png"><img alt="Default Storage Container" src="images/img-71.png"></a><figcaption>Figure 74: Default Storage Container</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="102-新增storage-container">10.2. 新增Storage Container<a class="headerlink" href="#102-%E6%96%B0%E5%A2%9Estorage-container" title="Permanent link">#</a></h3>
+<p><strong>點擊左上方選單 -&gt; Storage</strong></p>
+<p></p><figure id="_figure-75"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-72.png"><img alt="Add Storage Container" src="images/img-72.png"></a><figcaption>Figure 75: Add Storage Container</figcaption></figure><p></p>
+<p></p><figure id="_figure-76"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-73.png"><img alt="Add Storage Container" src="images/img-73.png"></a><figcaption>Figure 76: Add Storage Container</figcaption></figure><p></p>
+<p></p><figure id="_figure-77"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-74.png"><img alt="Add Storage Container" src="images/img-74.png"></a><figcaption>Figure 77: Add Storage Container</figcaption></figure><p></p>
+<table id="_table-17">
+<caption style="caption-side:bottom">Table 17: Create Storage Container</caption><thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td><strong>Name</strong>為此Storage Container名稱</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<p></p><figure id="_figure-78"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-75.png"><img alt="Add Storage Container" src="images/img-75.png"></a><figcaption>Figure 78: Add Storage Container</figcaption></figure><p></p>
+<table id="_table-18">
+<caption style="caption-side:bottom">Table 18: Advanced Settings</caption><thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td><strong>Replication Factor</strong>是指資料要儲存的份數。RF2係指同份資料會被儲存成兩份。</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td><strong>Reserved Capacity</strong>是指此Storage Container需預留的儲存空間。這樣可以確保此Storage Container內的應用或虛擬機擁有固定的可用儲存容量</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td><strong>Advertised Capacity</strong>是指此Storage Containe最大可用儲存空間，當儲存使用量達到設定的容量上限時，將無法再新增數據，以避免超出預期的存儲空間。</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<p></p><figure id="_figure-79"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-76.png"><img alt="Add Storage Container" src="images/img-76.png"></a><figcaption>Figure 79: Add Storage Container</figcaption></figure><p></p>
+<table id="_table-19">
+<caption style="caption-side:bottom">Table 19: Advanced Settings</caption><thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td><strong>Compression</strong>預設啟用，當<strong>Delay設定為0</strong>時即數據在寫入時立即壓縮也就是所謂的<strong>Inline Compression</strong>，。若<strong>Delay設定為非0值</strong>即所謂的<strong>Post-Process Compression</strong>，建議設定最少<strong>60 分鐘</strong>。</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td><strong>Deduplication</strong>為Post-Process Deduplication。Nutanix 建議將此選項應用於full clone, persistent desktops, and physical to virtual等場景，以節省存儲容量。建議 <strong>要啟用此功能建議CVM具備至少 32GB RAM 和 300GB SSD 作為metadata disk</strong>。</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td><strong>Erasure Coding</strong>是一種提升儲存效率的技術，透過分散式校驗碼機制儲存資料，比 RF2節省 30-50% 空間，同時確保數據可用性，即使節點或磁碟故障仍能恢復。<mark class="critic">啟用最低需求為4個Node</mark>，詳請可參考<a href="https://portal.nutanix.com/page/documents/details?targetId=Web-Console-Guide-Prism-v6_10:wc-erasure-coding-overview-wc-c.html#nconcept_upx_k3b_cs" target="_blank">Prism Element Web Console Guide</a>內的說明。</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td><strong>Filesystem Allowlists</strong>為定義允許使用NFS存取此Storage Container的主機或網段。部分備份軟體或第三方軟體需使用NFS存取時就需要設定，此設定會覆蓋全域白名單設定。</td>
+</tr>
+</tbody>
+</table>
+<p></p><figure id="_figure-80"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-77.png"><img alt="Finish" src="images/img-77.png"></a><figcaption>Figure 80: Finish</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="11-lcm">11. LCM<a class="headerlink" href="#11-lcm" title="Permanent link">#</a></h2>
+<ul>
+<li>LCM（Life Cycle Manager）是 Nutanix提供的自動化生命週期管理工具，用於升級與管理Nutanix叢集的軟體與韌體，確保系統始終處於最佳狀態，建議完成安裝後要執行韌體更新。</li>
+</ul>
+<div class="page-break">
+<h3 id="111-inventory">11.1. Inventory<a class="headerlink" href="#111-inventory" title="Permanent link">#</a></h3>
+<p>執行Inventory時將會掃描Cluster中的硬體與軟體及識別當前版本與可用更新，可設定定期自動檢查或手動檢查。</p>
+<p></p><figure id="_figure-81"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-80.png"><img alt="Inventory" src="images/img-80.png"></a><figcaption>Figure 81: Inventory</figcaption></figure><p></p>
+<p></p><figure id="_figure-82"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-81.png"><img alt="Inventory" src="images/img-81.png"></a><figcaption>Figure 82: Inventory</figcaption></figure><p></p>
+<p></p><figure id="_figure-83"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-82.png"><img alt="Inventory" src="images/img-82.png"></a><figcaption>Figure 83: Inventory</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="112-updates">11.2. Updates<a class="headerlink" href="#112-updates" title="Permanent link">#</a></h3>
+<p>當執行完Inventory後將可以在Updates查看是否有Software或Firmware可用更新，建議在更新前後均手動執行NCC Check確定Cluster健全狀態。</p>
+<p></p><figure id="_figure-84"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-83.png"><img alt="Updates" src="images/img-83.png"></a><figcaption>Figure 84: Updates</figcaption></figure><p></p>
+<p>選擇要更新的項目及版本</p>
+<p></p><figure id="_figure-85"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-84.png"><img alt="Updates" src="images/img-84.png"></a><figcaption>Figure 85: Updates</figcaption></figure><p></p>
+<p>執行更新</p>
+<p></p><figure id="_figure-86"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-85.png"><img alt="Updates" src="images/img-85.png"></a><figcaption>Figure 86: Updates</figcaption></figure><p></p>
+<p></p><figure id="_figure-87"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-87.png"><img alt="Finish" src="images/img-87.png"></a><figcaption>Figure 87: Finish</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="12-prism-central">12. Prism Central<a class="headerlink" href="#12-prism-central" title="Permanent link">#</a></h2>
+<p>Prism Central可集中管理多個Cluster，且部分功能也僅有在Prism Central才可以執行，例如VM變更Storage Container、同時對多台VM執行開關機等，主要差異如下表。</p>
+<table id="_table-20">
+<caption style="caption-side:bottom">Table 20: Key Differences</caption><thead>
+<tr>
+<th style="text-align: center;"><strong>Feature</strong></th>
+<th><strong>Prism Element</strong></th>
+<th><strong>Prism Central</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>範圍</strong></td>
+<td>Single Cluster</td>
+<td>Multiple Clusters</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>管理方式</strong></td>
+<td>Localized per cluster</td>
+<td>Centralized across all clusters</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>自動化與分析</strong></td>
+<td>Basic</td>
+<td>Advanced, AI-driven</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>安全與政策</strong></td>
+<td>Security Per Cluster</td>
+<td>Global policies across clusters</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>硬體管理</strong></td>
+<td>Expand cluster, put host into maintenance mode</td>
+<td>Cluster, host, disk, networking dashboards</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>儲存管理</strong></td>
+<td>Manage containers, volume groups per cluster</td>
+<td>Centralized storage management and policies</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>網路管理</strong></td>
+<td>Network visualization and subnet management per cluster</td>
+<td>Centralized networking across all clusters</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>虛擬機器</strong></td>
+<td>- Create, update, clone, delete VM<br>- launch console<br>- migrate<br>- take snapshot<br>- power on/off<br>- manage guest tools.</td>
+<td>- Create, update, clone, delete<br>- launch console<br>- migrate<br>- power off/on<br>- hard power off<br>- soft shutdown<br>- VM templates<br>- enable/disable efficiency measurement<br>- enable/disable anomaly detection<br>- protect/unprotect<br>- create recovery point<br>- install, manage , upgrade NGT<br>- configure host affinity<br>- add to catalog<br>- export as OVA<br>- run playbook<br>- manage categories<br>- manage affinity policies<br>- manage NGT policies</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h3 id="121-安裝prism-central">12.1. 安裝Prism Central<a class="headerlink" href="#121-%E5%AE%89%E8%A3%9Dprism-central" title="Permanent link">#</a></h3>
+<p>於Prism Element點選<strong>Register or create new</strong></p>
+<p></p><figure id="_figure-88"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-88.png"><img alt="Prism Central Installation" src="images/img-88.png"></a><figcaption>Figure 88: Prism Central Installation</figcaption></figure><p></p>
+<p>選擇Deploy</p>
+<p></p><figure id="_figure-89"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-89.png"><img alt="Deploy" src="images/img-89.png"></a><figcaption>Figure 89: Deploy</figcaption></figure><p></p>
+<div class="page-break">
+<p>在CVM可對外連線情況下會自動抓取版本號，後續會依據所選擇的版本自動下載軟體，但也可以自行至官網下載後使用<strong>Upload Installation Binary</strong>上傳</p>
+<p></p><figure id="_figure-90"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-90.png"><img alt="PC Version" src="images/img-90.png"></a><figcaption>Figure 90: PC Version</figcaption></figure><p></p>
+<p>X-Small大小僅有基本的Prism Central功能且無法Scale-Out，其餘大小都可依需求Scale-Out成三台達到高可用性</p>
+<p></p><figure id="_figure-91"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-91.png"><img alt="PC Size and Scale" src="images/img-91.png"></a><figcaption>Figure 91: PC Size and Scale</figcaption></figure><p></p>
+<div class="page-break">
+<p>選擇要使用的Subnet及Storage Container，並填入相關網路資訊及主機名稱</p>
+<p></p><figure id="_figure-92"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-92.png"><img alt="Configuration" src="images/img-92.png"></a><figcaption>Figure 92: Configuration</figcaption></figure><p></p>
+<p>無特殊需求保持預設值即可</p>
+<p></p><figure id="_figure-93"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-93.png"><img alt="Microservices" src="images/img-93.png"></a><figcaption>Figure 93: Microservices</figcaption></figure><p></p>
+<div class="page-break">
+<p>完成安裝後連線https://[Prism_Central_IP]:9440，帳號：admin，密碼：Nutanix/4u</p>
+<p></p><figure id="_figure-94"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-94.png"><img alt="Login" src="images/img-94.png"></a><figcaption>Figure 94: Login</figcaption></figure><p></p>
+<p>變更admin密碼</p>
+<p></p><figure id="_figure-95"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-95.png"><img alt="Change Password" src="images/img-95.png"></a><figcaption>Figure 95: Change Password</figcaption></figure><p></p>
+<div class="page-break">
+<p>選擇同意EULA協議</p>
+<p></p><figure id="_figure-96"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-96.png"><img alt="Accept EULA" src="images/img-96.png"></a><figcaption>Figure 96: Accept EULA</figcaption></figure><p></p>
+<p>啟用Pulse服務將會監控收集Cluster必要資訊並於問題發生時主動通知，建議要開啟除非是測試或環境無法對外上網時。</p>
+<p></p><figure id="_figure-97"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-97.png"><img alt="Enable Pulse" src="images/img-97.png"></a><figcaption>Figure 97: Enable Pulse</figcaption></figure><p></p>
+<div class="page-break">
+<p></p><figure id="_figure-98"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-98.png"><img alt="Finish" src="images/img-98.png"></a><figcaption>Figure 98: Finish</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="122-註冊prism-central">12.2. 註冊Prism Central<a class="headerlink" href="#122-%E8%A8%BB%E5%86%8Aprism-central" title="Permanent link">#</a></h3>
+<p>於Prism Element點選<strong>Register or create new</strong></p>
+<p></p><figure id="_figure-99"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-99.png"><img alt="Connect to Prism Central" src="images/img-99.png"></a><figcaption>Figure 99: Connect to Prism Central</figcaption></figure><p></p>
+<p>選擇Connect</p>
+<p></p><figure id="_figure-100"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-100.png"><img alt="Connect to Prism Central" src="images/img-100.png"></a><figcaption>Figure 100: Connect to Prism Central</figcaption></figure><p></p>
+<p></p><figure id="_figure-101"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-101.png"><img alt="Connect to Prism Central" src="images/img-101.png"></a><figcaption>Figure 101: Connect to Prism Central</figcaption></figure><p></p>
+<div class="page-break">
+<p>輸入Prism Central IP、帳號、密碼，Port部分若Prism Central是使用預設的9440就可以不需輸入</p>
+<p></p><figure id="_figure-102"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-102.png"><img alt="Connect to Prism Central" src="images/img-102.png"></a><figcaption>Figure 102: Connect to Prism Central</figcaption></figure><p></p>
+<div class="page-break">
+<p>完成後會顯示Conntected</p>
+<p></p><figure id="_figure-103"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-103.png"><img alt="Finish" src="images/img-103.png"></a><figcaption>Figure 103: Finish</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="13-其他設定">13. 其他設定<a class="headerlink" href="#13-%E5%85%B6%E4%BB%96%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<h3 id="131-設定cvm-vlan-tag">13.1. 設定CVM VLAN Tag<a class="headerlink" href="#131-%E8%A8%AD%E5%AE%9Acvm-vlan-tag" title="Permanent link">#</a></h3>
+<p>需個別SSH登入每一台CVM設定</p>
+<p><strong>新增/修改 CVM VLAN Tag</strong></p>
+<div class="highlight"><pre><span></span><code>change_cvm_vlan<span class="w"> </span>&lt;vlan<span class="w"> </span>tag&gt;
+</code></pre></div>
+<p><strong>移除CVM VLAN Tag</strong></p>
+<div class="highlight"><pre><span></span><code>change_cvm_vlan<span class="w"> </span>--remove
+</code></pre></div>
+<p><strong>檢查CVM VLAN Tag</strong></p>
+<p>若沒有VLAN Tag則不會輸出任何資訊</p>
+<div class="highlight"><pre><span></span><code>virsh<span class="w"> </span>dumpxml<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>tag
+</code></pre></div>
+<h3 id="132-設定ahv-vlan-tag">13.2. 設定AHV VLAN Tag<a class="headerlink" href="#132-%E8%A8%AD%E5%AE%9Aahv-vlan-tag" title="Permanent link">#</a></h3>
+<p>需個別SSH登入每一台AHV設定</p>
+<p><strong>新增/修改 AHV VLAN Tag</strong></p>
+<div class="highlight"><pre><span></span><code>ovs-vsctl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>port<span class="w"> </span>br0<span class="w"> </span><span class="nv">tag</span><span class="o">=</span>&lt;vlan<span class="w"> </span>tag&gt;
+</code></pre></div>
+<p><strong>移除AHV VLAN Tag</strong></p>
+<div class="highlight"><pre><span></span><code>ovs-vsctl<span class="w"> </span><span class="nb">set</span><span class="w"> </span>port<span class="w"> </span>br0<span class="w"> </span><span class="nv">tag</span><span class="o">=</span><span class="m">0</span>
+</code></pre></div>
+<p><strong>檢查AHV VLAN Tag</strong></p>
+<div class="highlight"><pre><span></span><code>ovs-vsctl<span class="w"> </span>list<span class="w"> </span>port<span class="w"> </span>br0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>tag
+</code></pre></div>
+<div class="page-break">
+<h2 class="no-print">參考資料</h2>
+<ul>
+<li><a href="https://portal.nutanix.com/page/documents/details?targetId=Field-Installation-Guide-v5_7:Field-Installation-Guide-v5_7" target="_blank">Foudation Field Installation Guide</a></li>
+<li><a href="https://portal.nutanix.com/page/documents/details?targetId=Web-Console-Guide-Prism-v6_10:Web-Console-Guide-Prism-v6_10" target="_blank">Prism Element Web Console Guide</a></li>
+<li><a href="https://portal.nutanix.com/page/documents/solutions/details?targetId=BP-2071-AHV-Networking:BP-2071-AHV-Networking" target="_blank">Nutanix AHV Networking Best Practices</a></li>
+</ul></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
+
+
+  
+
+
+
+  <h2 id="__comments" class="no-print">留言</h2>
+  <!-- Insert generated snippet here -->
+  <script src="https://giscus.app/client.js" data-repo="wilder640/blog-comment" data-repo-id="R_kgDOMXc0AQ" data-category="Announcements" data-category-id="DIC_kwDOMXc0Ac4Cg2f3" data-mapping="title" data-strict="0" data-reactions-enabled="1" data-emit-metadata="1" data-input-position="top" data-theme="preferred_color_scheme" data-lang="zh-TW" crossorigin="anonymous" async>
+</script>
+  <!-- Synchronize Giscus theme with palette -->
+  <script>
+    var giscus = document.querySelector("script[src*=giscus]")
+
+    // Set palette on initial load
+    var palette = __md_get("__palette")
+    if (palette && typeof palette.color === "object") {
+      var theme = palette.color.scheme === "slate"
+        ? "transparent_dark"
+        : "light"
+
+      // Instruct Giscus to set theme
+      giscus.setAttribute("data-theme", theme) 
+    }
+
+    // Register event handlers after documented loaded
+    document.addEventListener("DOMContentLoaded", function() {
+      var ref = document.querySelector("[data-md-component=palette]")
+      ref.addEventListener("change", function() {
+        var palette = __md_get("__palette")
+        if (palette && typeof palette.color === "object") {
+          var theme = palette.color.scheme === "slate"
+            ? "transparent_dark"
+            : "light"
+
+          // Instruct Giscus to change theme
+          var frame = document.querySelector(".giscus-frame")
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme } } },
+            "https://giscus.app"
+          )
+        }
+      })
+    })
+  </script>
+
+      
+    </article>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  回到頂端
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["search.suggest", "search.highlight", "navigation.tabs", "navigation.top", "navigation.indexes", "toc.integrate", "content.tooltips", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u5df2\u8907\u88fd", "clipboard.copy": "\u8907\u88fd", "search.result.more.one": "\u6b64\u9801\u5c1a\u6709 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.more.other": "\u6b64\u9801\u5c1a\u6709 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.none": "\u6c92\u6709\u7b26\u5408\u7684\u9805\u76ee", "search.result.one": "\u627e\u5230 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.other": "\u627e\u5230 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.placeholder": "\u6253\u5b57\u9032\u884c\u641c\u5c0b", "search.result.term.missing": "\u7f3a\u5c11\u5b57\u8a5e", "select.version": "\u9078\u64c7\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

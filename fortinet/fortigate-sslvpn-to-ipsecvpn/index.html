@@ -1,0 +1,2066 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="本篇教學將說明如何在 FortiGate 中，將既有的 SSLVPN 架構移轉至 IPsec VPN架構。" name="description"/>
+<link href="https://wilder640.github.io/blog/fortinet/fortigate-sslvpn-to-ipsecvpn/" rel="canonical"/>
+<link href="../../nutanix/nutanix-installation/" rel="prev"/>
+<link href="../../vmware/vcf-authenticated-downloads-update-guide/" rel="next"/>
+<link href="../../assets/images/favicon.png" rel="icon"/>
+<meta content="mkdocs-1.6.1, mkdocs-material-9.5.49" name="generator"/>
+<title>FortiGate SSL VPN 遷移到 IPsec VPN 教學 - Wilder's IT 日誌</title>
+<link href="../../assets/stylesheets/main.6f8fc17f.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.06af60db.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Noto Sans TC";--md-code-font:"Roboto Mono"}</style>
+<link href="../../assets/stylesheets/extra.css" rel="stylesheet"/>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<script data-website-id="53197f63-8bcf-4ee7-b1dc-3bb98354a997" defer="" src="https://cloud.umami.is/script.js"></script>
+<!-- Open Graph -->
+<meta content="website" property="og:type"/>
+<meta content="FortiGate SSL VPN 遷移到 IPsec VPN 教學 - Wilder's IT 日誌" property="og:title"/>
+<meta content="本篇教學將說明如何在 FortiGate 中，將既有的 SSLVPN 架構移轉至 IPsec VPN架構。" property="og:description"/>
+<meta content="https://wilder640.github.io/blog/fortinet/fortigate-sslvpn-to-ipsecvpn/" property="og:url"/>
+<meta content="https://wilder640.github.io/blog/fortinet/fortigate-sslvpn-to-ipsecvpn//images/img.png" property="og:image"/>
+<meta content="image/png" property="og:image:type"/>
+<meta content="1200" property="og:image:width"/>
+<meta content="630" property="og:image:height"/>
+<!-- Twitter Cards -->
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="FortiGate SSL VPN 遷移到 IPsec VPN 教學 - Wilder's IT 日誌" name="twitter:title"/>
+<meta content="本篇教學將說明如何在 FortiGate 中，將既有的 SSLVPN 架構移轉至 IPsec VPN架構。" name="twitter:description"/>
+<meta content="https://wilder640.github.io/blog/fortinet/fortigate-sslvpn-to-ipsecvpn//images/img.png" name="twitter:image"/>
+<link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style><script src="../../js/unpkg.com/d3@7.js" type="text/javascript"></script><script src="../../js/unpkg.com/markmap-lib@0.18.js" type="text/javascript"></script><script src="../../js/unpkg.com/markmap-view@0.18.js" type="text/javascript"></script><style type="text/css">div.mkdocs-markmap {
+    width: 100%;
+    min-height: 1em;
+    border: 1px solid grey;
+}
+.mkdocs-markmap > svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+</style></head>
+<body data-md-color-accent="indigo" data-md-color-primary="indigo" data-md-color-scheme="default" dir="ltr">
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#1-環境說明">
+          跳轉到
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="頁首" class="md-header__inner md-grid">
+<a aria-label="Wilder's IT 日誌" class="md-header__button md-logo" data-md-component="logo" href="../.." title="Wilder's IT 日誌">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Wilder's IT 日誌
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              FortiGate SSL VPN 遷移到 IPsec VPN 教學
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="開啟深色模式" class="md-option" data-md-color-accent="indigo" data-md-color-media="" data-md-color-primary="indigo" data-md-color-scheme="default" id="__palette_0" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="開啟深色模式">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"></path></svg>
+</label>
+<input aria-label="關閉深色模式" class="md-option" data-md-color-accent="indigo" data-md-color-media="" data-md-color-primary="black" data-md-color-scheme="slate" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_0" hidden="" title="關閉深色模式">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"></path></svg>
+</label>
+</form>
+<script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="搜尋" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="搜尋" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+</label>
+<nav aria-label="搜尋" class="md-search__options">
+<button aria-label="清除" class="md-search__icon md-icon" tabindex="-1" title="清除" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+</button>
+</nav>
+<div class="md-search__suggest" data-md-component="search-suggest"></div>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="" tabindex="0">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            正在初始化搜尋引擎
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="標籤" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item md-tabs__item--active">
+<a class="md-tabs__link" href="../..">
+        
+  
+    
+  
+  Home
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../tags/">
+        
+  
+    
+  
+  Tags
+
+      </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../archive/2025/">
+          
+  
+    
+  
+  時間軸
+
+        </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../../category/aruba/">
+          
+  
+    
+  
+  類別
+
+        </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden="">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="導覽列" class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Wilder's IT 日誌" class="md-nav__button md-logo" data-md-component="logo" href="../.." title="Wilder's IT 日誌">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+</a>
+    Wilder's IT 日誌
+  </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active">
+<a class="md-nav__link" href="../..">
+<span class="md-ellipsis">
+    Home
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../tags/">
+<span class="md-ellipsis">
+    Tags
+  </span>
+</a>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_3" type="checkbox"/>
+<label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+<span class="md-ellipsis">
+    時間軸
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_3_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_3">
+<span class="md-nav__icon md-icon"></span>
+            時間軸
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../archive/2025/">
+<span class="md-ellipsis">
+    2025 10月
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../archive/2024/">
+<span class="md-ellipsis">
+    2024 12月
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item md-nav__item--nested">
+<input class="md-nav__toggle md-toggle" id="__nav_4" type="checkbox"/>
+<label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+<span class="md-ellipsis">
+    類別
+  </span>
+<span class="md-nav__icon md-icon"></span>
+</label>
+<nav aria-expanded="false" aria-labelledby="__nav_4_label" class="md-nav" data-md-level="1">
+<label class="md-nav__title" for="__nav_4">
+<span class="md-nav__icon md-icon"></span>
+            類別
+          </label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../category/aruba/">
+<span class="md-ellipsis">
+    Aruba
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../category/extreme/">
+<span class="md-ellipsis">
+    Extreme
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../category/fortinet/">
+<span class="md-ellipsis">
+    Fortinet
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../category/nutanix/">
+<span class="md-ellipsis">
+    Nutanix
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../category/paloalto/">
+<span class="md-ellipsis">
+    Paloalto
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../category/veeam/">
+<span class="md-ellipsis">
+    Veeam
+  </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../../category/vmware/">
+<span class="md-ellipsis">
+    Vmware
+  </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content md-content--post" data-md-component="content">
+<div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner md-post">
+<nav class="md-nav md-nav--primary">
+<div class="md-post__back">
+<div class="md-nav__title md-nav__container">
+<a class="md-nav__link" href="../..">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+<span class="md-ellipsis">
+                    回到主頁
+                  </span>
+</a>
+</div>
+</div>
+<ul class="md-post__meta md-nav__list">
+<li class="md-nav__item md-nav__item--section">
+<div class="md-post__title">
+<span class="md-ellipsis">
+                    元數據
+                  </span>
+</div>
+<nav class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<div class="md-nav__link">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"></path></svg>
+<time class="md-ellipsis" datetime="2025-05-05 00:00:00+00:00">2025年5月5日</time>
+</div>
+</li>
+<li class="md-nav__item">
+<div class="md-nav__link">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"></path></svg>
+<span class="md-ellipsis">
+                            於
+                            
+                              <a href="../../category/fortinet/">Fortinet</a></span>
+</div>
+</li>
+<li class="md-nav__item">
+<div class="md-nav__link">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"></path></svg>
+<span class="md-ellipsis">
+                            
+                              需要 12 分鐘閱讀時間
+                            
+                          </span>
+</div>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+<nav aria-label="目錄" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#1-環境說明">
+<span class="md-ellipsis">
+      1. 環境說明
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#2-sslvpn-介紹">
+<span class="md-ellipsis">
+      2. SSLVPN 介紹
+    </span>
+</a>
+<nav aria-label="2. SSLVPN 介紹" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#21-特點">
+<span class="md-ellipsis">
+      2.1. 特點
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#22-限制與注意事項">
+<span class="md-ellipsis">
+      2.2. 限制與注意事項
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#3-ipsec介紹">
+<span class="md-ellipsis">
+      3. IPsec介紹
+    </span>
+</a>
+<nav aria-label="3. IPsec介紹" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#31-運作模式">
+<span class="md-ellipsis">
+      3.1. 運作模式
+    </span>
+</a>
+<nav aria-label="3.1. 運作模式" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#311-傳輸模式">
+<span class="md-ellipsis">
+      3.1.1. 傳輸模式
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#312-隧道模式">
+<span class="md-ellipsis">
+      3.1.2. 隧道模式
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#32-封包安全協定">
+<span class="md-ellipsis">
+      3.2. 封包安全協定
+    </span>
+</a>
+<nav aria-label="3.2. 封包安全協定" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#321-ah">
+<span class="md-ellipsis">
+      3.2.1. AH
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#322-esp">
+<span class="md-ellipsis">
+      3.2.2. ESP
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#33-金鑰管理協定">
+<span class="md-ellipsis">
+      3.3. 金鑰管理協定
+    </span>
+</a>
+<nav aria-label="3.3. 金鑰管理協定" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#331-ikev1">
+<span class="md-ellipsis">
+      3.3.1. IKEv1
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#332-ikev2">
+<span class="md-ellipsis">
+      3.3.2. IKEv2
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#34-封包處理流程">
+<span class="md-ellipsis">
+      3.4. 封包處理流程
+    </span>
+</a>
+<nav aria-label="3.4. 封包處理流程" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#341-outbound-path封包送出">
+<span class="md-ellipsis">
+      3.4.1. Outbound Path（封包送出）
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#342-inbound-path封包接收">
+<span class="md-ellipsis">
+      3.4.2. Inbound Path（封包接收）
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#4-ssl-vpn-vs-ipsec-vpn-比較">
+<span class="md-ellipsis">
+      4. SSL VPN vs IPsec VPN 比較
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#5-遷移前的設計規劃要點">
+<span class="md-ellipsis">
+      5. 遷移前的設計規劃要點
+    </span>
+</a>
+<nav aria-label="5. 遷移前的設計規劃要點" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#51-身份驗證方式">
+<span class="md-ellipsis">
+      5.1. 身份驗證方式
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#52-連線方式">
+<span class="md-ellipsis">
+      5.2. 連線方式
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#53-ip-位址分配">
+<span class="md-ellipsis">
+      5.3. IP 位址分配
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#54-dns-與搜尋網域">
+<span class="md-ellipsis">
+      5.4. DNS 與搜尋網域
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#55-多使用者群組與-peer-id-連線設計">
+<span class="md-ellipsis">
+      5.5. 多使用者群組與 Peer ID 連線設計
+    </span>
+</a>
+<nav aria-label="5.5. 多使用者群組與 Peer ID 連線設計" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#551-方式一單一撥入隧道--多群組">
+<span class="md-ellipsis">
+      5.5.1. 方式一：單一撥入隧道 + 多群組
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#552-方式二多條獨立撥入隧道--各自群組">
+<span class="md-ellipsis">
+      5.5.2. 方式二：多條獨立撥入隧道 + 各自群組
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#553-ikev1-模式對-peer-id-辨識的影響">
+<span class="md-ellipsis">
+      5.5.3. IKEv1 模式對 Peer ID 辨識的影響
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#6-建立ipsec-vpn-tunnel">
+<span class="md-ellipsis">
+      6. 建立IPSEC VPN Tunnel
+    </span>
+</a>
+<nav aria-label="6. 建立IPSEC VPN Tunnel" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#61-使用內建範本建立">
+<span class="md-ellipsis">
+      6.1. 使用內建範本建立
+    </span>
+</a>
+<nav aria-label="6.1. 使用內建範本建立" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#611-開啟-vpn-wizard">
+<span class="md-ellipsis">
+      6.1.1. 開啟 VPN Wizard
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#612-設定身份驗證與撥入參數">
+<span class="md-ellipsis">
+      6.1.2. 設定身份驗證與撥入參數
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#613-配置撥入用戶的網路設定">
+<span class="md-ellipsis">
+      6.1.3. 配置撥入用戶的網路設定
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#614-客戶端選項">
+<span class="md-ellipsis">
+      6.1.4. 客戶端選項
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#615-建立完成並驗證">
+<span class="md-ellipsis">
+      6.1.5. 建立完成並驗證
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#62-不使用內建範本建立">
+<span class="md-ellipsis">
+      6.2. 不使用內建範本建立
+    </span>
+</a>
+<nav aria-label="6.2. 不使用內建範本建立" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#621-開啟-vpn-wizard">
+<span class="md-ellipsis">
+      6.2.1. 開啟 VPN Wizard
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#622-network">
+<span class="md-ellipsis">
+      6.2.2. Network
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#623-認證與-ike-版本設定">
+<span class="md-ellipsis">
+      6.2.3. 認證與 IKE 版本設定
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#624-phase-1">
+<span class="md-ellipsis">
+      6.2.4. Phase 1
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#625-phase-2">
+<span class="md-ellipsis">
+      6.2.5. Phase 2
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#626-設定eap驗證">
+<span class="md-ellipsis">
+      6.2.6. 設定EAP驗證
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#627-建立firewall-policy">
+<span class="md-ellipsis">
+      6.2.7. 建立Firewall Policy
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#7-forticlient-用戶端設定教學">
+<span class="md-ellipsis">
+      7. FortiClient 用戶端設定教學
+    </span>
+</a>
+<nav aria-label="7. FortiClient 用戶端設定教學" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#71-開啟-forticlient-vpn-設定頁面">
+<span class="md-ellipsis">
+      7.1. 開啟 FortiClient VPN 設定頁面
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#72-建立-vpn-profile">
+<span class="md-ellipsis">
+      7.2. 建立 VPN Profile
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#73-測試-vpn-連線">
+<span class="md-ellipsis">
+      7.3. 測試 VPN 連線
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#8-faq">
+<span class="md-ellipsis">
+      8. FAQ
+    </span>
+</a>
+<nav aria-label="8. FAQ" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#81-如何限制僅有台灣ip可以連線">
+<span class="md-ellipsis">
+      8.1. 如何限制僅有台灣IP可以連線
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#82-為何在forward-traffic-user欄位沒有資訊">
+<span class="md-ellipsis">
+      8.2. 為何在Forward Traffic User欄位沒有資訊
+    </span>
+</a>
+<nav aria-label="8.2. 為何在Forward Traffic User欄位沒有資訊" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#821-ikev1">
+<span class="md-ellipsis">
+      8.2.1. IKEv1
+    </span>
+</a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#822-ikev2">
+<span class="md-ellipsis">
+      8.2.2. IKEv2
+    </span>
+</a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<article class="md-content__inner md-typeset">
+<div class="cover no-print">
+<h1 class="page-title"> FortiGate SSL VPN 遷移到 IPsec VPN 教學 </h1>
+<span class="md-source-file__fact">
+<span class="md-icon" title="最後更新">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
+</span>
+        2025-10-30 
+        
+             |
+             
+                <span class="md-icon" title="分類">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 20H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h7a2 2 0 0 1 2 2H4v10l2.14-8h17.07l-2.28 8.5c-.23.87-1.01 1.5-1.93 1.5"></path></svg>
+</span>
+                Fortinet
+            
+        
+    </span>
+<p class="page-description">
+            本篇教學將說明如何在 FortiGate 中，將既有的 SSLVPN 架構移轉至 IPsec VPN架構。
+        </p>
+<nav class="md-tags">
+<a class="md-tag" href="../../tags/#fortigate">FortiGate</a>
+<a class="md-tag" href="../../tags/#ssl-vpn">SSL VPN</a>
+<a class="md-tag" href="../../tags/#ipsec-vpn">IPsec VPN</a>
+</nav>
+</div>
+<h2>目錄</h2>
+<ul>
+<li><a href="#1-%E7%92%B0%E5%A2%83%E8%AA%AA%E6%98%8E">1. 環境說明</a></li>
+<li><a href="#2-sslvpn-%E4%BB%8B%E7%B4%B9">2. SSLVPN 介紹</a><ul>
+<li><a href="#21-%E7%89%B9%E9%BB%9E">2.1. 特點</a></li>
+<li><a href="#22-%E9%99%90%E5%88%B6%E8%88%87%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A0%85">2.2. 限制與注意事項</a></li>
+</ul>
+</li>
+<li><a href="#3-ipsec%E4%BB%8B%E7%B4%B9">3. IPsec介紹</a><ul>
+<li><a href="#31-%E9%81%8B%E4%BD%9C%E6%A8%A1%E5%BC%8F">3.1. 運作模式</a><ul>
+<li><a href="#311-%E5%82%B3%E8%BC%B8%E6%A8%A1%E5%BC%8F">3.1.1. 傳輸模式</a></li>
+<li><a href="#312-%E9%9A%A7%E9%81%93%E6%A8%A1%E5%BC%8F">3.1.2. 隧道模式</a></li>
+</ul>
+</li>
+<li><a href="#32-%E5%B0%81%E5%8C%85%E5%AE%89%E5%85%A8%E5%8D%94%E5%AE%9A">3.2. 封包安全協定</a><ul>
+<li><a href="#321-ah">3.2.1. AH</a></li>
+<li><a href="#322-esp">3.2.2. ESP</a></li>
+</ul>
+</li>
+<li><a href="#33-%E9%87%91%E9%91%B0%E7%AE%A1%E7%90%86%E5%8D%94%E5%AE%9A">3.3. 金鑰管理協定</a><ul>
+<li><a href="#331-ikev1">3.3.1. IKEv1</a><ul>
+<li><a href="#3311-%E4%BD%BF%E7%94%A8main-mode%E6%B5%81%E7%A8%8B">3.3.1.1. 使用Main Mode流程</a></li>
+<li><a href="#3312-%E4%BD%BF%E7%94%A8aggressive-mode%E6%B5%81%E7%A8%8B">3.3.1.2. 使用Aggressive Mode流程</a></li>
+<li><a href="#3313-main-mode-vs-aggressive-mode-%E6%AF%94%E8%BC%83">3.3.1.3. Main Mode vs Aggressive Mode 比較</a></li>
+</ul>
+</li>
+<li><a href="#332-ikev2">3.3.2. IKEv2</a><ul>
+<li><a href="#3321-%E4%BD%BF%E7%94%A8-ikev2-%E6%B5%81%E7%A8%8B">3.3.2.1. 使用 IKEv2 流程</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#34-%E5%B0%81%E5%8C%85%E8%99%95%E7%90%86%E6%B5%81%E7%A8%8B">3.4. 封包處理流程</a><ul>
+<li><a href="#341-outbound-path%E5%B0%81%E5%8C%85%E9%80%81%E5%87%BA">3.4.1. Outbound Path（封包送出）</a></li>
+<li><a href="#342-inbound-path%E5%B0%81%E5%8C%85%E6%8E%A5%E6%94%B6">3.4.2. Inbound Path（封包接收）</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4-ssl-vpn-vs-ipsec-vpn-%E6%AF%94%E8%BC%83">4. SSL VPN vs IPsec VPN 比較</a></li>
+<li><a href="#5-%E9%81%B7%E7%A7%BB%E5%89%8D%E7%9A%84%E8%A8%AD%E8%A8%88%E8%A6%8F%E5%8A%83%E8%A6%81%E9%BB%9E">5. 遷移前的設計規劃要點</a><ul>
+<li><a href="#51-%E8%BA%AB%E4%BB%BD%E9%A9%97%E8%AD%89%E6%96%B9%E5%BC%8F">5.1. 身份驗證方式</a></li>
+<li><a href="#52-%E9%80%A3%E7%B7%9A%E6%96%B9%E5%BC%8F">5.2. 連線方式</a></li>
+<li><a href="#53-ip-%E4%BD%8D%E5%9D%80%E5%88%86%E9%85%8D">5.3. IP 位址分配</a></li>
+<li><a href="#54-dns-%E8%88%87%E6%90%9C%E5%B0%8B%E7%B6%B2%E5%9F%9F">5.4. DNS 與搜尋網域</a></li>
+<li><a href="#55-%E5%A4%9A%E4%BD%BF%E7%94%A8%E8%80%85%E7%BE%A4%E7%B5%84%E8%88%87-peer-id-%E9%80%A3%E7%B7%9A%E8%A8%AD%E8%A8%88">5.5. 多使用者群組與 Peer ID 連線設計</a><ul>
+<li><a href="#551-%E6%96%B9%E5%BC%8F%E4%B8%80%E5%96%AE%E4%B8%80%E6%92%A5%E5%85%A5%E9%9A%A7%E9%81%93--%E5%A4%9A%E7%BE%A4%E7%B5%84">5.5.1. 方式一：單一撥入隧道 + 多群組</a></li>
+<li><a href="#552-%E6%96%B9%E5%BC%8F%E4%BA%8C%E5%A4%9A%E6%A2%9D%E7%8D%A8%E7%AB%8B%E6%92%A5%E5%85%A5%E9%9A%A7%E9%81%93--%E5%90%84%E8%87%AA%E7%BE%A4%E7%B5%84">5.5.2. 方式二：多條獨立撥入隧道 + 各自群組</a></li>
+<li><a href="#553-ikev1-%E6%A8%A1%E5%BC%8F%E5%B0%8D-peer-id-%E8%BE%A8%E8%AD%98%E7%9A%84%E5%BD%B1%E9%9F%BF">5.5.3. IKEv1 模式對 Peer ID 辨識的影響</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#6-%E5%BB%BA%E7%AB%8Bipsec-vpn-tunnel">6. 建立IPSEC VPN Tunnel</a><ul>
+<li><a href="#61-%E4%BD%BF%E7%94%A8%E5%85%A7%E5%BB%BA%E7%AF%84%E6%9C%AC%E5%BB%BA%E7%AB%8B">6.1. 使用內建範本建立</a><ul>
+<li><a href="#611-%E9%96%8B%E5%95%9F-vpn-wizard">6.1.1. 開啟 VPN Wizard</a></li>
+<li><a href="#612-%E8%A8%AD%E5%AE%9A%E8%BA%AB%E4%BB%BD%E9%A9%97%E8%AD%89%E8%88%87%E6%92%A5%E5%85%A5%E5%8F%83%E6%95%B8">6.1.2. 設定身份驗證與撥入參數</a></li>
+<li><a href="#613-%E9%85%8D%E7%BD%AE%E6%92%A5%E5%85%A5%E7%94%A8%E6%88%B6%E7%9A%84%E7%B6%B2%E8%B7%AF%E8%A8%AD%E5%AE%9A">6.1.3. 配置撥入用戶的網路設定</a></li>
+<li><a href="#614-%E5%AE%A2%E6%88%B6%E7%AB%AF%E9%81%B8%E9%A0%85">6.1.4. 客戶端選項</a></li>
+<li><a href="#615-%E5%BB%BA%E7%AB%8B%E5%AE%8C%E6%88%90%E4%B8%A6%E9%A9%97%E8%AD%89">6.1.5. 建立完成並驗證</a></li>
+</ul>
+</li>
+<li><a href="#62-%E4%B8%8D%E4%BD%BF%E7%94%A8%E5%85%A7%E5%BB%BA%E7%AF%84%E6%9C%AC%E5%BB%BA%E7%AB%8B">6.2. 不使用內建範本建立</a><ul>
+<li><a href="#621-%E9%96%8B%E5%95%9F-vpn-wizard">6.2.1. 開啟 VPN Wizard</a></li>
+<li><a href="#622-network">6.2.2. Network</a></li>
+<li><a href="#623-%E8%AA%8D%E8%AD%89%E8%88%87-ike-%E7%89%88%E6%9C%AC%E8%A8%AD%E5%AE%9A">6.2.3. 認證與 IKE 版本設定</a></li>
+<li><a href="#624-phase-1">6.2.4. Phase 1</a></li>
+<li><a href="#625-phase-2">6.2.5. Phase 2</a></li>
+<li><a href="#626-%E8%A8%AD%E5%AE%9Aeap%E9%A9%97%E8%AD%89">6.2.6. 設定EAP驗證</a></li>
+<li><a href="#627-%E5%BB%BA%E7%AB%8Bfirewall-policy">6.2.7. 建立Firewall Policy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#7-forticlient-%E7%94%A8%E6%88%B6%E7%AB%AF%E8%A8%AD%E5%AE%9A%E6%95%99%E5%AD%B8">7. FortiClient 用戶端設定教學</a><ul>
+<li><a href="#71-%E9%96%8B%E5%95%9F-forticlient-vpn-%E8%A8%AD%E5%AE%9A%E9%A0%81%E9%9D%A2">7.1. 開啟 FortiClient VPN 設定頁面</a></li>
+<li><a href="#72-%E5%BB%BA%E7%AB%8B-vpn-profile">7.2. 建立 VPN Profile</a></li>
+<li><a href="#73-%E6%B8%AC%E8%A9%A6-vpn-%E9%80%A3%E7%B7%9A">7.3. 測試 VPN 連線</a></li>
+</ul>
+</li>
+<li><a href="#8-faq">8. FAQ</a><ul>
+<li><a href="#81-%E5%A6%82%E4%BD%95%E9%99%90%E5%88%B6%E5%83%85%E6%9C%89%E5%8F%B0%E7%81%A3ip%E5%8F%AF%E4%BB%A5%E9%80%A3%E7%B7%9A">8.1. 如何限制僅有台灣IP可以連線</a></li>
+<li><a href="#82-%E7%82%BA%E4%BD%95%E5%9C%A8forward-traffic-user%E6%AC%84%E4%BD%8D%E6%B2%92%E6%9C%89%E8%B3%87%E8%A8%8A">8.2. 為何在Forward Traffic User欄位沒有資訊</a><ul>
+<li><a href="#821-ikev1">8.2.1. IKEv1</a></li>
+<li><a href="#822-ikev2">8.2.2. IKEv2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="page-break">
+<h2 id="1-環境說明">1. 環境說明<a class="headerlink" href="#1-%E7%92%B0%E5%A2%83%E8%AA%AA%E6%98%8E" title="Permanent link">#</a></h2>
+<ul>
+<li>硬體： FortiGate 60F</li>
+<li>FortiOS版本：7.2.11</li>
+</ul>
+<div class="page-break">
+<h2 id="2-sslvpn-介紹">2. SSLVPN 介紹<a class="headerlink" href="#2-sslvpn-%E4%BB%8B%E7%B4%B9" title="Permanent link">#</a></h2>
+<p>SSLVPN（Secure Sockets Layer Virtual Private Network）是一種基於應用層的 VPN 技術，常透過瀏覽器或VPN軟體連線。</p>
+<h3 id="21-特點">2.1. 特點<a class="headerlink" href="#21-%E7%89%B9%E9%BB%9E" title="Permanent link">#</a></h3>
+<ul>
+<li>使用 TLS（Transport Layer Security） 加密封包（前身為 SSL）</li>
+<li>用戶可透過 Web 瀏覽器或VPN軟體連線</li>
+<li>支援 Web Portal 模式與 Tunnel 模式</li>
+<li>支援客戶端憑證、二階段驗證、多用戶群組控管</li>
+<li>通常封裝於 TCP 443，可避免大多數網路阻擋</li>
+</ul>
+<h3 id="22-限制與注意事項">2.2. 限制與注意事項<a class="headerlink" href="#22-%E9%99%90%E5%88%B6%E8%88%87%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A0%85" title="Permanent link">#</a></h3>
+<ol>
+<li>
+<p><strong>TCP-over-TCP 問題</strong><br/>
+   Tunnel 模式本身透過 TCP（TLS）進行封包傳輸，如果使用的應用（如 RDP、SSH、FTP）本身也是 TCP 協定，兩層 TCP 若同時發生重傳機制，會造成「重複擁塞控制」與效能瓶頸，這稱為 "TCP-over-TCP" 問題。</p>
+</li>
+<li>
+<p><strong>不支援 QoS 標記與優先處理</strong><br/>
+   TLS 封裝會將原始封包包在加密資料裡，導致網路設備無法辨識內層封包的類型與標記，因此無法針對不同流量進行 QoS（服務品質）管理。</p>
+</li>
+<li>
+<p><strong>無法使用硬體加速（如 NPU）</strong><br/>
+   SSL VPN 使用 TLS 加密，其運算在應用層，與 IPsec 不同，無法使用 FortiGate 上的 NPU（Network Processing Unit）等硬體加速器，因此會大量依賴 CPU，造成加密效能受限。</p>
+</li>
+</ol>
+<div class="page-break">
+<h2 id="3-ipsec介紹">3. IPsec介紹<a class="headerlink" href="#3-ipsec%E4%BB%8B%E7%B4%B9" title="Permanent link">#</a></h2>
+<p>IPsec（Internet Protocol Security）是一種用於在 IP 層實現安全通訊的協定套件。它透過雙方事先協商好的設定（稱為 Security Association，SA），來對 IP 封包進行加密與驗證，確保資料在網路上的私密性、完整性與可驗證性。</p>
+<div class="language-markmap mkdocs-markmap"><markmap-data encoding="base64" hidden="true">LS0tCm1hcmttYXA6CiAgY29sb3JGcmVlemVMZXZlbDogMgogIGxpbmVXaWR0aDogMgogIHBhbjogdHJ1ZQogIHNwYWNpbmdWZXJ0aWNhbDogMTUKICBkdXJhdGlvbjogMAotLS0KIyBJUHNlYyDmnrbmp4sKIyMg6YGL5L2c5qih5byPIChPcGVyYXRpb25hbCBNb2RlcykKIyMjIOWCs+i8uOaooeW8jyAoVHJhbnNwb3J0IE1vZGUpCiMjIyDpmqfpgZPmqKHlvI8gKFR1bm5lbCBNb2RlKQojIyDlsIHljIXlronlhajljZTlrpogKFRyYWZmaWMgU2VjdXJpdHkgUHJvdG9jb2xzKQojIyMgRVNQIOKAlCBFbmNhcHN1bGF0aW5nIFNlY3VyaXR5IFBheWxvYWQKIyMjIEFIIOKAlCBBdXRoZW50aWNhdGlvbiBIZWFkZXIKIyMg5a6J5YWo6Zec6IGvIChTZWN1cml0eSBBc3NvY2lhdGlvbiwgU0EpCiMjIyBQaGFzZS0xIFNBCiMjIyMgSUtFdjEgTWFpbiAvIEFnZ3Jlc3NpdmUg772cIElLRXYyIElLRV9TQe+8iOW7uueri+aOp+WItumAmumBk++8jOeUqOaWvOW+jOe6jCBQaGFzZS0yIElLRSDmtYHph4/liqDop6Plr4bvvIkKIyMjIFBoYXNlLTIgU0EKIyMjIyBJS0V2MSBRdWljayBNb2RlIO+9nCBJS0V2MiBDSElMRF9TQe+8iOW7uueri+izh+aWmemAmumBk++8jOS+myBFU1AgLyBBSCDliqDop6Plr4blr6bpmpvmtYHph4/vvIkKIyMg6LOH5paZ5bqrIChEYXRhYmFzZXMpCiMjIyBTUEQg4oCUIFNlY3VyaXR5IFBvbGljeSBEYXRhYmFzZQojIyMjIOS+nSBTZWxlY3RvcnMg5rG65a6aIFByb3RlY3QgLyBCeXBhc3MgLyBEaXNjYXJkCiMjIyBTQUQg4oCUIFNlY3VyaXR5IEFzc29jaWF0aW9uIERhdGFiYXNlCiMjIyMg5LulIFNQSSDngrrntKLlvJXvvIzkv53lrZggSUtFIOW3suirh+WmpeeahCBTQSDlj4PmlbgKIyMjIFBBRCDigJQgUGVlciBBdXRob3JpemF0aW9uIERhdGFiYXNlCiMjIyMg54K65q+P5YCLIFBlZXIgSUQg5oyH5a6a5Y+v5o6l5Y+X55qE5Z+656SO6amX6K2J5rOV77yI5YWx5Lqr6YeR6ZGw77yP5oaR6K2J77yJ77yM5Lim5qiZ56S65piv5ZCm5by35Yi25qyh57Sa6amX6K2JICh4QXV0aC9FQVApCiMjIOmHkemRsOeuoeeQhuWNlOWumiAoS2V5IE1hbmFnZW1lbnQgUHJvdG9jb2wpCiMjIyBJS0V2MQojIyMjIE1haW4gTW9kZQojIyMjIEFnZ3Jlc3NpdmUgTW9kZQojIyMgSUtFdjI=</markmap-data></div>
+<div class="page-break">
+<h3 id="31-運作模式">3.1. 運作模式<a class="headerlink" href="#31-%E9%81%8B%E4%BD%9C%E6%A8%A1%E5%BC%8F" title="Permanent link">#</a></h3>
+<h4 id="311-傳輸模式">3.1.1. 傳輸模式<a class="headerlink" href="#311-%E5%82%B3%E8%BC%B8%E6%A8%A1%E5%BC%8F" title="Permanent link">#</a></h4>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────┬─────────────────────┬────────────────────────────┐
+│         IP Header           │   ESP/AH Header     │   TCP/UDP Header + Data    │
+└─────────────────────────────┴─────────────────────┴────────────────────────────┘
+|&lt;----- 保留原IP Header -----&gt;|                      |&lt;-- 加密╱驗證的範圍 (僅負載) --&gt;|
+</code></pre></div>
+<ul>
+<li>原 IP Header保留，只加一層 ESP／AH Header</li>
+<li>僅 <code>TCP/UDP + Data</code>部分會受到保護</li>
+<li>因 IP 位址不變故開銷小，但無法隱匿真實 IP。</li>
+<li>適用於主機 ↔ 主機或路由協定簽章。</li>
+</ul>
+<div class="page-break">
+<h4 id="312-隧道模式">3.1.2. 隧道模式<a class="headerlink" href="#312-%E9%9A%A7%E9%81%93%E6%A8%A1%E5%BC%8F" title="Permanent link">#</a></h4>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────┬─────────────────────┬─────────────────────────────────────────┐
+│        New IP Header        │   ESP/AH Header     │  Old IP Header + TCP/UDP Header + Data  │
+└─────────────────────────────┴─────────────────────┴─────────────────────────────────────────┘
+|&lt;-- 外部路由使用的IP Header --&gt;|                     |&lt;--- 加密╱驗證的範圍（原IP Header和資料） ---&gt;|                                     
+</code></pre></div>
+<ul>
+<li>外層更換新 IP Header，把 <em>整個原封包</em> 包裝進去  </li>
+<li>完全隱蔽內部源/目的 IP，適合在Internet上傳輸  </li>
+<li>因額外新增一個IP Header故MTU 開銷較大  </li>
+<li>適用 Site-to-Site VPN、遠端撥號。</li>
+</ul>
+<div class="page-break">
+<h3 id="32-封包安全協定">3.2. 封包安全協定<a class="headerlink" href="#32-%E5%B0%81%E5%8C%85%E5%AE%89%E5%85%A8%E5%8D%94%E5%AE%9A" title="Permanent link">#</a></h3>
+<h4 id="321-ah">3.2.1. AH<a class="headerlink" href="#321-ah" title="Permanent link">#</a></h4>
+<div class="highlight"><pre><span></span><code>┌────────────┬───────────────────────────────────┐
+│ AH Header  │              IP Data              │
+└────────────┴───────────────────────────────────┘
+             |&lt;-- 驗證範圍 (MD5/SHA1 雜湊演算法) --&gt;|
+</code></pre></div>
+<ul>
+<li>工作在 IP Protocol 51</li>
+<li>僅提供 完整性╱來源驗證，不提供加密</li>
+<li>由於無機密性，現代部署已很少使用，常被 ESP 取代</li>
+</ul>
+<div class="page-break">
+<h4 id="322-esp">3.2.2. ESP<a class="headerlink" href="#322-esp" title="Permanent link">#</a></h4>
+<div class="highlight"><pre><span></span><code>┌────────────┬───────────────────┬──────────────┬────────────────────┐
+│ ESP Header │      IP Data      │  ESP Trailer │ ESP Authentication │
+└────────────┴───────────────────┴──────────────┴────────────────────┘
+             |&lt;-- 加密範圍 (DES/3DES/AES 加密) --&gt;|
+|&lt;-------- 驗證範圍 (MD5/SHA1 雜湊演算法) --------&gt;|
+</code></pre></div>
+<ul>
+<li>工作在 IP Protocol 50</li>
+<li>可同時提供 機密性 (加密) 與 完整性╱來源驗證</li>
+<li>支援 NAT-T → 封裝於 UDP 4500</li>
+<li>主流 VPN 部署（Site-to-Site、Remote Access）皆採 ESP</li>
+</ul>
+<div class="page-break">
+<h3 id="33-金鑰管理協定">3.3. 金鑰管理協定<a class="headerlink" href="#33-%E9%87%91%E9%91%B0%E7%AE%A1%E7%90%86%E5%8D%94%E5%AE%9A" title="Permanent link">#</a></h3>
+<h4 id="331-ikev1">3.3.1. IKEv1<a class="headerlink" href="#331-ikev1" title="Permanent link">#</a></h4>
+<ul>
+<li>IKEv1 使用兩階段（Phase-1 / Phase-2）建立安全關聯 (SA)。</li>
+<li>Phase-1 主要負責雙向認證與保護後續 IKE 流量。</li>
+<li>Phase-2（Quick Mode）則建立真正的 ESP/AH SA。</li>
+<li>支援以下兩種協商模式</li>
+</ul>
+<div class="page-break">
+<h5 id="3311-使用main-mode流程">3.3.1.1. 使用Main Mode流程<a class="headerlink" href="#3311-%E4%BD%BF%E7%94%A8main-mode%E6%B5%81%E7%A8%8B" title="Permanent link">#</a></h5>
+<div class="highlight"><pre><span></span><code>| Initiator                                                                                                 Responder |
+|                                                                                                                     |
+|─────────────────────────────────────────── Phase-1（Main Mode：建立 IKE SA）──────────────────────────────────────────|
+|                                                                                                                     |
+| ------ 傳送 Propose algorithms（加密演算法（如 AES）、驗證演算法（如 SHA1）、DH 群組（如 Group 14）、認證方法（如 PSK））  ------&gt; |
+|                                                                                                                     |
+| &lt;------------------------------------- Select algorithms（從提案中選擇匹配組合） -------------------------------------- |
+|                                                                                                                     |
+| ------------------------------------------- Exchange DH public values  --------------------------------------------&gt;|
+|                                                                                                                     |
+| &lt;------------------------------------------ Exchange DH public values  ---------------------------------------------|
+|                                                                                                                     |
+| ---------------------- 利用 Diffie-Hellman 產生的共享金鑰加密傳送Authenticate（Local ID + Auth）  ----------------------&gt;|
+|                                                                                                                     |
+| &lt;---------------------- 利用 Diffie-Hellman 產生的共享金鑰加密傳送Authenticate（Local ID + Auth）  ----------------------|
+|                                                                                                                     |
+|───────────────────────────────────────── Phase-2（Quick Mode：建立 IPsec SA）─────────────────────────────────────────|
+|                                                                                                                     |
+| ---------------------- 傳送Propose IPsec SA參數（ESP/AH演算法、加密演算法、認證演算法、生命週期等）  -----------------------&gt;|
+|                                                                                                                     |
+| &lt;------------------------------------- Select algorithms（從提案中選擇匹配組合） -------------------------------------- |
+|                                                                                                                     |
+| --- Initiator/Responder → 產生資料加密金鑰：---------------------------------------------------------------------------|
+|     - 啟用 PFS → 進行新的 Diffie-Hellman 交換，產生獨立金鑰                                                              |
+|     - 未啟用 PFS → 由 Phase-1 的共享金鑰派生新的資料加密金鑰                                                              |
+</code></pre></div>
+<ul>
+<li>Phase-1 共需 6 個封包往返。</li>
+<li>ID 資訊（身份）在加密後傳送 ➔ 較安全。</li>
+<li>適合Site-to-Site VPN。</li>
+</ul>
+<div class="page-break">
+<h5 id="3312-使用aggressive-mode流程">3.3.1.2. 使用Aggressive Mode流程<a class="headerlink" href="#3312-%E4%BD%BF%E7%94%A8aggressive-mode%E6%B5%81%E7%A8%8B" title="Permanent link">#</a></h5>
+<div class="highlight"><pre><span></span><code>| Initiator                                                                                                               Responder |
+|                                                                                                                                   |
+|───────────────────────────────────────────── Phase-1（Aggressive Mode：建立 IKE SA）────────────────────────────────────────────────|
+|                                                                                                                                   |
+| --- 傳送 Proposal（加密演算法（如 AES）、驗證演算法（如 SHA1）、DH 群組（如 Group 14）、認證方法（如 PSK）） + DH public values + Local ID  ---&gt; |
+|                                                                                                                                   |
+| &lt;-------------------------- 傳送回應（接受的 Proposal 內容） + DH public values + Local ID + 認證資料（Auth） --------------------------|
+|                                                                                                                                   |
+| ------------------------------------------------------- 傳送認證資料（Auth） -------------------------------------------------------&gt;|
+|                                                                                                                                   |
+|───────────────────────────────────────────── Phase-2（Quick Mode：建立 IPsec SA）───────────────────────────────────────────────────|
+|                                                                                                                                   |
+| ---------------------------- 傳送 Propose IPsec SA參數（ESP/AH演算法、加密演算法、認證演算法、生命週期等）  ------------------------------&gt;|
+|                                                                                                                                   |
+| &lt;-------------------------------------------- Select algorithms（從提案中選擇匹配組合） --------------------------------------------- |
+|                                                                                                                                   |
+| --- Initiator/Responder → 產生資料加密金鑰：-----------------------------------------------------------------------------------------|
+|     - 啟用 PFS → 進行新的 Diffie-Hellman 交換，產生獨立金鑰                                                                            |
+|     - 未啟用 PFS → 由 Phase-1 的共享金鑰派生新的資料加密金鑰                                                                            |
+</code></pre></div>
+<ul>
+<li>Phase-1 僅需 3 個封包往返。</li>
+<li>ID 資訊直接以明文傳送 ➔ 速度快，但身份外洩風險高。</li>
+<li>適合Remote Access VPN。</li>
+</ul>
+<div class="page-break">
+<h5 id="3313-main-mode-vs-aggressive-mode-比較">3.3.1.3. Main Mode vs Aggressive Mode 比較<a class="headerlink" href="#3313-main-mode-vs-aggressive-mode-%E6%AF%94%E8%BC%83" title="Permanent link">#</a></h5>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">項目</th>
+<th style="text-align: left;">Main Mode</th>
+<th style="text-align: left;">Aggressive Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Phase-1封包數量</td>
+<td style="text-align: left;">6個</td>
+<td style="text-align: left;">3個</td>
+</tr>
+<tr>
+<td style="text-align: left;">ID傳送方式</td>
+<td style="text-align: left;">加密傳送</td>
+<td style="text-align: left;">明文傳送</td>
+</tr>
+<tr>
+<td style="text-align: left;">建立速度</td>
+<td style="text-align: left;">較慢</td>
+<td style="text-align: left;">較快</td>
+</tr>
+<tr>
+<td style="text-align: left;">適用場景</td>
+<td style="text-align: left;">Site-to-Site VPN</td>
+<td style="text-align: left;">Dial-up VPN</td>
+</tr>
+<tr>
+<td style="text-align: left;">安全性</td>
+<td style="text-align: left;">較高</td>
+<td style="text-align: left;">較低</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h4 id="332-ikev2">3.3.2. IKEv2<a class="headerlink" href="#332-ikev2" title="Permanent link">#</a></h4>
+<ul>
+<li>IKEv2 重新設計了 IKE 協定，簡化了流程與訊息數量。</li>
+<li>將原本 IKEv1 的 Phase-1（Main/Aggressive Mode）與 Phase-2（Quick Mode）整合成單一流程。</li>
+<li>主要分為兩個階段：<ul>
+<li><strong>IKE_SA_INIT</strong>：建立基礎加密通道（協商加密、驗證參數並交換 DH 公開值）</li>
+<li><strong>IKE_AUTH</strong>：雙向認證，並同時建立第一個 CHILD_SA（資料加密通道）</li>
+</ul>
+</li>
+<li>支援 NAT Traversal（UDP 4500）、EAP（靈活認證機制）、MOBIKE（行動IP遷移）。</li>
+</ul>
+<div class="page-break">
+<h5 id="3321-使用-ikev2-流程">3.3.2.1. 使用 IKEv2 流程<a class="headerlink" href="#3321-%E4%BD%BF%E7%94%A8-ikev2-%E6%B5%81%E7%A8%8B" title="Permanent link">#</a></h5>
+<div class="highlight"><pre><span></span><code>|Initiator                                                                                                                   Responder|                                                 
+|                                                                                                                                     |
+|─────────────────────────────────────────────────── IKE_SA_INIT 階段（建立加密通道）────────────────────────────────────────────────────|
+|                                                                                                                                     |
+| --- 傳送 Proposal（加密演算法（如 AES）、驗證演算法（如 SHA1）、DH 群組（如 Group 14）、認證方法（如 PSK））、DH public values、Nonce（隨機數）  ---&gt; |
+|                                                                                                                                    |
+| &lt;----------------------------------------- 回應選定演算法、DH public values、Nonce（隨機數）  ----------------------------------------- |
+|                                                                                                                                    |
+|                              【雙方根據彼此的 DH public values + Nonce ➔ 計算出 Shared Key】                                           |
+|                                                                                                                                    |
+|────────────────────────────────────────────────── IKE_AUTH 階段（認證與建立資料通道）──────────────────────────────────────────────────|
+|                              【此階段封包內容以 IKE_SA_INIT 階段產生的 Shared Key 加密】                                                 |
+|                                                                                                                                    |
+| -------------------------------------------------------- Encrypted(IDi + 認證資料 + CHILD_SA參數提案) -------------------------------&gt;|
+|                                                                                                                                    |
+| &lt;------------------------------------------- Encrypted(IDr + 認證資料 + CHILD_SA建立回應) --------------------------------------------|
+</code></pre></div>
+<ul>
+<li>只需 4 個封包往返，即可完成身份驗證與資料通道建立。</li>
+<li>支援 EAP 認證 ➔ 適合靈活使用者認證（如帳號密碼、雙因子認證）。</li>
+<li>建立第一個 CHILD_SA 後，可持續新增／刪除 CHILD_SA，不需重建 IKE_SA。</li>
+<li>適合各種 VPN 型態（Site-to-Site VPN、Remote Access VPN）。</li>
+</ul>
+<div class="page-break">
+<h3 id="34-封包處理流程">3.4. 封包處理流程<a class="headerlink" href="#34-%E5%B0%81%E5%8C%85%E8%99%95%E7%90%86%E6%B5%81%E7%A8%8B" title="Permanent link">#</a></h3>
+<h4 id="341-outbound-path封包送出">3.4.1. Outbound Path（封包送出）<a class="headerlink" href="#341-outbound-path%E5%B0%81%E5%8C%85%E9%80%81%E5%87%BA" title="Permanent link">#</a></h4>
+<div class="highlight"><pre><span></span><code>[應用層資料]（產生要傳送的資料）
+      ↓
+[加上 IP Header]（封裝成 IP 封包）
+      ↓
+[SPD 查詢]（根據 Selectors：來源IP／目的IP／Port／協定）
+      ↓
+[SPD 查詢結果]
+      ├── Bypass → [直接送出]（無需加密）
+      ├── Discard → [丟棄封包]
+      ↓ Protect
+[SAD 查找 SA]（根據 SPD指定 or SPI 查找 SA）
+      ↓
+[找到 SA？]
+      ├── 否 → [觸發 IKE 協商]（建立新的 SA 並存入 SAD）
+      │           ↓
+      └────────── 回到 [使用 ESP╱AH 加密]
+      ↓ 是
+[使用 ESP╱AH 加密]（加密封包 or 驗證完整性）
+      ↓
+[送出到網路]
+</code></pre></div>
+<p><strong>以上流程圖可以想像成：</strong></p>
+<ol>
+<li>當你（主機）要寄出一封信（資料封包），你先把信寫好（應用層資料），然後裝進信封（IP Header）。</li>
+<li>接著你到郵局（SPD）詢問：<ul>
+<li>這封信要加密寄出嗎？（Protect）</li>
+<li>還是可以直接寄出？（Bypass）</li>
+<li>還是這封信根本不准寄？（Discard）</li>
+</ul>
+</li>
+<li>如果郵局說要加密寄出，那你會去問櫃台（SAD）：「我有鑰匙可以加密嗎？」<ul>
+<li>如果有，就直接加密（使用ESP/AH）後送出去。</li>
+<li>如果沒有鑰匙，就要打電話給對方（IKE 協商），雙方交換好密鑰，才能加密後寄出。</li>
+</ul>
+</li>
+</ol>
+<div class="page-break">
+<h4 id="342-inbound-path封包接收">3.4.2. Inbound Path（封包接收）<a class="headerlink" href="#342-inbound-path%E5%B0%81%E5%8C%85%E6%8E%A5%E6%94%B6" title="Permanent link">#</a></h4>
+<div class="highlight"><pre><span></span><code>[從網路接收封包]
+      ↓
+[封包是否有 ESP╱AH Header？]
+      ├── 有 → [解析 SPI]（從 ESP╱AH Header 擷取 SPI）
+      │           ↓
+      │    [SAD 查找對應的 SA]（找加解密╱驗證所需參數）
+      │           ↓
+      │    [ESP╱AH 驗證╱解密]（先完成驗證與解密）
+      ↓
+[SPD 查詢]（根據解密後封包的 Selectors 進行比對）
+      ↓
+[SPD 查詢結果]
+      ├── Protect → [交付上層應用]（符合規則，交TCP/UDP繼續處理）
+      ├── Bypass → [直接交付上層應用]（明文允許流量）
+      └── Discard → [丟棄封包]（不符合規則丟棄）
+</code></pre></div>
+<p><strong>以上流程圖可以想像成：</strong></p>
+<ol>
+<li>當你（主機）收到一封信（網路封包），你先看看信封上是不是貼了「加密封條」（ESP/AH Header）。</li>
+<li>如果有，就用你事先存好的鑰匙（SAD裡的SA）把信打開，並驗證是不是正確寄來的。</li>
+<li>打開之後，你再拿這封信去郵局（SPD）問：<ul>
+<li>這種信可以收嗎？（Protect）</li>
+<li>還是這封信本來就是可以直接收的明信片？（Bypass）</li>
+<li>還是這封信是垃圾詐騙？（Discard）</li>
+</ul>
+</li>
+<li>郵局會根據信件的寄件人、地址等資訊做決定。只有通過檢查的信，才會交到你的桌上（上層應用）。</li>
+</ol>
+<div class="page-break">
+<h2 id="4-ssl-vpn-vs-ipsec-vpn-比較">4. SSL VPN vs IPsec VPN 比較<a class="headerlink" href="#4-ssl-vpn-vs-ipsec-vpn-%E6%AF%94%E8%BC%83" title="Permanent link">#</a></h2>
+<p>以下表格彙整 SSL VPN 與 IPsec VPN 在各項核心技術指標的差異：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">項目</th>
+<th style="text-align: left;">SSL VPN</th>
+<th style="text-align: left;">IPsec VPN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">封裝方式</td>
+<td style="text-align: left;">TLS over TCP</td>
+<td style="text-align: left;">ESP（Encapsulating Security Payload）</td>
+</tr>
+<tr>
+<td style="text-align: left;">加密效能</td>
+<td style="text-align: left;">較低</td>
+<td style="text-align: left;">較高（支援硬體加速）</td>
+</tr>
+<tr>
+<td style="text-align: left;">NAT 穿透能力</td>
+<td style="text-align: left;">高（走 TCP 443）</td>
+<td style="text-align: left;">中（需 UDP 4500，或 TCP 封裝方式）</td>
+</tr>
+<tr>
+<td style="text-align: left;">穿透防火牆能力</td>
+<td style="text-align: left;">高（幾乎不受限制）</td>
+<td style="text-align: left;">中（視防火牆設定而定）</td>
+</tr>
+<tr>
+<td style="text-align: left;">QoS 支援</td>
+<td style="text-align: left;">差（無法標記 DSCP）</td>
+<td style="text-align: left;">佳（ESP 可支援 QoS 標記與分類）</td>
+</tr>
+<tr>
+<td style="text-align: left;">用戶端需求</td>
+<td style="text-align: left;">瀏覽器 / FortiClient</td>
+<td style="text-align: left;">FortiClient（或其他 IPsec-compatible client）</td>
+</tr>
+<tr>
+<td style="text-align: left;">適用場景</td>
+<td style="text-align: left;">小型、臨時連線需求</td>
+<td style="text-align: left;">長期、穩定、大規模部署</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<p><strong>小結說明：</strong></p>
+<ul>
+<li>
+<p><strong>SSL VPN</strong> 透過標準的 HTTPS (TCP 443) 封裝，加密傳輸，  </p>
+<ul>
+<li>優點是<strong>容易穿越 NAT、防火牆</strong>。</li>
+<li>缺點是<strong>加密效率較低</strong>，且容易遇到 <strong>TCP over TCP 重傳效能下降</strong>問題。</li>
+<li>適合小型、臨時需求，如 Remote Access 或緊急異地辦公。</li>
+</ul>
+</li>
+<li>
+<p><strong>IPsec VPN</strong> 使用 ESP 協定於 IP 層加密，  </p>
+<ul>
+<li>優點是<strong>支援硬體加速（NPU等）</strong>，加密效率高、可標記 QoS。  </li>
+<li>缺點是<strong>NAT穿透需配合 UDP 4500</strong>，且防火牆須正確設置。</li>
+<li>適合需要高效能、長期且穩定連線的場景，如 Site-to-Site VPN 或大型企業連線。</li>
+</ul>
+</li>
+</ul>
+<div class="page-break">
+<h2 id="5-遷移前的設計規劃要點">5. 遷移前的設計規劃要點<a class="headerlink" href="#5-%E9%81%B7%E7%A7%BB%E5%89%8D%E7%9A%84%E8%A8%AD%E8%A8%88%E8%A6%8F%E5%8A%83%E8%A6%81%E9%BB%9E" title="Permanent link">#</a></h2>
+<p>在開始配置 IPsec VPN 之前，建議先盤點現有 SSL VPN 架構與使用者行為，並依據下列幾個面向設計對應策略。</p>
+<h3 id="51-身份驗證方式">5.1. 身份驗證方式<a class="headerlink" href="#51-%E8%BA%AB%E4%BB%BD%E9%A9%97%E8%AD%89%E6%96%B9%E5%BC%8F" title="Permanent link">#</a></h3>
+<p>SSL VPN 支援多種驗證方式，包括：</p>
+<ul>
+<li>本機帳號（Local User）</li>
+<li>LDAP</li>
+<li>RADIUS</li>
+<li>SAML</li>
+<li>PKI 憑證</li>
+</ul>
+<p>IPsec VPN 同樣支援上述大多數機制，但實作方式會依 IKE 協定版本略有差異：</p>
+<table>
+<thead>
+<tr>
+<th>驗證方式</th>
+<th>IKEv1 支援</th>
+<th>IKEv2 支援</th>
+<th>備註</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>本機帳號</td>
+<td>✅</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>LDAP</td>
+<td>✅（搭配 XAuth）</td>
+<td>✅（搭配 EAP）</td>
+<td>IKEv2 效能與整合度較佳</td>
+</tr>
+<tr>
+<td>RADIUS</td>
+<td>✅</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>SAML</td>
+<td>❌</td>
+<td>✅</td>
+<td>僅支援 IKEv2，需 FortiClient 支援</td>
+</tr>
+<tr>
+<td>憑證</td>
+<td>✅</td>
+<td>✅</td>
+<td>可與 PKI + LDAP 搭配使用</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>若目前 SSL VPN 為多樣化驗證結構（如混合 LDAP+SAML），則建議選用 IKEv2 並搭配 FortiClient。</p>
+</blockquote>
+<div class="page-break">
+<h3 id="52-連線方式">5.2. 連線方式<a class="headerlink" href="#52-%E9%80%A3%E7%B7%9A%E6%96%B9%E5%BC%8F" title="Permanent link">#</a></h3>
+<ul>
+<li>SSL VPN 提供 Web Portal 或 FortiClient Tunnel 模式登入。</li>
+<li>IPsec VPN 則必須使用 FortiClient（或支援 IPsec 的第三方客戶端）建立隧道。</li>
+</ul>
+<h3 id="53-ip-位址分配">5.3. IP 位址分配<a class="headerlink" href="#53-ip-%E4%BD%8D%E5%9D%80%E5%88%86%E9%85%8D" title="Permanent link">#</a></h3>
+<p>SSL VPN 使用自訂 IP Pool 發放虛擬位址。</p>
+<p>IPsec VPN 可使用：</p>
+<ol>
+<li><strong>Mode Config 地址池</strong>：類似 SSL VPN 的方式。</li>
+<li><strong>DHCP over IPsec</strong>：由內部 DHCP Server 分配。</li>
+<li><strong>靜態 IP（使用者設定）</strong>：僅限部分進階場景使用。</li>
+</ol>
+<blockquote>
+<p>建議使用 mode-config 並設定適當的 Split Tunnel 網段，以避免流量全數導入 VPN 造成瓶頸。</p>
+</blockquote>
+<div class="page-break">
+<h3 id="54-dns-與搜尋網域">5.4. DNS 與搜尋網域<a class="headerlink" href="#54-dns-%E8%88%87%E6%90%9C%E5%B0%8B%E7%B6%B2%E5%9F%9F" title="Permanent link">#</a></h3>
+<p>SSL VPN 可支援自定義 DNS 與搜尋字尾設定；IPsec VPN 同樣支援，但其行為依 IKE 版本與用戶端功能而異。</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>SSL VPN</th>
+<th>IPsec（IKEv1）</th>
+<th>IPsec（IKEv2）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>設定 DNS Server</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>設定搜尋字尾</td>
+<td>✅</td>
+<td>有限支援</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Split DNS</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h3 id="55-多使用者群組與-peer-id-連線設計">5.5. 多使用者群組與 Peer ID 連線設計<a class="headerlink" href="#55-%E5%A4%9A%E4%BD%BF%E7%94%A8%E8%80%85%E7%BE%A4%E7%B5%84%E8%88%87-peer-id-%E9%80%A3%E7%B7%9A%E8%A8%AD%E8%A8%88" title="Permanent link">#</a></h3>
+<p>在 SSL VPN 中，所有使用者共用同一個虛擬介面 <code>ssl.root</code>，並依使用者所屬群組，透過防火牆政策指派不同 Portal 或存取權限。</p>
+<p>相比之下，IPsec VPN 提供更多彈性來實作多群組架構，常見有兩種設計方式：</p>
+<h4 id="551-方式一單一撥入隧道--多群組">5.5.1. 方式一：單一撥入隧道 + 多群組<a class="headerlink" href="#551-%E6%96%B9%E5%BC%8F%E4%B8%80%E5%96%AE%E4%B8%80%E6%92%A5%E5%85%A5%E9%9A%A7%E9%81%93--%E5%A4%9A%E7%BE%A4%E7%B5%84" title="Permanent link">#</a></h4>
+<ul>
+<li>在單一 VPN 隧道中，允許多個使用者群組（如 <code>Group_A</code>、<code>Group_B</code>）連線</li>
+<li>利用防火牆政策根據群組分配不同存取權限</li>
+<li>適合設定共用、資源共用（如同一IP Pool、加密套件）</li>
+</ul>
+<h4 id="552-方式二多條獨立撥入隧道--各自群組">5.5.2. 方式二：多條獨立撥入隧道 + 各自群組<a class="headerlink" href="#552-%E6%96%B9%E5%BC%8F%E4%BA%8C%E5%A4%9A%E6%A2%9D%E7%8D%A8%E7%AB%8B%E6%92%A5%E5%85%A5%E9%9A%A7%E9%81%93--%E5%90%84%E8%87%AA%E7%BE%A4%E7%B5%84" title="Permanent link">#</a></h4>
+<ul>
+<li>為每個群組建立一條專屬的 VPN 隧道</li>
+<li>每條隧道設定專屬的 <strong>Peer ID</strong>（用來識別不同來源）</li>
+<li>可為不同群組設定不同加密演算法、不同 IP Pool、不同存取策略</li>
+<li>需依據連線初期的 Peer ID 來套用正確的設定檔</li>
+</ul>
+<div class="page-break">
+<h4 id="553-ikev1-模式對-peer-id-辨識的影響">5.5.3. IKEv1 模式對 Peer ID 辨識的影響<a class="headerlink" href="#553-ikev1-%E6%A8%A1%E5%BC%8F%E5%B0%8D-peer-id-%E8%BE%A8%E8%AD%98%E7%9A%84%E5%BD%B1%E9%9F%BF" title="Permanent link">#</a></h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">IKEv1 模式類型</th>
+<th style="text-align: left;">Peer ID 傳遞支援</th>
+<th style="text-align: left;">說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Main Mode</td>
+<td style="text-align: left;">❌ 不支援</td>
+<td style="text-align: left;">初期封包不傳遞身份，無法根據 Peer ID 區分連線</td>
+</tr>
+<tr>
+<td style="text-align: left;">Aggressive Mode</td>
+<td style="text-align: left;">✅ 支援</td>
+<td style="text-align: left;">初期封包即攜帶 Peer ID，可用來區分設定</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>重點提醒</strong>：<br/>
+若採用 IKEv1 並希望依 Peer ID 自動分配設定，建議使用 <strong>Aggressive Mode</strong>。<br/>
+使用 IKEv2 則無此限制，原生支援 Peer ID 傳遞。</p>
+</blockquote>
+<div class="page-break">
+<h2 id="6-建立ipsec-vpn-tunnel">6. 建立IPSEC VPN Tunnel<a class="headerlink" href="#6-%E5%BB%BA%E7%AB%8Bipsec-vpn-tunnel" title="Permanent link">#</a></h2>
+<h3 id="61-使用內建範本建立">6.1. 使用內建範本建立<a class="headerlink" href="#61-%E4%BD%BF%E7%94%A8%E5%85%A7%E5%BB%BA%E7%AF%84%E6%9C%AC%E5%BB%BA%E7%AB%8B" title="Permanent link">#</a></h3>
+<p>FortiGate 提供內建的 IPsec Wizard，可快速建立與 FortiClient 相容的遠端 VPN，設定流程簡單明確，本節將逐步說明 GUI 設定流程。</p>
+<div class="page-break">
+<h4 id="611-開啟-vpn-wizard">6.1.1. 開啟 VPN Wizard<a class="headerlink" href="#611-%E9%96%8B%E5%95%9F-vpn-wizard" title="Permanent link">#</a></h4>
+<ol>
+<li>登入 FortiGate 管理介面</li>
+<li>前往 <code>VPN &gt; IPsec Wizard</code></li>
+<li>Template Type 請選擇：<strong>Remote Access</strong></li>
+<li>Remote device type 選擇：<strong>FortiClient</strong></li>
+</ol>
+<p>輸入 Tunnel 名稱（例如：<code>Remote-VPN</code>）</p>
+<p></p><figure id="_figure-1"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-1.png"><img alt="VPN Setup" src="images/img-1.png"/></a><figcaption>Figure 1: VPN Setup</figcaption></figure><p></p>
+<div class="page-break">
+<h4 id="612-設定身份驗證與撥入參數">6.1.2. 設定身份驗證與撥入參數<a class="headerlink" href="#612-%E8%A8%AD%E5%AE%9A%E8%BA%AB%E4%BB%BD%E9%A9%97%E8%AD%89%E8%88%87%E6%92%A5%E5%85%A5%E5%8F%83%E6%95%B8" title="Permanent link">#</a></h4>
+<p></p><figure id="_figure-2"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-2.png"><img alt="Authentication" src="images/img-2.png"/></a><figcaption>Figure 2: Authentication</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th>欄位名稱</th>
+<th>建議設定</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Incoming Interface</td>
+<td>對外連線使用的 WAN 介面（如 <code>wan1</code>）</td>
+</tr>
+<tr>
+<td>Authentication Method</td>
+<td>選擇 <code>Pre-shared Key</code> 或 <code>Digital Certificate</code></td>
+</tr>
+<tr>
+<td>Pre-shared Key</td>
+<td>自訂金鑰，需與用戶端設定一致</td>
+</tr>
+<tr>
+<td>User Group</td>
+<td>選擇已建立的驗證群組（如 <code>SSL_VPN_Group</code>）</td>
+</tr>
+</tbody>
+</table>
+<p>✅ 若使用 LDAP 或 RADIUS，請確保已建立對應的使用者群組並套用至此處。</p>
+<div class="page-break">
+<h4 id="613-配置撥入用戶的網路設定">6.1.3. 配置撥入用戶的網路設定<a class="headerlink" href="#613-%E9%85%8D%E7%BD%AE%E6%92%A5%E5%85%A5%E7%94%A8%E6%88%B6%E7%9A%84%E7%B6%B2%E8%B7%AF%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h4>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-3.png"><img alt="Policy &amp; Routing" src="images/img-3.png"/></a></p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local Interface</td>
+<td>內部網段的出入口（如 <code>internal</code>）</td>
+</tr>
+<tr>
+<td>Local Address</td>
+<td>用戶成功撥入後能存取的內部資源 IP 或網段</td>
+</tr>
+<tr>
+<td>Client Address Range</td>
+<td>指定撥入用戶將取得的虛擬 IP 範圍（如 <code>10.10.10.10-10.10.10.20</code>）</td>
+</tr>
+<tr>
+<td>Subnet Mask</td>
+<td>建議設定<code>255.255.255.255</code>，這樣每個VPN用戶均視為獨立網段彼此不能互相溝通</td>
+</tr>
+<tr>
+<td>DNS Server</td>
+<td>指定內部 DNS（如 <code>192.168.1.1</code>），或保留預設</td>
+</tr>
+<tr>
+<td>Enable Split Tunnel</td>
+<td>啟用後就只有設定的目的地網段才會導入 VPN</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h4 id="614-客戶端選項">6.1.4. 客戶端選項<a class="headerlink" href="#614-%E5%AE%A2%E6%88%B6%E7%AB%AF%E9%81%B8%E9%A0%85" title="Permanent link">#</a></h4>
+<p></p><figure id="_figure-4"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-4.png"><img alt="Client Options" src="images/img-4.png"/></a><figcaption>Figure 4: Client Options</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th>選項項目</th>
+<th>建議</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Save Password</td>
+<td>若啟用則使用者將可以儲存密碼</td>
+</tr>
+<tr>
+<td>Auto Connect</td>
+<td>可選，適用於長時間連線需求</td>
+</tr>
+<tr>
+<td>Always Up</td>
+<td>若啟用，VPN 將會自動嘗試維持連線狀態</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h4 id="615-建立完成並驗證">6.1.5. 建立完成並驗證<a class="headerlink" href="#615-%E5%BB%BA%E7%AB%8B%E5%AE%8C%E6%88%90%E4%B8%A6%E9%A9%97%E8%AD%89" title="Permanent link">#</a></h4>
+<p>完成設定後，系統會自動建立：</p>
+<ul>
+<li>Phase 1 與 Phase 2 的設定檔</li>
+<li>一條撥入的 IPsec Tunnel 介面</li>
+<li>對應的防火牆政策（允許撥入 VPN 使用者進入內部網段）</li>
+</ul>
+<p>可至 <code>VPN &gt; IPsec Tunnels</code> 查看連線狀態並進行調整。</p>
+<p></p><figure id="_figure-5"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-6.png"><img alt="IPsec Tunnels" src="images/img-6.png"/></a><figcaption>Figure 5: IPsec Tunnels</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="62-不使用內建範本建立">6.2. 不使用內建範本建立<a class="headerlink" href="#62-%E4%B8%8D%E4%BD%BF%E7%94%A8%E5%85%A7%E5%BB%BA%E7%AF%84%E6%9C%AC%E5%BB%BA%E7%AB%8B" title="Permanent link">#</a></h3>
+<p>使用範本建立部分目前都是使用IKEv1，若有要使用IKEv2或希望不要自動建立相關物件及Policy則可以使用 Custom 方式建立，以下是使用IKEv2作為範例，若是要設定IKEv1則不需要設定EAP部分但是要設定XAuth部分</p>
+<h4 id="621-開啟-vpn-wizard">6.2.1. 開啟 VPN Wizard<a class="headerlink" href="#621-%E9%96%8B%E5%95%9F-vpn-wizard" title="Permanent link">#</a></h4>
+<ol>
+<li>登入 FortiGate 管理介面</li>
+<li>前往 <code>VPN &gt; IPsec Wizard</code></li>
+<li>Template Type 請選擇：<strong>Custom</strong></li>
+</ol>
+<p>輸入 Tunnel 名稱（例如：<code>IKEv2-VPN</code>）</p>
+<p></p><figure id="_figure-6"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-5.png"><img alt="VPN Setup" src="images/img-5.png"/></a><figcaption>Figure 6: VPN Setup</figcaption></figure><p></p>
+<div class="page-break">
+<h4 id="622-network">6.2.2. Network<a class="headerlink" href="#622-network" title="Permanent link">#</a></h4>
+<p></p><figure id="_figure-7"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-7.png"><img alt="Network" src="images/img-7.png"/></a><figcaption>Figure 7: Network</figcaption></figure><p></p>
+<p></p><figure id="_figure-8"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-8.png"><img alt="Network" src="images/img-8.png"/></a><figcaption>Figure 8: Network</figcaption></figure><p></p>
+<div class="page-break">
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IP Version</td>
+<td>使用 <code>IPv4</code></td>
+</tr>
+<tr>
+<td>Remote Gateway</td>
+<td>選擇 <code>Dialup User</code>，代表允許不定來源的用戶端進行撥入</td>
+</tr>
+<tr>
+<td>Interface</td>
+<td>設定 VPN 撥入要綁定的介面（如 <code>wan1</code>）</td>
+</tr>
+<tr>
+<td>Local Gateway</td>
+<td>僅有當要使用的IP並非介面IP時才需勾選</td>
+</tr>
+<tr>
+<td>Mode Config</td>
+<td>建議<code>啟用</code>，因為在未啟用此設定情況下是不會賦予用戶端任何網路資訊</td>
+</tr>
+<tr>
+<td>Use system DNS in mode config</td>
+<td>若有<code>勾選</code>則用戶端會使用FortiGate上設定的DNS資訊</td>
+</tr>
+<tr>
+<td>Assign IP From</td>
+<td>設定賦予Client端IP方式，一般選擇<code>Range</code></td>
+</tr>
+<tr>
+<td>Client Address Range</td>
+<td>設定Client IP範圍，如 <code>10.10.10.10-10.10.10.20</code></td>
+</tr>
+<tr>
+<td>Subnet Mask</td>
+<td>建議設定255.255.255.255，這樣每個VPN用戶均視為獨立網段彼此不能互相溝通</td>
+</tr>
+<tr>
+<td>DNS Server</td>
+<td>設定Client DNS Server</td>
+</tr>
+<tr>
+<td>Enable IPv4 Split Tunnel</td>
+<td>啟用後就只有設定的目的地網段才會導入 VPN</td>
+</tr>
+<tr>
+<td>Accessible Networks</td>
+<td>選擇要導入VPN的目的地網段</td>
+</tr>
+<tr>
+<td>NAT Traversal</td>
+<td>建議設為設定 <code>Enable</code>，可支援 VPN 客戶端位於 NAT 後方</td>
+</tr>
+<tr>
+<td>Dead Peer Detection</td>
+<td>建議設為 <code>On Demand</code>，可自動偵測對端是否離線，避免無效連線</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h4 id="623-認證與-ike-版本設定">6.2.3. 認證與 IKE 版本設定<a class="headerlink" href="#623-%E8%AA%8D%E8%AD%89%E8%88%87-ike-%E7%89%88%E6%9C%AC%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h4>
+<p></p><figure id="_figure-9"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-9.png"><img alt="Authentication and IKE Version" src="images/img-9.png"/></a><figcaption>Figure 9: Authentication and IKE Version</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Method</strong></td>
+<td>依需求選擇，通常選擇 <code>Pre-shared Key</code></td>
+</tr>
+<tr>
+<td><strong>Pre-shared Key</strong></td>
+<td>設定<code>Pre-shared Key</code></td>
+</tr>
+<tr>
+<td><strong>IKE Version</strong></td>
+<td>依需求選擇，建議選擇 <code>2</code>較安全</td>
+</tr>
+<tr>
+<td><strong>Accept Types</strong></td>
+<td>依 VPN 架構選擇，通常選擇<code>Any peer ID</code>：</td>
+</tr>
+<tr>
+<td></td>
+<td>- <code>Any peer ID</code>：適用於<strong>單一VPN撥入通道</strong>的環境</td>
+</tr>
+<tr>
+<td></td>
+<td>- <code>Specific Peer ID</code>：適用於<strong>相同介面有多個VPN撥入通道</strong>的環境</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h4 id="624-phase-1">6.2.4. Phase 1<a class="headerlink" href="#624-phase-1" title="Permanent link">#</a></h4>
+<p>Proposal（加密演算法、驗證演算法、Diffie-Hellman 群組）可以設定多組，IKE 協商時對方只要符合其中一組，即可成功連線。這樣可兼容不同設備或客戶端的加密需求，提升互通性。</p>
+<p></p><figure id="_figure-10"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-10.png"><img alt="Phase 1" src="images/img-10.png"/></a><figcaption>Figure 10: Phase 1</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Encryption</strong></td>
+<td>建議不要選擇<code>DES 與 3DES</code>，已經不安全</td>
+</tr>
+<tr>
+<td><strong>Authentication</strong></td>
+<td>建議不要選<code>MD5與SHA1</code>易受碰撞攻擊</td>
+</tr>
+<tr>
+<td><strong>Diffie-Hellman Group</strong></td>
+<td>建議不要選<code>1、2、5</code>，金鑰長度太短，容易遭受暴力破解</td>
+</tr>
+<tr>
+<td><strong>Key Lifetime</strong></td>
+<td>維持預設<code>86400</code>秒即可</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h4 id="625-phase-2">6.2.5. Phase 2<a class="headerlink" href="#625-phase-2" title="Permanent link">#</a></h4>
+<ul>
+<li>Selectors 部分建議將 Local/Remote Address 設定為 0.0.0.0/0，Local Port、 Remote Port、 Protocol都設定為All，因為此部分是控制是否加密而非流量是否要走此通道。</li>
+<li>Proposal（加密演算法、驗證演算法、Diffie-Hellman 群組）可以設定多組，IKE 協商時對方只要符合其中一組，即可成功連線。這樣可兼容不同設備或客戶端的加密需求，提升互通性。</li>
+</ul>
+<div class="page-break">
+<p></p><figure id="_figure-11"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-11.png"><img alt="Phase2" src="images/img-11.png"/></a><figcaption>Figure 11: Phase2</figcaption></figure><p></p>
+<p></p><figure id="_figure-12"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-12.png"><img alt="Phase2" src="images/img-12.png"/></a><figcaption>Figure 12: Phase2</figcaption></figure><p></p>
+<div class="page-break">
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Local Address</strong></td>
+<td>與 Remote Address 組成 Selector，建議設定 <code>0.0.0.0/0</code> 即可。</td>
+</tr>
+<tr>
+<td><strong>Remote Address</strong></td>
+<td>與 Local Address 組成 Selector，建議設定 <code>0.0.0.0/0</code> 即可。</td>
+</tr>
+<tr>
+<td><strong>Encryption</strong></td>
+<td>建議不要選擇 <code>DES</code> 與 <code>3DES</code>，演算法過時，安全性不足。</td>
+</tr>
+<tr>
+<td><strong>Authentication</strong></td>
+<td>建議避免選 <code>MD5</code> 與 <code>SHA1</code>，容易受到碰撞攻擊。</td>
+</tr>
+<tr>
+<td><strong>Diffie-Hellman Group</strong></td>
+<td>僅在 PFS開啟時使用。建議避免 <code>Group 1、2、5</code>，因金鑰長度過短易被破解。</td>
+</tr>
+<tr>
+<td><strong>Enable Replay Detection</strong></td>
+<td>建議<code>勾選</code>，可防止封包重播攻擊（Replay Attack）。</td>
+</tr>
+<tr>
+<td><strong>Enable Perfect Forward Secrecy (PFS)</strong></td>
+<td>建議<code>啟用</code> PFS，讓每次建立 IPsec SA 時都進行新的 Diffie-Hellman 金鑰交換，即使 IKE SA 洩漏也安全。</td>
+</tr>
+<tr>
+<td><strong>Key Lifetime</strong></td>
+<td>建議保持預設 <code>43200</code> 秒，不宜設太長，避免金鑰長期暴露風險。</td>
+</tr>
+<tr>
+<td><strong>Local Port</strong></td>
+<td>指定被保護流量的來源 Port，通常勾選 <code>All</code>。</td>
+</tr>
+<tr>
+<td><strong>Remote Port</strong></td>
+<td>指定被保護流量的目的 Port，通常勾選 <code>All</code>。</td>
+</tr>
+<tr>
+<td><strong>Protocol</strong></td>
+<td>指定被保護的傳輸層協定（如 TCP、UDP、ICMP），通常勾選 <code>All</code>。</td>
+</tr>
+<tr>
+<td><strong>Autokey Keep Alive</strong></td>
+<td>建議<code>開啟</code>，防止因為長時間無流量導致 NAT Session 超時被清除，確保隧道連線持續活躍。</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h4 id="626-設定eap驗證">6.2.6. 設定EAP驗證<a class="headerlink" href="#626-%E8%A8%AD%E5%AE%9Aeap%E9%A9%97%E8%AD%89" title="Permanent link">#</a></h4>
+<p>此部分在此版本僅能使用CLI設定，且僅只有設定IKEv2才需設定，若是設定IKEv1則僅許在GUI配置XAuth即可</p>
+<div class="highlight"><pre><span></span><code>config<span class="w"> </span>vpn<span class="w"> </span>ipsec<span class="w"> </span>phase1-interface<span class="w"> </span>
+
+edit<span class="w"> </span>IKEv2-VPN<span class="w"> </span>
+<span class="c1"># 編輯要設定的VPN設定檔名稱</span>
+
+<span class="nb">set</span><span class="w"> </span>eap<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>
+<span class="c1"># 啟用EAP驗證</span>
+
+<span class="nb">set</span><span class="w"> </span>eap-identity<span class="w"> </span>send-request<span class="w"> </span>
+<span class="c1"># 設定要發送EAP驗證請求</span>
+
+<span class="nb">set</span><span class="w"> </span>authusrgrp<span class="w"> </span>SSL_VPN_Group<span class="w"> </span>
+<span class="c1"># 設定要允許的User Group</span>
+
+end
+</code></pre></div>
+<div class="page-break">
+<h4 id="627-建立firewall-policy">6.2.7. 建立Firewall Policy<a class="headerlink" href="#627-%E5%BB%BA%E7%AB%8Bfirewall-policy" title="Permanent link">#</a></h4>
+<p>依據需求建立允許IPSec Tunnel流量的相關Policy</p>
+<p></p><figure id="_figure-13"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-13.png"><img alt="Firewall Policy" src="images/img-13.png"/></a><figcaption>Figure 13: Firewall Policy</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="7-forticlient-用戶端設定教學">7. FortiClient 用戶端設定教學<a class="headerlink" href="#7-forticlient-%E7%94%A8%E6%88%B6%E7%AB%AF%E8%A8%AD%E5%AE%9A%E6%95%99%E5%AD%B8" title="Permanent link">#</a></h2>
+<p>使用者可手動在 FortiClient 上設定撥入 IPsec VPN，以下為必要步驟與參數說明。</p>
+<div class="page-break">
+<h3 id="71-開啟-forticlient-vpn-設定頁面">7.1. 開啟 FortiClient VPN 設定頁面<a class="headerlink" href="#71-%E9%96%8B%E5%95%9F-forticlient-vpn-%E8%A8%AD%E5%AE%9A%E9%A0%81%E9%9D%A2" title="Permanent link">#</a></h3>
+<p>至<a href="https://community.fortinet.com/t5/FortiGate/Technical-Tip-How-to-use-multiple-groups-with-EAP-for-IKEv2-SAML/ta-p/334453" target="_blank">官網</a>下載FortiClient VPN Only版本後完成安裝   </p>
+<p></p><figure id="_figure-14"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-14.png"><img alt="FortiClient VPN Only" src="images/img-14.png"/></a><figcaption>Figure 14: FortiClient VPN Only</figcaption></figure><p></p>
+<p>點選 <code>建立新連接</code>。</p>
+<p></p><figure id="_figure-15"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-15.png"><img alt="Add New Connection" src="images/img-15.png"/></a><figcaption>Figure 15: Add New Connection</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="72-建立-vpn-profile">7.2. 建立 VPN Profile<a class="headerlink" href="#72-%E5%BB%BA%E7%AB%8B-vpn-profile" title="Permanent link">#</a></h3>
+<p></p><figure id="_figure-16"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-16.png"><img alt="General" src="images/img-16.png"/></a><figcaption>Figure 16: General</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VPN</td>
+<td>選擇 <code>IPsec VPN</code></td>
+</tr>
+<tr>
+<td>連接名</td>
+<td>自定義，例如：<code>IKEv2 VPN</code></td>
+</tr>
+<tr>
+<td>遠程網關</td>
+<td>輸入在FortiGate上VPN設定的介面IP 或 FQDN</td>
+</tr>
+<tr>
+<td>驗証方式</td>
+<td>依FortiGate上設定選擇 <code>預設共享金鑰</code> 或 <code>Certificate</code> ，若選<code>預設共享金鑰</code>則需輸入共享金鑰</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>下方相關參數設定要與在FortiGate上設定的相同除了Proposal不一定要完全相同可以設定多組外，但Proposal設定的其中一個一定要與FortiGate上設定的吻合</p>
+</div>
+<p></p><figure id="_figure-17"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-17.png"><img alt="IKE Settings" src="images/img-17.png"/></a><figcaption>Figure 17: IKE Settings</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="73-測試-vpn-連線">7.3. 測試 VPN 連線<a class="headerlink" href="#73-%E6%B8%AC%E8%A9%A6-vpn-%E9%80%A3%E7%B7%9A" title="Permanent link">#</a></h3>
+<p>儲存設定後輸入帳號密碼點選 <code>連接</code>。</p>
+<p></p><figure id="_figure-18"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-18.png"><img alt="Connect" src="images/img-18.png"/></a><figcaption>Figure 18: Connect</figcaption></figure><p></p>
+<div class="page-break">
+<p>連線成功後，應取得虛擬 IP 並可存取內部網段。</p>
+<p></p><figure id="_figure-19"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-19.png"><img alt="Finish" src="images/img-19.png"/></a><figcaption>Figure 19: Finish</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="8-faq">8. FAQ<a class="headerlink" href="#8-faq" title="Permanent link">#</a></h2>
+<h3 id="81-如何限制僅有台灣ip可以連線">8.1. 如何限制僅有台灣IP可以連線<a class="headerlink" href="#81-%E5%A6%82%E4%BD%95%E9%99%90%E5%88%B6%E5%83%85%E6%9C%89%E5%8F%B0%E7%81%A3ip%E5%8F%AF%E4%BB%A5%E9%80%A3%E7%B7%9A" title="Permanent link">#</a></h3>
+<p><strong>建立Addresses Object</strong></p>
+<p></p><figure id="_figure-20"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-20.png"><img alt="Create New" src="images/img-20.png"/></a><figcaption>Figure 20: Create New</figcaption></figure><p></p>
+<p></p><figure id="_figure-21"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-21.png"><img alt="New Address" src="images/img-21.png"/></a><figcaption>Figure 21: New Address</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>物件名稱，可自定義</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>選擇<code>Geography</code></td>
+</tr>
+<tr>
+<td>Country/Region</td>
+<td>選擇<code>要設定的國家地區</code>，例如<code>Taiwan</code></td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<p><strong>建立Services</strong></p>
+<p>IPSec VPN會使用UDP500及4500這兩個Port，故需要建立這兩個Service</p>
+<p></p><figure id="_figure-22"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-22.png"><img alt="Create New" src="images/img-22.png"/></a><figcaption>Figure 22: Create New</figcaption></figure><p></p>
+<p></p><figure id="_figure-23"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-23.png"><img alt="New Service UDP500" src="images/img-23.png"/></a><figcaption>Figure 23: New Service UDP500</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>物件名稱，可自定義</td>
+</tr>
+<tr>
+<td>Destination Port</td>
+<td>選擇<code>UDP</code>， <code>Low及High</code>都設定為<code>500</code></td>
+</tr>
+</tbody>
+</table>
+<p></p><figure id="_figure-24"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-24.png"><img alt="New Service UDP4500" src="images/img-24.png"/></a><figcaption>Figure 24: New Service UDP4500</figcaption></figure><p></p>
+<div class="page-break">
+<p><strong>建立Local In Policy</strong></p>
+<p>Local In Policy 是用於管制連線FortiGate本身服務的Policy，目前僅能使用CLI新增，由於IPSEC VPN會使用到UDP 500及4500，故需要新增一條規則管制連線此兩個Port的IP</p>
+<div class="highlight"><pre><span></span><code>config<span class="w"> </span>firewall<span class="w"> </span>local-in-policy
+
+edit<span class="w"> </span><span class="m">1</span>
+<span class="c1"># 規則編號</span>
+
+<span class="nb">set</span><span class="w"> </span>intf<span class="w"> </span>wan1
+<span class="c1"># IPSec VPN使用的介面</span>
+
+<span class="nb">set</span><span class="w"> </span>srcaddr<span class="w"> </span>Taiwan
+<span class="c1"># 設定允許的來源國家IP</span>
+
+<span class="nb">set</span><span class="w"> </span>srcaddr-negate<span class="w"> </span><span class="nb">enable</span>
+<span class="c1"># 設定除了上面設定的IP外其他來源都不可以連線</span>
+
+<span class="nb">set</span><span class="w"> </span>dstaddr<span class="w"> </span>all
+<span class="c1"># 設定目的地IP，可以設定IPSec VPN使用的WAN IP物件，或直接設定All</span>
+
+<span class="nb">set</span><span class="w"> </span>service<span class="w"> </span>UDP500<span class="w"> </span>UDP4500
+<span class="c1"># 設定目的地Port</span>
+
+<span class="nb">set</span><span class="w"> </span>schedule<span class="w"> </span>always
+<span class="c1"># 設定啟用排程，直接設定always代表永遠開啟</span>
+
+end
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Local-in-Policy 的比對順序一樣為由上而下，若有多條規則，務必注意順序，以免錯誤阻擋合法流量。</p>
+</div>
+<div class="page-break">
+<h3 id="82-為何在forward-traffic-user欄位沒有資訊">8.2. 為何在Forward Traffic User欄位沒有資訊<a class="headerlink" href="#82-%E7%82%BA%E4%BD%95%E5%9C%A8forward-traffic-user%E6%AC%84%E4%BD%8D%E6%B2%92%E6%9C%89%E8%B3%87%E8%A8%8A" title="Permanent link">#</a></h3>
+<p>因為當在 IPSec VPN Phase1 設定了群組，身份驗證就會發生在 VPN 隧道層，防火牆就無法辨識使用者，導致 Forward Traffic 的 User 欄位無資料。需改由使用防火牆政策設定群組才能讓使用者資訊顯示在流量記錄中。但不可兩邊都設定會造成連線直接被拒絕。</p>
+<p></p><figure id="_figure-25"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-25.png"><img alt="Forward Traffic" src="images/img-25.png"/></a><figcaption>Figure 25: Forward Traffic</figcaption></figure><p></p>
+<div class="page-break">
+<h4 id="821-ikev1">8.2.1. IKEv1<a class="headerlink" href="#821-ikev1" title="Permanent link">#</a></h4>
+<p><strong>取消Phase1對Group的驗證</strong></p>
+<p></p><figure id="_figure-26"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-30.png"><img alt="Inherit from policy" src="images/img-30.png"/></a><figcaption>Figure 26: Inherit from policy</figcaption></figure><p></p>
+<div class="page-break">
+<p><strong>針對所有此VPN的相關Policy加入Group</strong></p>
+<p></p><figure id="_figure-27"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-31.png"><img alt="Edit Policy" src="images/img-31.png"/></a><figcaption>Figure 27: Edit Policy</figcaption></figure><p></p>
+<p></p><figure id="_figure-28"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-32.png"><img alt="Add Source User" src="images/img-32.png"/></a><figcaption>Figure 28: Add Source User</figcaption></figure><p></p>
+<p></p><figure id="_figure-29"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-33.png"><img alt="Finish" src="images/img-33.png"/></a><figcaption>Figure 29: Finish</figcaption></figure><p></p>
+<p></p><figure id="_figure-30"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-34.png"><img alt="Forward Traffic" src="images/img-34.png"/></a><figcaption>Figure 30: Forward Traffic</figcaption></figure><p></p>
+<div class="page-break">
+<h4 id="822-ikev2">8.2.2. IKEv2<a class="headerlink" href="#822-ikev2" title="Permanent link">#</a></h4>
+<p><strong>取消Phase1對Group的驗證</strong></p>
+<div class="highlight"><pre><span></span><code>config<span class="w"> </span>vpn<span class="w"> </span>ipsec<span class="w"> </span>phase1-interface
+
+edit<span class="w"> </span><span class="s2">"IKEv2-VPN"</span>
+<span class="c1"># 編輯要設定的VPN設定檔名稱</span>
+
+<span class="nb">unset</span><span class="w"> </span>authusrgrp
+<span class="c1"># 取消允許User Group的設定</span>
+
+end
+</code></pre></div>
+<div class="page-break">
+<p><strong>針對所有此VPN的相關Policy加入Group</strong></p>
+<p></p><figure id="_figure-31"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-26.png"><img alt="Edit Policy" src="images/img-26.png"/></a><figcaption>Figure 31: Edit Policy</figcaption></figure><p></p>
+<p></p><figure id="_figure-32"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-27.png"><img alt="Add Source User" src="images/img-27.png"/></a><figcaption>Figure 32: Add Source User</figcaption></figure><p></p>
+<p></p><figure id="_figure-33"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-28.png"><img alt="Finish" src="images/img-28.png"/></a><figcaption>Figure 33: Finish</figcaption></figure><p></p>
+<p></p><figure id="_figure-34"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-29.png"><img alt="Forward Traffic" src="images/img-29.png"/></a><figcaption>Figure 34: Forward Traffic</figcaption></figure><p></p>
+<div class="page-break">
+<h2 class="no-print">參考資料</h2>
+<ul>
+<li><a href="https://docs.fortinet.com/document/fortigate/7.4.4/ssl-vpn-to-ipsec-vpn-migration/140089" target="_blank">SSL VPN to IPsec VPN Migration</a></li>
+<li><a href="https://community.fortinet.com/t5/FortiGate/Technical-Tip-How-to-use-multiple-groups-with-EAP-for-IKEv2-SAML/ta-p/334453" target="_blank">Technical Tip: How to use multiple groups with EAP for IKEv2 (SAML/RADIUS/local)</a></li>
+<li><a href="https://community.fortinet.com/t5/FortiGate/Technical-Tip-Using-group-based-firewall-policy-for-Dial-Up-VPN/ta-p/198208" target="_blank">Technical Tip: Using group based firewall policy for Dial-Up VPN to restrict network access</a></li>
+<li><a href="https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-Dialup-IPsec-VPN-user-info-not-displaying-in/ta-p/385150" target="_blank">Troubleshooting Tip: Dialup IPsec VPN user-info not displaying in 'Assets &amp; Identities'</a></li>
+</ul></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
+</article>
+</div>
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  回到頂端
+</button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["search.suggest", "search.highlight", "navigation.tabs", "navigation.top", "navigation.indexes", "toc.integrate", "content.tooltips", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u5df2\u8907\u88fd", "clipboard.copy": "\u8907\u88fd", "search.result.more.one": "\u6b64\u9801\u5c1a\u6709 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.more.other": "\u6b64\u9801\u5c1a\u6709 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.none": "\u6c92\u6709\u7b26\u5408\u7684\u9805\u76ee", "search.result.one": "\u627e\u5230 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.other": "\u627e\u5230 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.placeholder": "\u6253\u5b57\u9032\u884c\u641c\u5c0b", "search.result.term.missing": "\u7f3a\u5c11\u5b57\u8a5e", "select.version": "\u9078\u64c7\u7248\u672c"}}</script>
+<script src="../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script><script type="text/javascript">(function initializeMarkmap() {
+    const transformer = new markmap.Transformer();
+    const preloadScripts = transformer.plugins
+        .flatMap((plugin) => plugin.config?.preloadScripts || [])
+        .map((item) => transformer.resolveJS(item));
+    const assets = transformer.getAssets();
+    const loading = Promise.all([
+        assets.styles && markmap.loadCSS(assets.styles),
+        markmap.loadJS([...preloadScripts, ...assets.scripts]),
+    ]);
+
+    function parseData(content) {
+        const { root, frontmatter } = transformer.transform(content);
+        let options = markmap.deriveOptions(frontmatter?.markmap);
+        options = Object.assign(
+            {
+                fitRatio: 0.85,
+            },
+            options
+        );
+        return { root, options };
+    }
+
+    function resetMarkmap(m, el) {
+        if (!m.state.rect) return;
+        const { x1, y1, x2, y2 } = m.state.rect;
+        const height = (el.offsetWidth / (x2 - x1)) * (y2 - y1);
+        el.style.height = height + "px";
+        m.fit();
+    }
+
+    function decodeBase64(encoded) {
+        const binary = atob(encoded);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < bytes.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+        }
+        return new TextDecoder().decode(bytes);
+    }
+
+    function renderMarkmap(el) {
+        const dataEl = el.querySelector("markmap-data");
+        if (!dataEl) return;
+        let content = el.textContent;
+        if (dataEl.getAttribute("encoding") === "base64") {
+            content = decodeBase64(content);
+        }
+        el.innerHTML = "<svg>";
+        svg = el.firstChild;
+        const { root, options } = parseData(content);
+        const m = markmap.Markmap.create(svg, options);
+        m.setData(root);
+        requestAnimationFrame(() => {
+            resetMarkmap(m, el);
+        });
+    }
+
+    function updateMarkmaps(node) {
+        for (const el of node.querySelectorAll(".mkdocs-markmap")) {
+            renderMarkmap(el);
+        }
+    }
+
+    loading.then(() => {
+        const observer = new MutationObserver((mutationList) => {
+            for (const mutation of mutationList) {
+                if (mutation.type === "childList") {
+                    for (const node of mutation.addedNodes) {
+                        updateMarkmaps(node);
+                    }
+                }
+            }
+        });
+
+        observer.observe(document.body, { childList: true });
+
+        updateMarkmaps(document);
+    });
+})();
+</script></body></html>

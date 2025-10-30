@@ -1,0 +1,1814 @@
+<!DOCTYPE html><html lang="zh-TW" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="本篇紀錄Paloalto防火牆初始化方式、常用設定及如何設定路由、NAT及Policy使內部可以訪問Internet">
+      
+      
+      
+        <link rel="canonical" href="https://wilder640.github.io/blog/paloalto/basic-settings/">
+      
+      
+        <link rel="prev" href="../backup-config-periodically-without-panorama/">
+      
+      
+        <link rel="next" href="../set-up-active-passive-ha/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+    <title>Paloalto防火牆基本設定方式 - Wilder's IT 日誌</title>
+
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+TC:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Noto Sans TC";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+<script defer src="https://cloud.umami.is/script.js" data-website-id="53197f63-8bcf-4ee7-b1dc-3bb98354a997"></script>
+
+      
+
+    
+
+    
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Paloalto防火牆基本設定方式 - Wilder's IT 日誌">
+    <meta property="og:description" content="本篇紀錄Paloalto防火牆初始化方式、常用設定及如何設定路由、NAT及Policy使內部可以訪問Internet">
+    <meta property="og:url" content="https://wilder640.github.io/blog/paloalto/basic-settings/">
+    <meta property="og:image" content="https://wilder640.github.io/blog/paloalto/basic-settings//images/img.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Paloalto防火牆基本設定方式 - Wilder's IT 日誌">
+    <meta name="twitter:description" content="本篇紀錄Paloalto防火牆初始化方式、常用設定及如何設定路由、NAT及Policy使內部可以訪問Internet">
+    <meta name="twitter:image" content="https://wilder640.github.io/blog/paloalto/basic-settings//images/img.png">
+
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-環境說明" class="md-skip">
+          跳轉到
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="頁首">
+    <a href="../.." title="Wilder's IT 日誌" class="md-header__button md-logo" aria-label="Wilder's IT 日誌" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Wilder's IT 日誌
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Paloalto防火牆基本設定方式
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="開啟深色模式" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="開啟深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo" aria-label="關閉深色模式" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="關閉深色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜尋" placeholder="搜尋" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="搜尋">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清除" aria-label="清除" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜尋引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="標籤" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../tags/" class="md-tabs__link">
+        
+  
+    
+  
+  Tags
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../archive/2025/" class="md-tabs__link">
+          
+  
+    
+  
+  時間軸
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../category/aruba/" class="md-tabs__link">
+          
+  
+    
+  
+  類別
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="導覽列" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Wilder's IT 日誌" class="md-nav__button md-logo" aria-label="Wilder's IT 日誌" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Wilder's IT 日誌
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tags/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tags
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    時間軸
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            時間軸
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../archive/2025/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2025 10月
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../archive/2024/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2024 12月
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    類別
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            類別
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/aruba/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aruba
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/extreme/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Extreme
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/fortinet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fortinet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/nutanix/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nutanix
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/paloalto/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Paloalto
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/veeam/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Veeam
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/vmware/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vmware
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../.." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+                  <span class="md-ellipsis">
+                    回到主頁
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    元數據
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"></path></svg>
+                        <time datetime="2024-12-05 00:00:00+00:00" class="md-ellipsis">2024年12月5日</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"></path></svg>
+                          <span class="md-ellipsis">
+                            於
+                            
+                              <a href="../../category/paloalto/">Paloalto</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"></path></svg>
+                          <span class="md-ellipsis">
+                            
+                              需要 7 分鐘閱讀時間
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+          </nav>
+          
+            
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-環境說明" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 環境說明
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-連線方式" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. 連線方式
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-初始化設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. 初始化設定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 初始化設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-變更密碼" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.1. 變更密碼
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-關閉ztp" class="md-nav__link">
+    <span class="md-ellipsis">
+      3.2. 關閉ZTP
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-提交設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. 提交設定
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-管理介面ip設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 管理介面IP設定
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-設備名稱及時區設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. 設備名稱及時區設定
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-dnsntp-server設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. DNS、NTP Server設定
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-服務路由設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. 服務路由設定
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-啟用授權" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. 啟用授權
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-特徵碼更新及排程設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. 特徵碼更新及排程設定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. 特徵碼更新及排程設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-特徵碼更新" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.1. 特徵碼更新
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-排程設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.2. 排程設定
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-網路設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. 網路設定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. 網路設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111-zones" class="md-nav__link">
+    <span class="md-ellipsis">
+      11.1. Zones
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-interface-mgmt" class="md-nav__link">
+    <span class="md-ellipsis">
+      11.2. Interface Mgmt
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      11.3. Interfaces
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#114-virtual-routers" class="md-nav__link">
+    <span class="md-ellipsis">
+      11.4. Virtual Routers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-nat" class="md-nav__link">
+    <span class="md-ellipsis">
+      12. NAT
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-security-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      13. Security Policy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-設定備份與還原" class="md-nav__link">
+    <span class="md-ellipsis">
+      14. 設定備份與還原
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. 設定備份與還原">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#141-設定備份" class="md-nav__link">
+    <span class="md-ellipsis">
+      14.1. 設定備份
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#142-設定還原" class="md-nav__link">
+    <span class="md-ellipsis">
+      14.2. 設定還原
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-重新開機" class="md-nav__link">
+    <span class="md-ellipsis">
+      15. 重新開機
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15. 重新開機">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#151-重新開機" class="md-nav__link">
+    <span class="md-ellipsis">
+      15.1. 重新開機
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#152-關機" class="md-nav__link">
+    <span class="md-ellipsis">
+      15.2. 關機
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-升級" class="md-nav__link">
+    <span class="md-ellipsis">
+      16. 升級
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="16. 升級">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-升級說明" class="md-nav__link">
+    <span class="md-ellipsis">
+      16.1. 升級說明
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#162-升級步驟" class="md-nav__link">
+    <span class="md-ellipsis">
+      16.2. 升級步驟
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+<div class="cover no-print">
+    
+    <h1 class="page-title"> Paloalto防火牆基本設定方式 </h1>
+    <span class="md-source-file__fact">
+        <span class="md-icon" title="最後更新">
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
+        
+        </span>
+        2025-10-30 
+        
+             |
+             
+                <span class="md-icon" title="分類">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 20H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h7a2 2 0 0 1 2 2H4v10l2.14-8h17.07l-2.28 8.5c-.23.87-1.01 1.5-1.93 1.5"></path></svg>
+                </span>
+                Paloalto
+            
+        
+    </span>
+    
+    
+        <p class="page-description">
+            本篇紀錄Paloalto防火牆初始化方式、常用設定及如何設定路由、NAT及Policy使內部可以訪問Internet
+        </p>
+    
+    
+    
+  
+
+<nav class="md-tags">
+  
+    
+    
+    
+      <a href="../../tags/#paloalto" class="md-tag">Paloalto</a>
+    
+  
+    
+    
+    
+      <a href="../../tags/#firewall" class="md-tag">Firewall</a>
+    
+  
+    
+    
+    
+      <a href="../../tags/#basic-operations" class="md-tag">Basic Operations</a>
+    
+  
+</nav>
+    
+    
+</div>
+<h2>目錄</h2>
+<ul>
+<li><a href="#1-%E7%92%B0%E5%A2%83%E8%AA%AA%E6%98%8E">1. 環境說明</a></li>
+<li><a href="#2-%E9%80%A3%E7%B7%9A%E6%96%B9%E5%BC%8F">2. 連線方式</a></li>
+<li><a href="#3-%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A8%AD%E5%AE%9A">3. 初始化設定</a><ul>
+<li><a href="#31-%E8%AE%8A%E6%9B%B4%E5%AF%86%E7%A2%BC">3.1. 變更密碼</a></li>
+<li><a href="#32-%E9%97%9C%E9%96%89ztp">3.2. 關閉ZTP</a></li>
+</ul>
+</li>
+<li><a href="#4-%E6%8F%90%E4%BA%A4%E8%A8%AD%E5%AE%9A">4. 提交設定</a></li>
+<li><a href="#5-%E7%AE%A1%E7%90%86%E4%BB%8B%E9%9D%A2ip%E8%A8%AD%E5%AE%9A">5. 管理介面IP設定</a></li>
+<li><a href="#6-%E8%A8%AD%E5%82%99%E5%90%8D%E7%A8%B1%E5%8F%8A%E6%99%82%E5%8D%80%E8%A8%AD%E5%AE%9A">6. 設備名稱及時區設定</a></li>
+<li><a href="#7-dnsntp-server%E8%A8%AD%E5%AE%9A">7. DNS、NTP Server設定</a></li>
+<li><a href="#8-%E6%9C%8D%E5%8B%99%E8%B7%AF%E7%94%B1%E8%A8%AD%E5%AE%9A">8. 服務路由設定</a></li>
+<li><a href="#9-%E5%95%9F%E7%94%A8%E6%8E%88%E6%AC%8A">9. 啟用授權</a></li>
+<li><a href="#10-%E7%89%B9%E5%BE%B5%E7%A2%BC%E6%9B%B4%E6%96%B0%E5%8F%8A%E6%8E%92%E7%A8%8B%E8%A8%AD%E5%AE%9A">10. 特徵碼更新及排程設定</a><ul>
+<li><a href="#101-%E7%89%B9%E5%BE%B5%E7%A2%BC%E6%9B%B4%E6%96%B0">10.1. 特徵碼更新</a></li>
+<li><a href="#102-%E6%8E%92%E7%A8%8B%E8%A8%AD%E5%AE%9A">10.2. 排程設定</a></li>
+</ul>
+</li>
+<li><a href="#11-%E7%B6%B2%E8%B7%AF%E8%A8%AD%E5%AE%9A">11. 網路設定</a><ul>
+<li><a href="#111-zones">11.1. Zones</a></li>
+<li><a href="#112-interface-mgmt">11.2. Interface Mgmt</a></li>
+<li><a href="#113-interfaces">11.3. Interfaces</a></li>
+<li><a href="#114-virtual-routers">11.4. Virtual Routers</a></li>
+</ul>
+</li>
+<li><a href="#12-nat">12. NAT</a></li>
+<li><a href="#13-security-policy">13. Security Policy</a></li>
+<li><a href="#14-%E8%A8%AD%E5%AE%9A%E5%82%99%E4%BB%BD%E8%88%87%E9%82%84%E5%8E%9F">14. 設定備份與還原</a><ul>
+<li><a href="#141-%E8%A8%AD%E5%AE%9A%E5%82%99%E4%BB%BD">14.1. 設定備份</a></li>
+<li><a href="#142-%E8%A8%AD%E5%AE%9A%E9%82%84%E5%8E%9F">14.2. 設定還原</a></li>
+</ul>
+</li>
+<li><a href="#15-%E9%87%8D%E6%96%B0%E9%96%8B%E6%A9%9F">15. 重新開機</a><ul>
+<li><a href="#151-%E9%87%8D%E6%96%B0%E9%96%8B%E6%A9%9F">15.1. 重新開機</a></li>
+<li><a href="#152-%E9%97%9C%E6%A9%9F">15.2. 關機</a></li>
+</ul>
+</li>
+<li><a href="#16-%E5%8D%87%E7%B4%9A">16. 升級</a><ul>
+<li><a href="#161-%E5%8D%87%E7%B4%9A%E8%AA%AA%E6%98%8E">16.1. 升級說明</a></li>
+<li><a href="#162-%E5%8D%87%E7%B4%9A%E6%AD%A5%E9%A9%9F">16.2. 升級步驟</a></li>
+</ul>
+</li>
+</ul>
+<div class="page-break">
+<h2 id="1-環境說明">1. 環境說明<a class="headerlink" href="#1-%E7%92%B0%E5%A2%83%E8%AA%AA%E6%98%8E" title="Permanent link">#</a></h2>
+<ul>
+<li>防火牆型號：PA-440</li>
+<li>防火牆版本：10.2.7-h8</li>
+<li>架構：</li>
+</ul>
+<p></p><figure id="_figure-1"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-67.png"><img alt="架構圖" src="images/img-67.png"></a><figcaption>Figure 1: 架構圖</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">設備</th>
+<th style="text-align: center;">介面</th>
+<th style="text-align: center;">IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">ISP</td>
+<td style="text-align: center;">Port 1</td>
+<td style="text-align: center;">10.10.10.254/24</td>
+</tr>
+<tr>
+<td style="text-align: center;">PA-440</td>
+<td style="text-align: center;">MGT</td>
+<td style="text-align: center;">192.168.30.101/24</td>
+</tr>
+<tr>
+<td style="text-align: center;">PA-440</td>
+<td style="text-align: center;">E1/1</td>
+<td style="text-align: center;">10.10.10.1/24</td>
+</tr>
+<tr>
+<td style="text-align: center;">PA-440</td>
+<td style="text-align: center;">E1/2</td>
+<td style="text-align: center;">172.16.1.254/24</td>
+</tr>
+<tr>
+<td style="text-align: center;">Core Switch</td>
+<td style="text-align: center;">Port 1</td>
+<td style="text-align: center;">172.16.1.1/24</td>
+</tr>
+<tr>
+<td style="text-align: center;">Core Switch</td>
+<td style="text-align: center;">Port 2</td>
+<td style="text-align: center;">192.168.30.254/24</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h2 id="2-連線方式">2. 連線方式<a class="headerlink" href="#2-%E9%80%A3%E7%B7%9A%E6%96%B9%E5%BC%8F" title="Permanent link">#</a></h2>
+<ul>
+<li>Web<ul>
+<li>電腦使用網路線連接MGT Port</li>
+<li>電腦設定為192.168.1.0/24任一個IP，但不要是192.168.1.1</li>
+<li>使用瀏覽器連線<a href="http://192.168.1.1">http://192.168.1.1</a></li>
+</ul>
+</li>
+<li>Console<ul>
+<li>Bit rate: 9600</li>
+<li>Serial data bits: 8</li>
+<li>No serial parity</li>
+<li>Serial stop bit: 1</li>
+<li>No flow control</li>
+</ul>
+</li>
+</ul>
+<div class="page-break">
+<h2 id="3-初始化設定">3. 初始化設定<a class="headerlink" href="#3-%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<h3 id="31-變更密碼">3.1. 變更密碼<a class="headerlink" href="#31-%E8%AE%8A%E6%9B%B4%E5%AF%86%E7%A2%BC" title="Permanent link">#</a></h3>
+<p>預設帳號為admin，密碼為admin</p>
+<p></p><figure id="_figure-2"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-1.png"><img alt="Login" src="images/img-1.png"></a><figcaption>Figure 2: Login</figcaption></figure><p></p>
+<div class="page-break">
+<p>設定新密碼</p>
+<p></p><figure id="_figure-3"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-2.png"><img alt="Change Password" src="images/img-2.png"></a><figcaption>Figure 3: Change Password</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="32-關閉ztp">3.2. 關閉ZTP<a class="headerlink" href="#32-%E9%97%9C%E9%96%89ztp" title="Permanent link">#</a></h3>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>此部分僅針對A-5400, PA-400, PA-410, PA-1400, PA-3400, PA-220-ZTP, PA-220R-ZTP, PA-800-ZTP, PA-850-ZTP, PA-3220-ZTP, PA-3250-ZTP, and PA-3260-ZTP才需要設定</p>
+</div>
+<p>使用變更後的密碼登入</p>
+<p></p><figure id="_figure-4"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-3.png"><img alt="Login" src="images/img-3.png"></a><figcaption>Figure 4: Login</figcaption></figure><p></p>
+<div class="page-break">
+<p>選擇標準模式</p>
+<p></p><figure id="_figure-5"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-4.png"><img alt="Standard Mode" src="images/img-4.png"></a><figcaption>Figure 5: Standard Mode</figcaption></figure><p></p>
+<p></p><figure id="_figure-6"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-5.png"><img alt="Warning" src="images/img-5.png"></a><figcaption>Figure 6: Warning</figcaption></figure><p></p>
+<div class="page-break">
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>若防火牆沒有自動重新開機代表預載的Firmware有關閉ZTP的Bug就需要使用CLI關閉ZTP Mode</p>
+</div>
+<div class="highlight"><pre><span></span><code><span class="c1"># PA-220-ZTP, PA-220R-ZTP, PA-800-ZTP, PA-850-ZTP, PA-3220-ZTP, PA-3250-ZTP, and PA-3260-ZTP</span>
+request<span class="w"> </span>disable-ztp
+
+<span class="c1"># PA-5400, PA-400, PA-410, PA-1400, and PA-3400</span>
+<span class="nb">set</span><span class="w"> </span>system<span class="w"> </span>ztp<span class="w"> </span>disable
+</code></pre></div>
+<p></p><figure id="_figure-7"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-6.png"><img alt="ZTP disable" src="images/img-6.png"></a><figcaption>Figure 7: ZTP disable</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="4-提交設定">4. 提交設定<a class="headerlink" href="#4-%E6%8F%90%E4%BA%A4%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>在沒有提交設定之前所做的任何變更都<mark class="critic">不會生效</mark></p>
+</div>
+<p></p><figure id="_figure-8"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-9.png"><img alt="Commit" src="images/img-9.png"></a><figcaption>Figure 8: Commit</figcaption></figure><p></p>
+<p></p><figure id="_figure-9"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-10.png"><img alt="Commit" src="images/img-10.png"></a><figcaption>Figure 9: Commit</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="5-管理介面ip設定">5. 管理介面IP設定<a class="headerlink" href="#5-%E7%AE%A1%E7%90%86%E4%BB%8B%E9%9D%A2ip%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<p></p><figure id="_figure-10"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-7.png"><img alt="Management Interface Setting" src="images/img-7.png"></a><figcaption>Figure 10: Management Interface Setting</figcaption></figure><p></p>
+<p></p><figure id="_figure-11"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-8.png"><img alt="Management Interface Setting" src="images/img-8.png"></a><figcaption>Figure 11: Management Interface Setting</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>IP Type</strong></td>
+<td>選擇使用靜態IP或者DHCP取得</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>IP Address</strong></td>
+<td>IP位址</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><strong>Netmask</strong></td>
+<td>子網路遮罩</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;"><strong>Default Gateway</strong></td>
+<td>預設閘道</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h2 id="6-設備名稱及時區設定">6. 設備名稱及時區設定<a class="headerlink" href="#6-%E8%A8%AD%E5%82%99%E5%90%8D%E7%A8%B1%E5%8F%8A%E6%99%82%E5%8D%80%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<p></p><figure id="_figure-12"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-11.png"><img alt="SYSName and TimeZone Setting" src="images/img-11.png"></a><figcaption>Figure 12: SYSName and TimeZone Setting</figcaption></figure><p></p>
+<p></p><figure id="_figure-13"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-12.png"><img alt="SYSName and TimeZone Setting" src="images/img-12.png"></a><figcaption>Figure 13: SYSName and TimeZone Setting</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="7-dnsntp-server設定">7. DNS、NTP Server設定<a class="headerlink" href="#7-dnsntp-server%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<p></p><figure id="_figure-14"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-13.png"><img alt="Services" src="images/img-13.png"></a><figcaption>Figure 14: Services</figcaption></figure><p></p>
+<p>此處的DNS設定是防火牆本身要做DNS查詢時使用，<mark class="critic">若未設定則相關特徵碼、Firmware更新、啟用授權等功能均會異常</mark></p>
+<p></p><figure id="_figure-15"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-14.png"><img alt="DNS Setting" src="images/img-14.png"></a><figcaption>Figure 15: DNS Setting</figcaption></figure><p></p>
+<p>NTP Server Address可以設定FQDN或者是IP</p>
+<p></p><figure id="_figure-16"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-15.png"><img alt="NTP Setting" src="images/img-15.png"></a><figcaption>Figure 16: NTP Setting</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="8-服務路由設定">8. 服務路由設定<a class="headerlink" href="#8-%E6%9C%8D%E5%8B%99%E8%B7%AF%E7%94%B1%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<p>Service Route部分是指防火牆本身的各項服務要使用哪個介面，預設是使用Management Interface，但若Management Interface無法上網或者沒有接線時可以改成使用其他介面</p>
+<p></p><figure id="_figure-17"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-16.png"><img alt="Service Route" src="images/img-16.png"></a><figcaption>Figure 17: Service Route</figcaption></figure><p></p>
+<div class="page-break">
+<p>可針對不同的服務設定使用不同的介面</p>
+<p></p><figure id="_figure-18"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-17.png"><img alt="Service Route" src="images/img-17.png"></a><figcaption>Figure 18: Service Route</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="9-啟用授權">9. 啟用授權<a class="headerlink" href="#9-%E5%95%9F%E7%94%A8%E6%8E%88%E6%AC%8A" title="Permanent link">#</a></h2>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<ul>
+<li>啟用授權前設備需先於<a href="https://support.paloaltonetworks.com/" target="_blank">Paloalto Customer Support Portal</a>完成註冊</li>
+<li>設備必須先完成DNS及服務路由設定</li>
+</ul>
+</div>
+<p></p><figure id="_figure-19"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-18.png"><img alt="Activate License" src="images/img-18.png"></a><figcaption>Figure 19: Activate License</figcaption></figure><p></p>
+<p></p><figure id="_figure-20"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-19.png"><img alt="Activate License" src="images/img-19.png"></a><figcaption>Figure 20: Activate License</figcaption></figure><p></p>
+<p></p><figure id="_figure-21"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-20.png"><img alt="Activate Success" src="images/img-20.png"></a><figcaption>Figure 21: Activate Success</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="10-特徵碼更新及排程設定">10. 特徵碼更新及排程設定<a class="headerlink" href="#10-%E7%89%B9%E5%BE%B5%E7%A2%BC%E6%9B%B4%E6%96%B0%E5%8F%8A%E6%8E%92%E7%A8%8B%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<h3 id="101-特徵碼更新">10.1. 特徵碼更新<a class="headerlink" href="#101-%E7%89%B9%E5%BE%B5%E7%A2%BC%E6%9B%B4%E6%96%B0" title="Permanent link">#</a></h3>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<ul>
+<li>必須先啟用完授權在此才可以看得到更新項目</li>
+<li>AntiVirus更新項目需先安裝Application and Threats後重新檢查更新才會出現</li>
+</ul>
+</div>
+<p></p><figure id="_figure-22"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-21.png"><img alt="Check Update" src="images/img-21.png"></a><figcaption>Figure 22: Check Update</figcaption></figure><p></p>
+<div class="page-break">
+<p>需先下載要更新的項目</p>
+<p></p><figure id="_figure-23"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-22.png"><img alt="Download" src="images/img-22.png"></a><figcaption>Figure 23: Download</figcaption></figure><p></p>
+<p>下載完成後Action會變成Install，此時點擊就會安裝</p>
+<p></p><figure id="_figure-24"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-23.png"><img alt="Insall" src="images/img-23.png"></a><figcaption>Figure 24: Insall</figcaption></figure><p></p>
+<p></p><figure id="_figure-25"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-24.png"><img alt="Install" src="images/img-24.png"></a><figcaption>Figure 25: Install</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="102-排程設定">10.2. 排程設定<a class="headerlink" href="#102-%E6%8E%92%E7%A8%8B%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h3>
+<p>每個項目都有各自的更新排程可以依需求設定自動下載及安裝時間</p>
+<p></p><figure id="_figure-26"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-25.png"><img alt="Schedule" src="images/img-25.png"></a><figcaption>Figure 26: Schedule</figcaption></figure><p></p>
+<p></p><figure id="_figure-27"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-26.png"><img alt="Schedule" src="images/img-26.png"></a><figcaption>Figure 27: Schedule</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>Recurrence</strong></td>
+<td>排程週期。依不同項目可選擇每小時、每天或每週</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>Minutes Past Hour</strong></td>
+<td>依據選擇的排程週期可設定每小時的第幾分鐘或每天的第幾個小時或每週的第幾天</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><strong>Action</strong></td>
+<td>可選擇僅下載或者下載並安裝</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;"><strong>Threshold (hours)</strong></td>
+<td>設定下載的更新項目其發行時間要是多少小時以前的。主要用於避免直接下載最新更新</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h2 id="11-網路設定">11. 網路設定<a class="headerlink" href="#11-%E7%B6%B2%E8%B7%AF%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<h3 id="111-zones">11.1. Zones<a class="headerlink" href="#111-zones" title="Permanent link">#</a></h3>
+<p>Zone主要用途是將多個介面群組起來故在設定NAT或Security Policy時就可以使用Zone的方式而不需要選擇每個介面，每個介面只能屬於一個Zone</p>
+<p></p><figure id="_figure-28"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-27.png"><img alt="Add Zone" src="images/img-27.png"></a><figcaption>Figure 28: Add Zone</figcaption></figure><p></p>
+<p></p><figure id="_figure-29"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-28.png"><img alt="Zone Settings" src="images/img-28.png"></a><figcaption>Figure 29: Zone Settings</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>Name</strong></td>
+<td>Zone名稱</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>Type</strong></td>
+<td>Zone類型，可設定為Tap、Virtual Wire、Layer 2、Layer3、Tunnel。Zone類型需與Interface類型相同故不能將不同類型的Interface放入同一個Zone</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<p>共建立LAN與WAN兩個Zone</p>
+<p></p><figure id="_figure-30"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-29.png"><img alt="Zones" src="images/img-29.png"></a><figcaption>Figure 30: Zones</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="112-interface-mgmt">11.2. Interface Mgmt<a class="headerlink" href="#112-interface-mgmt" title="Permanent link">#</a></h3>
+<p>Interface Mgmt設定檔主要是設定介面要允許哪些服務以及哪些IP可以使用這些服務，在對外Interface套用的設定檔建議不要勾選Administrative Management Services的項目因為這樣就可以直接從外部存取到防火牆</p>
+<p></p><figure id="_figure-31"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-30.png"><img alt="Add Interface Mgmt" src="images/img-30.png"></a><figcaption>Figure 31: Add Interface Mgmt</figcaption></figure><p></p>
+<p></p><figure id="_figure-32"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-31.png"><img alt="Interface Mgmt Setting" src="images/img-31.png"></a><figcaption>Figure 32: Interface Mgmt Setting</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>Name</strong></td>
+<td>Interface Mgmt設定檔名稱</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>Service</strong></td>
+<td>介面允許的服務，可分為管理用及一般網路服務用</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><strong>PERMITED IP ADDRESSES</strong></td>
+<td>允許使用服務的IP。沒有設定代表全部都允許</td>
+</tr>
+</tbody>
+</table>
+<p></p><figure id="_figure-33"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-32.png"><img alt="Interface Mgmt" src="images/img-32.png"></a><figcaption>Figure 33: Interface Mgmt</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="113-interfaces">11.3. Interfaces<a class="headerlink" href="#113-interfaces" title="Permanent link">#</a></h3>
+<p>設定每個介面的IP、Zone、Virtual Router、Interface Mgmt Profile</p>
+<p></p><figure id="_figure-34"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-33.png"><img alt="Interface" src="images/img-33.png"></a><figcaption>Figure 34: Interface</figcaption></figure><p></p>
+<p></p><figure id="_figure-35"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-34.png"><img alt="Config" src="images/img-34.png"></a><figcaption>Figure 35: Config</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>Interface Type</strong></td>
+<td>Interface類型。可設定為Tap、HA、Virtual Wire、Layer 2、Layer3、Aggregate Ethernet，此處選擇Layer 3</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><strong>Virtual Router</strong></td>
+<td>設定屬於哪一個虛擬路由器。Paloalto允許建立多個Virtual Router，每個 Virtual Router都是獨立的路由表，此處選擇default</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;"><strong>Security Zone</strong></td>
+<td>設定屬於哪一個Zone。依照不同介面選擇Zone</td>
+</tr>
+</tbody>
+</table>
+<p>設定介面IP</p>
+<p></p><figure id="_figure-36"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-35.png"><img alt="IPV4" src="images/img-35.png"></a><figcaption>Figure 36: IPV4</figcaption></figure><p></p>
+<div class="page-break">
+<p>設定介面的Management Profile</p>
+<p></p><figure id="_figure-37"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-36.png"><img alt="Advanced" src="images/img-36.png"></a><figcaption>Figure 37: Advanced</figcaption></figure><p></p>
+<p>完成兩個Interfaces設定</p>
+<p></p><figure id="_figure-38"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-37.png"><img alt="Interfaces" src="images/img-37.png"></a><figcaption>Figure 38: Interfaces</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="114-virtual-routers">11.4. Virtual Routers<a class="headerlink" href="#114-virtual-routers" title="Permanent link">#</a></h3>
+<p>設定各種路由包含靜態及動態路由</p>
+<p></p><figure id="_figure-39"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-38.png"><img alt="Virtual Routers" src="images/img-38.png"></a><figcaption>Figure 39: Virtual Routers</figcaption></figure><p></p>
+<p></p><figure id="_figure-40"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-39.png"><img alt="Add Static Route" src="images/img-39.png"></a><figcaption>Figure 40: Add Static Route</figcaption></figure><p></p>
+<p></p><figure id="_figure-41"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-40.png"><img alt="Static Route Settings" src="images/img-40.png"></a><figcaption>Figure 41: Static Route Settings</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>Name</strong></td>
+<td>靜態路由名稱</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><strong>Destination</strong></td>
+<td>目的地。0.0.0.0/0代表default route</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;"><strong>Interface</strong></td>
+<td>符合上述目的地的要由哪個介面出去</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;"><strong>Next Hop</strong></td>
+<td>出去後要丟給哪一個IP</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<p>此處共要設定兩條路由，一條是default route丟往Internet，另一條是針對內部網段要丟往Core Switch</p>
+<p></p><figure id="_figure-42"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-41.png"><img alt="Virtual Routers" src="images/img-41.png"></a><figcaption>Figure 42: Virtual Routers</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="12-nat">12. NAT<a class="headerlink" href="#12-nat" title="Permanent link">#</a></h2>
+<p>可設定多條NAT規則，比對順序為由上而下，一但有比對到就不會再往下比對</p>
+<p></p><figure id="_figure-43"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-42.png"><img alt="NAT" src="images/img-42.png"></a><figcaption>Figure 43: NAT</figcaption></figure><p></p>
+<div class="page-break">
+<p>設定此NAT Policy名稱</p>
+<p></p><figure id="_figure-44"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-43.png"><img alt="General" src="images/img-43.png"></a><figcaption>Figure 44: General</figcaption></figure><p></p>
+<p>封包要符合此處<mark class="critic">所有條件</mark>才會套用此規則</p>
+<p></p><figure id="_figure-45"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-44.png"><img alt="Original Packet" src="images/img-44.png"></a><figcaption>Figure 45: Original Packet</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>Source Zone</strong></td>
+<td>來源Zone</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>Destination Zone</strong></td>
+<td>目的地Zone</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><strong>Destination Interface</strong></td>
+<td>目的地Interface</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;"><strong>Service</strong></td>
+<td>目的地Port</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;"><strong>SOURCE ADDRESS</strong></td>
+<td>來源IP</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;"><strong>DESTINATION ADDRESS</strong></td>
+<td>目的地IP</td>
+</tr>
+</tbody>
+</table>
+<p>可以針對來源IP或目的地IP實施轉換，來源IP轉換大多是內部要存取外部服務，目的地IP轉換大多是外部需要訪問內部服務</p>
+<p></p><figure id="_figure-46"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-45.png"><img alt="Translated Packet" src="images/img-45.png"></a><figcaption>Figure 46: Translated Packet</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>Translation Type</strong></td>
+<td>轉換方式，可設定以下三種：<br>- Dynamic IP Port：來源IP及Port都會被轉換<br>- Dynamic IP：僅來源IP會被轉換成設定的IP範圍<br>- Static：僅來源IP會被轉換成設定的IP</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><strong>Address Type</strong></td>
+<td>可以選擇使用Interface IP或者是手動輸入IP</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;"><strong>Interface</strong></td>
+<td>要使用哪一個Interface IP做轉換</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;"><strong>IP Address</strong></td>
+<td>要使用Interface的哪一個IP做轉換</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h2 id="13-security-policy">13. Security Policy<a class="headerlink" href="#13-security-policy" title="Permanent link">#</a></h2>
+<ul>
+<li>
+<p>此處主要設定允許或拒絕封包及相關資訊安全檢查，比對順序為由上而下，一但有比對到就不會再往下比對</p>
+</li>
+<li>
+<p><mark class="critic">封包要完全符合Source、Destination、Application、Service/URL Category</mark>這四種條件才會套用規則的Actions</p>
+</li>
+</ul>
+<p></p><figure id="_figure-47"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-46.png"><img alt="Security Policy" src="images/img-46.png"></a><figcaption>Figure 47: Security Policy</figcaption></figure><p></p>
+<p>設定Policy名稱</p>
+<p></p><figure id="_figure-48"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-47.png"><img alt="General" src="images/img-47.png"></a><figcaption>Figure 48: General</figcaption></figure><p></p>
+<div class="page-break">
+<p>設定來源Zone及IP</p>
+<p></p><figure id="_figure-49"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-48.png"><img alt="Source" src="images/img-48.png"></a><figcaption>Figure 49: Source</figcaption></figure><p></p>
+<p>設定目的地Zone 及IP</p>
+<p></p><figure id="_figure-50"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-49.png"><img alt="Destination" src="images/img-49.png"></a><figcaption>Figure 50: Destination</figcaption></figure><p></p>
+<p>設定目的地應用程式（如Line、Facebook）等</p>
+<p></p><figure id="_figure-51"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-50.png"><img alt="Application" src="images/img-50.png"></a><figcaption>Figure 51: Application</figcaption></figure><p></p>
+<div class="page-break">
+<p>設定目的地Port或URL類別</p>
+<p></p><figure id="_figure-52"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-51.png"><img alt="Service/URL Category" src="images/img-51.png"></a><figcaption>Figure 52: Service/URL Category</figcaption></figure><p></p>
+<p>設定符合條件的封包要允許或拒絕、允許後要實施的資安檢查項目及Log是否紀錄</p>
+<p></p><figure id="_figure-53"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-52.png"><img alt="Actions" src="images/img-52.png"></a><figcaption>Figure 53: Actions</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="14-設定備份與還原">14. 設定備份與還原<a class="headerlink" href="#14-%E8%A8%AD%E5%AE%9A%E5%82%99%E4%BB%BD%E8%88%87%E9%82%84%E5%8E%9F" title="Permanent link">#</a></h2>
+<h3 id="141-設定備份">14.1. 設定備份<a class="headerlink" href="#141-%E8%A8%AD%E5%AE%9A%E5%82%99%E4%BB%BD" title="Permanent link">#</a></h3>
+<p>防火牆在每次提交設定後都會於本身保存設定版本，預設會保存100個版本</p>
+<p></p><figure id="_figure-54"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-58.png"><img alt="Export configuration version" src="images/img-58.png"></a><figcaption>Figure 54: Export configuration version</figcaption></figure><p></p>
+<p>選擇要匯出的設定檔版本</p>
+<p></p><figure id="_figure-55"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-59.png"><img alt="Export Versioned Configuration" src="images/img-59.png"></a><figcaption>Figure 55: Export Versioned Configuration</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="142-設定還原">14.2. 設定還原<a class="headerlink" href="#142-%E8%A8%AD%E5%AE%9A%E9%82%84%E5%8E%9F" title="Permanent link">#</a></h3>
+<p>匯入之前備份的檔案，檔名可以自行變更但副檔名要是xml</p>
+<p></p><figure id="_figure-56"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-60.png"><img alt="Import named configuration snapshot" src="images/img-60.png"></a><figcaption>Figure 56: Import named configuration snapshot</figcaption></figure><p></p>
+<p></p><figure id="_figure-57"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-61.png"><img alt="Import Named Configuration" src="images/img-61.png"></a><figcaption>Figure 57: Import Named Configuration</figcaption></figure><p></p>
+<p>此時僅是將設定檔案上傳到防火牆還需載入該設定檔案</p>
+<p></p><figure id="_figure-58"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-62.png"><img alt="Load Named configuration snapshot" src="images/img-62.png"></a><figcaption>Figure 58: Load Named configuration snapshot</figcaption></figure><p></p>
+<p></p><figure id="_figure-59"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-63.png"><img alt="Load Named Configuration" src="images/img-63.png"></a><figcaption>Figure 59: Load Named Configuration</figcaption></figure><p></p>
+<p>載入完成後若確認沒有問題需要commit後設定才會生效</p>
+<p></p><figure id="_figure-60"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-64.png"><img alt="Commit" src="images/img-64.png"></a><figcaption>Figure 60: Commit</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="15-重新開機">15. 重新開機<a class="headerlink" href="#15-%E9%87%8D%E6%96%B0%E9%96%8B%E6%A9%9F" title="Permanent link">#</a></h2>
+<h3 id="151-重新開機">15.1. 重新開機<a class="headerlink" href="#151-%E9%87%8D%E6%96%B0%E9%96%8B%E6%A9%9F" title="Permanent link">#</a></h3>
+<p></p><figure id="_figure-61"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-65.png"><img alt="Reboot" src="images/img-65.png"></a><figcaption>Figure 61: Reboot</figcaption></figure><p></p>
+<h3 id="152-關機">15.2. 關機<a class="headerlink" href="#152-%E9%97%9C%E6%A9%9F" title="Permanent link">#</a></h3>
+<p>關機後若要開機需先將電源拔除後重插即可開機</p>
+<p></p><figure id="_figure-62"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-66.png"><img alt="Shutdown" src="images/img-66.png"></a><figcaption>Figure 62: Shutdown</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="16-升級">16. 升級<a class="headerlink" href="#16-%E5%8D%87%E7%B4%9A" title="Permanent link">#</a></h2>
+<h3 id="161-升級說明">16.1. 升級說明<a class="headerlink" href="#161-%E5%8D%87%E7%B4%9A%E8%AA%AA%E6%98%8E" title="Permanent link">#</a></h3>
+<ul>
+<li>PAN-OS命名方式為(主要版本號).(次要版本號).(維護版本號)，如10.2.1。主要版本號大多是指較大幅度的架構或功能變更，次要版本號則大多是指較小幅度的功能新增，維護版本號大多是指Bug修正。</li>
+<li>PAN-OS的(主要版本號).(次要版本號)為一個版本，故EOS時間發佈時會以10.1、10.2、11.0來做分類。</li>
+<li>PAN-OS升級到不同版本時需先升級到維護版本號為0的版本(此維護版本為Base Image，如10.2.0、11.0.0、11.1.0等)後才可升級後續維護版本(如10.2.1)</li>
+<li>PAN-OS 10.2版本以後簡化了升級程序可以允許跳過三個版本號實施升級。如10.2可以直接升級到11.2而不需要經過11.0、11.1</li>
+<li>若是使用10.2以前版本則升級路徑為先升級到該版本的最後一個建議維護版本然後再升級到下一個版本。如10.1.10要升級到11.1.6則步驟為10.1.10 -&gt; 10.1.14-h6(建議維護版本) -&gt; 10.2.0(優化升級程序版本) -&gt; 11.1.0 -&gt;11.1.6</li>
+</ul>
+<div class="page-break">
+<h3 id="162-升級步驟">16.2. 升級步驟<a class="headerlink" href="#162-%E5%8D%87%E7%B4%9A%E6%AD%A5%E9%A9%9F" title="Permanent link">#</a></h3>
+<p>檢查目前可用更新</p>
+<p></p><figure id="_figure-63"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-53.png"><img alt="Check Update" src="images/img-53.png"></a><figcaption>Figure 63: Check Update</figcaption></figure><p></p>
+<p>下載更新檔案</p>
+<p></p><figure id="_figure-64"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-54.png"><img alt="Download Image" src="images/img-54.png"></a><figcaption>Figure 64: Download Image</figcaption></figure><p></p>
+<p>安裝更新檔案</p>
+<p></p><figure id="_figure-65"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-55.png"><img alt="Install Image" src="images/img-55.png"></a><figcaption>Figure 65: Install Image</figcaption></figure><p></p>
+<p></p><figure id="_figure-66"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-56.png"><img alt="Install Image" src="images/img-56.png"></a><figcaption>Figure 66: Install Image</figcaption></figure><p></p>
+<p>可選擇立即重新開機或者等待維護時間再手動重新開機，新的版本只有在重新開機完後才會應用</p>
+<p></p><figure id="_figure-67"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-57.png"><img alt="Reboot" src="images/img-57.png"></a><figcaption>Figure 67: Reboot</figcaption></figure><p></p></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
+
+
+  
+
+
+
+  <h2 id="__comments" class="no-print">留言</h2>
+  <!-- Insert generated snippet here -->
+  <script src="https://giscus.app/client.js" data-repo="wilder640/blog-comment" data-repo-id="R_kgDOMXc0AQ" data-category="Announcements" data-category-id="DIC_kwDOMXc0Ac4Cg2f3" data-mapping="title" data-strict="0" data-reactions-enabled="1" data-emit-metadata="1" data-input-position="top" data-theme="preferred_color_scheme" data-lang="zh-TW" crossorigin="anonymous" async>
+</script>
+  <!-- Synchronize Giscus theme with palette -->
+  <script>
+    var giscus = document.querySelector("script[src*=giscus]")
+
+    // Set palette on initial load
+    var palette = __md_get("__palette")
+    if (palette && typeof palette.color === "object") {
+      var theme = palette.color.scheme === "slate"
+        ? "transparent_dark"
+        : "light"
+
+      // Instruct Giscus to set theme
+      giscus.setAttribute("data-theme", theme) 
+    }
+
+    // Register event handlers after documented loaded
+    document.addEventListener("DOMContentLoaded", function() {
+      var ref = document.querySelector("[data-md-component=palette]")
+      ref.addEventListener("change", function() {
+        var palette = __md_get("__palette")
+        if (palette && typeof palette.color === "object") {
+          var theme = palette.color.scheme === "slate"
+            ? "transparent_dark"
+            : "light"
+
+          // Instruct Giscus to change theme
+          var frame = document.querySelector(".giscus-frame")
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme } } },
+            "https://giscus.app"
+          )
+        }
+      })
+    })
+  </script>
+
+      
+    </article>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  回到頂端
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["search.suggest", "search.highlight", "navigation.tabs", "navigation.top", "navigation.indexes", "toc.integrate", "content.tooltips", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u5df2\u8907\u88fd", "clipboard.copy": "\u8907\u88fd", "search.result.more.one": "\u6b64\u9801\u5c1a\u6709 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.more.other": "\u6b64\u9801\u5c1a\u6709 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.none": "\u6c92\u6709\u7b26\u5408\u7684\u9805\u76ee", "search.result.one": "\u627e\u5230 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.other": "\u627e\u5230 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.placeholder": "\u6253\u5b57\u9032\u884c\u641c\u5c0b", "search.result.term.missing": "\u7f3a\u5c11\u5b57\u8a5e", "select.version": "\u9078\u64c7\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

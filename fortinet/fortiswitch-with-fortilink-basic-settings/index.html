@@ -1,0 +1,2301 @@
+<!DOCTYPE html><html lang="zh-TW" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="本篇紀錄FortiSwitch在FortiLink管理模式下的基本設定">
+      
+      
+      
+        <link rel="canonical" href="https://wilder640.github.io/blog/fortinet/fortiswitch-with-fortilink-basic-settings/">
+      
+      
+        <link rel="prev" href="../../paloalto/set-up-active-passive-ha/">
+      
+      
+        <link rel="next" href="../../nutanix/nutanix-installation/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
+    
+    
+    <title>FortiSwitch在FortiLink管理模式下的基本設定方式 - Wilder's IT 日誌</title>
+
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6f8fc17f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+TC:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Noto Sans TC";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+<script defer src="https://cloud.umami.is/script.js" data-website-id="53197f63-8bcf-4ee7-b1dc-3bb98354a997"></script>
+
+      
+
+    
+
+    
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="FortiSwitch在FortiLink管理模式下的基本設定方式 - Wilder's IT 日誌">
+    <meta property="og:description" content="本篇紀錄FortiSwitch在FortiLink管理模式下的基本設定">
+    <meta property="og:url" content="https://wilder640.github.io/blog/fortinet/fortiswitch-with-fortilink-basic-settings/">
+    <meta property="og:image" content="https://wilder640.github.io/blog/fortinet/fortiswitch-with-fortilink-basic-settings//images/img.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="FortiSwitch在FortiLink管理模式下的基本設定方式 - Wilder's IT 日誌">
+    <meta name="twitter:description" content="本篇紀錄FortiSwitch在FortiLink管理模式下的基本設定">
+    <meta name="twitter:image" content="https://wilder640.github.io/blog/fortinet/fortiswitch-with-fortilink-basic-settings//images/img.png">
+
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-環境說明" class="md-skip">
+          跳轉到
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="頁首">
+    <a href="../.." title="Wilder's IT 日誌" class="md-header__button md-logo" aria-label="Wilder's IT 日誌" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Wilder's IT 日誌
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              FortiSwitch在FortiLink管理模式下的基本設定方式
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="開啟深色模式" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="開啟深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo" aria-label="關閉深色模式" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="關閉深色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜尋" placeholder="搜尋" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="搜尋">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清除" aria-label="清除" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜尋引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="標籤" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../tags/" class="md-tabs__link">
+        
+  
+    
+  
+  Tags
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../archive/2025/" class="md-tabs__link">
+          
+  
+    
+  
+  時間軸
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../category/aruba/" class="md-tabs__link">
+          
+  
+    
+  
+  類別
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="導覽列" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Wilder's IT 日誌" class="md-nav__button md-logo" aria-label="Wilder's IT 日誌" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    Wilder's IT 日誌
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tags/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tags
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    時間軸
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            時間軸
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../archive/2025/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2025 10月
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../archive/2024/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2024 12月
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    類別
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            類別
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/aruba/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Aruba
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/extreme/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Extreme
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/fortinet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fortinet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/nutanix/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Nutanix
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/paloalto/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Paloalto
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/veeam/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Veeam
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../category/vmware/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vmware
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../.." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+                  <span class="md-ellipsis">
+                    回到主頁
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    元數據
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"></path></svg>
+                        <time datetime="2025-01-13 00:00:00+00:00" class="md-ellipsis">2025年1月13日</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"></path></svg>
+                          <span class="md-ellipsis">
+                            於
+                            
+                              <a href="../../category/fortinet/">Fortinet</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"></path></svg>
+                          <span class="md-ellipsis">
+                            
+                              需要 11 分鐘閱讀時間
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+          </nav>
+          
+            
+
+<nav class="md-nav md-nav--secondary" aria-label="目錄">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目錄
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-環境說明" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. 環境說明
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-fortiswitch管理模式" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. FortiSwitch管理模式
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. FortiSwitch管理模式">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-standlone" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1. Standlone
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-managed-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2. Managed Switch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-fortilan-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.3. FortiLan Cloud
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-fortilink管理模式下fortiswitch上線流程" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. FortiLink管理模式下FortiSwitch上線流程
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-fortilink" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. FortiLink
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. FortiLink">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-fortigate-interface啟用fortilink功能方式" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.1. FortiGate Interface啟用FortiLink功能方式
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-fortiswitch啟用auto-discovery-fortilink功能方式" class="md-nav__link">
+    <span class="md-ellipsis">
+      4.2. FortiSwitch啟用auto-discovery-fortilink功能方式
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-授權fortiswitch" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. 授權FortiSwitch
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-部署模式" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. 部署模式
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 部署模式">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-單一台fortiswitch" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1. 單一台FortiSwitch
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1. 單一台FortiSwitch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#611-fortigate-fortilink-type為physical" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1.1. FortiGate FortiLink Type為Physical
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#612-fortigate-fortilink-type為aggregate" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.1.2. FortiGate FortiLink Type為Aggregate
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-多台fortiswitch" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.2. 多台FortiSwitch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-fortilink-type為hardware或software-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.3. FortiLink Type為hardware或software switch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-fortilink-mode-over-a-layer-3-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.4. FortiLink mode over a layer-3 network
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.4. FortiLink mode over a layer-3 network">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#641-在fortiswitch上的設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.4.1. 在FortiSwitch上的設定
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#642-在fortigate上的設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.4.2. 在FortiGate上的設定
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#643-連接第二台fortiswitch" class="md-nav__link">
+    <span class="md-ellipsis">
+      6.4.3. 連接第二台FortiSwitch
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-vlan設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. VLAN設定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. VLAN設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-新增vlan" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.1. 新增VLAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-刪除vlan" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.2. 刪除VLAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-賦予vlan到fortiswitch-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      7.3. 賦予VLAN到FortiSWitch Port
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-trunklink-aggregation-group設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Trunk（Link Aggregation Group）設定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Trunk（Link Aggregation Group）設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-新增trunk" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.1. 新增Trunk
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-刪除trunk" class="md-nav__link">
+    <span class="md-ellipsis">
+      8.2. 刪除Trunk
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-fortiswitch-port設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. FortiSwitch Port設定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. FortiSwitch Port設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-dhcp-snopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.1. DHCP Snopping
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-stp" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.2. STP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-loop-guard" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.3. Loop Guard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94-edge-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.4. Edge Port
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95-stp-bpdu-guard" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.5. STP BPDU Guard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#96-stp-root-guard" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.6. STP Root Guard
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-quarantines" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Quarantines
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Quarantines">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-新增需隔離的mac-address" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.1. 新增需隔離的Mac Address
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-刪除被隔離的mac-address" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.2. 刪除被隔離的Mac Address
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-啟用bounce-the-switch-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      10.3. 啟用bounce the switch port
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-設定security-policy以允許訪問fortilink-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. 設定Security Policy以允許訪問FortiLink Interface
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-設定fortiswitch可供存取的管理服務" class="md-nav__link">
+    <span class="md-ellipsis">
+      12. 設定FortiSwitch可供存取的管理服務
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-統一變更fortiswitch密碼" class="md-nav__link">
+    <span class="md-ellipsis">
+      13. 統一變更FortiSwitch密碼
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-snmp設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      14. SNMP設定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. SNMP設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#141-全域設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      14.1. 全域設定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.1. 全域設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1411-snmp-system-info設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      14.1.1. SNMP System Info設定
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1412-snmp-community設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      14.1.2. SNMP Community設定
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#142-針對特定fortiswitch設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      14.2. 針對特定FortiSwitch設定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14.2. 針對特定FortiSwitch設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1421-snmp-system-info設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      14.2.1. SNMP System Info設定
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1422-snmp-community設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      14.2.2. SNMP Community設定
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-syslog設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      15. Syslog設定
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15. Syslog設定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#151-全域設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      15.1. 全域設定
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#152-針對特定fortiswitch設定" class="md-nav__link">
+    <span class="md-ellipsis">
+      15.2. 針對特定FortiSwitch設定
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-port-mirroring" class="md-nav__link">
+    <span class="md-ellipsis">
+      16. Port Mirroring
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-更換fortiswitch" class="md-nav__link">
+    <span class="md-ellipsis">
+      17. 更換FortiSwitch
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="17. 更換FortiSwitch">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#171-更換未使用mclag的fortiswitch" class="md-nav__link">
+    <span class="md-ellipsis">
+      17.1. 更換未使用MCLAG的FortiSwitch
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-重新開機" class="md-nav__link">
+    <span class="md-ellipsis">
+      18. 重新開機
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19-升級firmware" class="md-nav__link">
+    <span class="md-ellipsis">
+      19. 升級Firmware
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+<div class="cover no-print">
+    
+    <h1 class="page-title"> FortiSwitch在FortiLink管理模式下的基本設定方式 </h1>
+    <span class="md-source-file__fact">
+        <span class="md-icon" title="最後更新">
+        
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"></path></svg>
+        
+        </span>
+        2025-10-30 
+        
+             |
+             
+                <span class="md-icon" title="分類">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 20H4a2 2 0 0 1-2-2V6c0-1.11.89-2 2-2h6l2 2h7a2 2 0 0 1 2 2H4v10l2.14-8h17.07l-2.28 8.5c-.23.87-1.01 1.5-1.93 1.5"></path></svg>
+                </span>
+                Fortinet
+            
+        
+    </span>
+    
+    
+        <p class="page-description">
+            本篇紀錄FortiSwitch在FortiLink管理模式下的基本設定
+        </p>
+    
+    
+    
+  
+
+<nav class="md-tags">
+  
+    
+    
+    
+      <a href="../../tags/#fortinet" class="md-tag">Fortinet</a>
+    
+  
+    
+    
+    
+      <a href="../../tags/#fortiswitch" class="md-tag">FortiSwitch</a>
+    
+  
+</nav>
+    
+    
+</div>
+<h2>目錄</h2>
+<ul>
+<li><a href="#1-%E7%92%B0%E5%A2%83%E8%AA%AA%E6%98%8E">1. 環境說明</a></li>
+<li><a href="#2-fortiswitch%E7%AE%A1%E7%90%86%E6%A8%A1%E5%BC%8F">2. FortiSwitch管理模式</a><ul>
+<li><a href="#21-standlone">2.1. Standlone</a></li>
+<li><a href="#22-managed-switch">2.2. Managed Switch</a></li>
+<li><a href="#23-fortilan-cloud">2.3. FortiLan Cloud</a></li>
+</ul>
+</li>
+<li><a href="#3-fortilink%E7%AE%A1%E7%90%86%E6%A8%A1%E5%BC%8F%E4%B8%8Bfortiswitch%E4%B8%8A%E7%B7%9A%E6%B5%81%E7%A8%8B">3. FortiLink管理模式下FortiSwitch上線流程</a></li>
+<li><a href="#4-fortilink">4. FortiLink</a><ul>
+<li><a href="#41-fortigate-interface%E5%95%9F%E7%94%A8fortilink%E5%8A%9F%E8%83%BD%E6%96%B9%E5%BC%8F">4.1. FortiGate Interface啟用FortiLink功能方式</a></li>
+<li><a href="#42-fortiswitch%E5%95%9F%E7%94%A8auto-discovery-fortilink%E5%8A%9F%E8%83%BD%E6%96%B9%E5%BC%8F">4.2. FortiSwitch啟用auto-discovery-fortilink功能方式</a></li>
+</ul>
+</li>
+<li><a href="#5-%E6%8E%88%E6%AC%8Afortiswitch">5. 授權FortiSwitch</a></li>
+<li><a href="#6-%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F">6. 部署模式</a><ul>
+<li><a href="#61-%E5%96%AE%E4%B8%80%E5%8F%B0fortiswitch">6.1. 單一台FortiSwitch</a><ul>
+<li><a href="#611-fortigate-fortilink-type%E7%82%BAphysical">6.1.1. FortiGate FortiLink Type為Physical</a></li>
+<li><a href="#612-fortigate-fortilink-type%E7%82%BAaggregate">6.1.2. FortiGate FortiLink Type為Aggregate</a></li>
+</ul>
+</li>
+<li><a href="#62-%E5%A4%9A%E5%8F%B0fortiswitch">6.2. 多台FortiSwitch</a></li>
+<li><a href="#63-fortilink-type%E7%82%BAhardware%E6%88%96software-switch">6.3. FortiLink Type為hardware或software switch</a></li>
+<li><a href="#64-fortilink-mode-over-a-layer-3-network">6.4. FortiLink mode over a layer-3 network</a><ul>
+<li><a href="#641-%E5%9C%A8fortiswitch%E4%B8%8A%E7%9A%84%E8%A8%AD%E5%AE%9A">6.4.1. 在FortiSwitch上的設定</a></li>
+<li><a href="#642-%E5%9C%A8fortigate%E4%B8%8A%E7%9A%84%E8%A8%AD%E5%AE%9A">6.4.2. 在FortiGate上的設定</a></li>
+<li><a href="#643-%E9%80%A3%E6%8E%A5%E7%AC%AC%E4%BA%8C%E5%8F%B0fortiswitch">6.4.3. 連接第二台FortiSwitch</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#7-vlan%E8%A8%AD%E5%AE%9A">7. VLAN設定</a><ul>
+<li><a href="#71-%E6%96%B0%E5%A2%9Evlan">7.1. 新增VLAN</a></li>
+<li><a href="#72-%E5%88%AA%E9%99%A4vlan">7.2. 刪除VLAN</a></li>
+<li><a href="#73-%E8%B3%A6%E4%BA%88vlan%E5%88%B0fortiswitch-port">7.3. 賦予VLAN到FortiSWitch Port</a></li>
+</ul>
+</li>
+<li><a href="#8-trunklink-aggregation-group%E8%A8%AD%E5%AE%9A">8. Trunk（Link Aggregation Group）設定</a><ul>
+<li><a href="#81-%E6%96%B0%E5%A2%9Etrunk">8.1. 新增Trunk</a></li>
+<li><a href="#82-%E5%88%AA%E9%99%A4trunk">8.2. 刪除Trunk</a></li>
+</ul>
+</li>
+<li><a href="#9-fortiswitch-port%E8%A8%AD%E5%AE%9A">9. FortiSwitch Port設定</a><ul>
+<li><a href="#91-dhcp-snopping">9.1. DHCP Snopping</a></li>
+<li><a href="#92-stp">9.2. STP</a></li>
+<li><a href="#93-loop-guard">9.3. Loop Guard</a></li>
+<li><a href="#94-edge-port">9.4. Edge Port</a></li>
+<li><a href="#95-stp-bpdu-guard">9.5. STP BPDU Guard</a></li>
+<li><a href="#96-stp-root-guard">9.6. STP Root Guard</a></li>
+</ul>
+</li>
+<li><a href="#10-quarantines">10. Quarantines</a><ul>
+<li><a href="#101-%E6%96%B0%E5%A2%9E%E9%9C%80%E9%9A%94%E9%9B%A2%E7%9A%84mac-address">10.1. 新增需隔離的Mac Address</a></li>
+<li><a href="#102-%E5%88%AA%E9%99%A4%E8%A2%AB%E9%9A%94%E9%9B%A2%E7%9A%84mac-address">10.2. 刪除被隔離的Mac Address</a></li>
+<li><a href="#103-%E5%95%9F%E7%94%A8bounce-the-switch-port">10.3. 啟用bounce the switch port</a></li>
+</ul>
+</li>
+<li><a href="#11-%E8%A8%AD%E5%AE%9Asecurity-policy%E4%BB%A5%E5%85%81%E8%A8%B1%E8%A8%AA%E5%95%8Ffortilink-interface">11. 設定Security Policy以允許訪問FortiLink Interface</a></li>
+<li><a href="#12-%E8%A8%AD%E5%AE%9Afortiswitch%E5%8F%AF%E4%BE%9B%E5%AD%98%E5%8F%96%E7%9A%84%E7%AE%A1%E7%90%86%E6%9C%8D%E5%8B%99">12. 設定FortiSwitch可供存取的管理服務</a></li>
+<li><a href="#13-%E7%B5%B1%E4%B8%80%E8%AE%8A%E6%9B%B4fortiswitch%E5%AF%86%E7%A2%BC">13. 統一變更FortiSwitch密碼</a></li>
+<li><a href="#14-snmp%E8%A8%AD%E5%AE%9A">14. SNMP設定</a><ul>
+<li><a href="#141-%E5%85%A8%E5%9F%9F%E8%A8%AD%E5%AE%9A">14.1. 全域設定</a><ul>
+<li><a href="#1411-snmp-system-info%E8%A8%AD%E5%AE%9A">14.1.1. SNMP System Info設定</a></li>
+<li><a href="#1412-snmp-community%E8%A8%AD%E5%AE%9A">14.1.2. SNMP Community設定</a></li>
+</ul>
+</li>
+<li><a href="#142-%E9%87%9D%E5%B0%8D%E7%89%B9%E5%AE%9Afortiswitch%E8%A8%AD%E5%AE%9A">14.2. 針對特定FortiSwitch設定</a><ul>
+<li><a href="#1421-snmp-system-info%E8%A8%AD%E5%AE%9A">14.2.1. SNMP System Info設定</a></li>
+<li><a href="#1422-snmp-community%E8%A8%AD%E5%AE%9A">14.2.2. SNMP Community設定</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#15-syslog%E8%A8%AD%E5%AE%9A">15. Syslog設定</a><ul>
+<li><a href="#151-%E5%85%A8%E5%9F%9F%E8%A8%AD%E5%AE%9A">15.1. 全域設定</a></li>
+<li><a href="#152-%E9%87%9D%E5%B0%8D%E7%89%B9%E5%AE%9Afortiswitch%E8%A8%AD%E5%AE%9A">15.2. 針對特定FortiSwitch設定</a></li>
+</ul>
+</li>
+<li><a href="#16-port-mirroring">16. Port Mirroring</a></li>
+<li><a href="#17-%E6%9B%B4%E6%8F%9Bfortiswitch">17. 更換FortiSwitch</a><ul>
+<li><a href="#171-%E6%9B%B4%E6%8F%9B%E6%9C%AA%E4%BD%BF%E7%94%A8mclag%E7%9A%84fortiswitch">17.1. 更換未使用MCLAG的FortiSwitch</a></li>
+</ul>
+</li>
+<li><a href="#18-%E9%87%8D%E6%96%B0%E9%96%8B%E6%A9%9F">18. 重新開機</a></li>
+<li><a href="#19-%E5%8D%87%E7%B4%9Afirmware">19. 升級Firmware</a></li>
+</ul>
+<div class="page-break">
+<h2 id="1-環境說明">1. 環境說明<a class="headerlink" href="#1-%E7%92%B0%E5%A2%83%E8%AA%AA%E6%98%8E" title="Permanent link">#</a></h2>
+<ul>
+<li>防火牆型號：FortiGate 61F</li>
+<li>防火牆版本： 7.2.8</li>
+<li>Switch型號：FortiSwitch 124F-POE</li>
+<li>Switch版本：7.2.8</li>
+</ul>
+<div class="page-break">
+<h2 id="2-fortiswitch管理模式">2. FortiSwitch管理模式<a class="headerlink" href="#2-fortiswitch%E7%AE%A1%E7%90%86%E6%A8%A1%E5%BC%8F" title="Permanent link">#</a></h2>
+<p>FortiSwitch管理模式可區分為三種，從7.2版開始切換管理模式不會重新開機</p>
+<h3 id="21-standlone">2.1. Standlone<a class="headerlink" href="#21-standlone" title="Permanent link">#</a></h3>
+<ul>
+<li>使用FortiSwitch本身的GUI或CLI管理</li>
+<li>不需要有FortiGate</li>
+</ul>
+<div class="highlight"><pre><span></span><code>config switch auto-network
+    set status disable
+end
+</code></pre></div>
+<h3 id="22-managed-switch">2.2. Managed Switch<a class="headerlink" href="#22-managed-switch" title="Permanent link">#</a></h3>
+<ul>
+<li>使用FortiGate GUI或CLI管理</li>
+<li>FortiSwitch需連接到FortiLink Interface</li>
+</ul>
+<div class="highlight"><pre><span></span><code>config switch auto-network
+    set status enable
+end
+</code></pre></div>
+<h3 id="23-fortilan-cloud">2.3. FortiLan Cloud<a class="headerlink" href="#23-fortilan-cloud" title="Permanent link">#</a></h3>
+<ul>
+<li>Standlone Switch但是使用FortiLan Cloud管理</li>
+<li>FortiSwitch本身要能夠上網</li>
+</ul>
+<div class="highlight"><pre><span></span><code>config switch auto-network
+    set status disable
+end
+config switch flan-cloud
+    set status enable
+end
+</code></pre></div>
+<div class="page-break">
+<h2 id="3-fortilink管理模式下fortiswitch上線流程">3. FortiLink管理模式下FortiSwitch上線流程<a class="headerlink" href="#3-fortilink%E7%AE%A1%E7%90%86%E6%A8%A1%E5%BC%8F%E4%B8%8Bfortiswitch%E4%B8%8A%E7%B7%9A%E6%B5%81%E7%A8%8B" title="Permanent link">#</a></h2>
+<ol>
+<li>決定<a href="#6-%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F">部署模式</a></li>
+<li>確定或設定FortiGate的<a href="#41-fortigate-interface%E5%95%9F%E7%94%A8fortilink%E5%8A%9F%E8%83%BD%E6%96%B9%E5%BC%8F">FortiLink</a></li>
+<li>確定或設定<a href="#42-fortiswitch%E5%95%9F%E7%94%A8auto-discovery-fortilink%E5%8A%9F%E8%83%BD%E6%96%B9%E5%BC%8F">FortiSwitch auto-discovery-fortilink</a></li>
+<li><a href="#5-%E6%8E%88%E6%AC%8Afortiswitch">授權FortiSwitch</a></li>
+</ol>
+<div class="page-break">
+<h2 id="4-fortilink">4. FortiLink<a class="headerlink" href="#4-fortilink" title="Permanent link">#</a></h2>
+<ul>
+<li>FortiLink是一種專屬的管理協議可使FortiGate藉由此協議管理設定FortiSwitch，在多數的FortiGate上會有預設的Aggregation Interface啟用FortiLink功能但也可以自行在Physical Interface、Software Switch、Hardware Switch啟用該功能，端看要採用何種部署方式。</li>
+<li>在使用FortiLink管理FortiSwitch時，FortiGate角色就是FortiSwitch的控制器，此時的FortiSwitch被稱為managed switch。</li>
+<li>從FortiSwitch 7.2版開始已經不使用switch-mgmt-mode設定來指定FortiSwitch是standalone或managed模式，取而代之的是config switch auto-network，預設為enable，故當連接到到FortiLink Interface時會自動切換至FortiLink模式且不會重開。</li>
+<li>Fortiswitch IP會經由FortiGate上的FortiLink Interface DHCP Server派發，若要確保IP均不會變動可以設定DHCP保留區來達成。</li>
+<li>被FortiGate控管的FortiSwitch設定會寫在FortiGate上故只要備份FortiGate設定檔即可。</li>
+<li><mark class="critic">不要直接在被管理的FortiSwitch上更改設定</mark>，因為FortiSwitch不會將更改的設定同步到FortiGate故會造成兩邊資訊不一致，且後續也可能會被FortiGate上的設定覆蓋。</li>
+<li>FortiLink Interface預設允許untagged及tagged frames，Native Vlan為4094，此Vlan也是管理使用的vlan。</li>
+</ul>
+<div class="page-break">
+<h3 id="41-fortigate-interface啟用fortilink功能方式">4.1. FortiGate Interface啟用FortiLink功能方式<a class="headerlink" href="#41-fortigate-interface%E5%95%9F%E7%94%A8fortilink%E5%8A%9F%E8%83%BD%E6%96%B9%E5%BC%8F" title="Permanent link">#</a></h3>
+<p>僅能於CLI啟用，啟用完成後該Interface就可以用來連接FortiSwitch</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># 進入Interface設定模式</span>
+FortiGate-61F # config system interface
+
+<span class="gh"># 編輯要啟用FortiLink功能介面 </span>
+FortiGate-61F (interface) # edit dmz 
+
+<span class="gh"># 啟用FortiLink</span>
+FortiGate-61F (dmz) # set fortilink enable 
+
+<span class="gh"># 結束編輯</span>
+FortiGate-61F (dmz) # end
+</code></pre></div>
+<p>啟用完成後可以於GUI查看確認</p>
+<p></p><figure id="_figure-1"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-4.png"><img alt="FortiLink" src="images/img-4.png"></a><figcaption>Figure 1: FortiLink</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="42-fortiswitch啟用auto-discovery-fortilink功能方式">4.2. FortiSwitch啟用auto-discovery-fortilink功能方式<a class="headerlink" href="#42-fortiswitch%E5%95%9F%E7%94%A8auto-discovery-fortilink%E5%8A%9F%E8%83%BD%E6%96%B9%E5%BC%8F" title="Permanent link">#</a></h3>
+<p>從FortiSwitch 7.2.0版本以後預設所有的Interface都會啟用故不需要額外設定，若是較早期版本則需查看手冊確認哪些介面有啟用，有啟用的Interface才會自動查找FortiLink Interface</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># 進入Interface設定模式</span>
+S124 # config switch interface 
+
+<span class="gh"># 編輯要啟用auto-discovery-fortilink功能介面 </span>
+S124 (interface) # edit port1 
+
+<span class="gh"># 啟用auto-discovery-fortilink</span>
+S124 (port1) # set auto-discovery-fortilink enable 
+
+<span class="gh"># 結束編輯</span>
+S124 (port1) # end
+</code></pre></div>
+<div class="page-break">
+<h2 id="5-授權fortiswitch">5. 授權FortiSwitch<a class="headerlink" href="#5-%E6%8E%88%E6%AC%8Afortiswitch" title="Permanent link">#</a></h2>
+<p>FortiSwitch連接上FortiGate後需要授權才可以使用</p>
+<p></p><figure id="_figure-2"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-42.png"><img alt="Manual Authorization" src="images/img-42.png"></a><figcaption>Figure 2: Manual Authorization</figcaption></figure><p></p>
+<p>也可以設定FortiLink Interface開啟自動授權FortiSwitch功能</p>
+<p></p><figure id="_figure-3"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-43.png"><img alt="Automatically authorize devices" src="images/img-43.png"></a><figcaption>Figure 3: Automatically authorize devices</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="6-部署模式">6. 部署模式<a class="headerlink" href="#6-%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F" title="Permanent link">#</a></h2>
+<p>FortiSwitch有多種部署方式故於安裝前需先評估要採取哪種方式</p>
+<h3 id="61-單一台fortiswitch">6.1. 單一台FortiSwitch<a class="headerlink" href="#61-%E5%96%AE%E4%B8%80%E5%8F%B0fortiswitch" title="Permanent link">#</a></h3>
+<p>可分為使用Physical Port或LAG Port連接兩種設定</p>
+<p></p><figure id="_figure-4"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-7.png"><img alt="Single FortiGate managing a single FortiSwitch unit" src="images/img-7.png"></a><figcaption>Figure 4: Single FortiGate managing a single FortiSwitch unit</figcaption></figure><p></p>
+<p></p><figure id="_figure-5"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-38.png"><img alt="HA-mode FortiGate units managing a single FortiSwitch unit" src="images/img-38.png"></a><figcaption>Figure 5: HA-mode FortiGate units managing a single FortiSwitch unit</figcaption></figure><p></p>
+<div class="page-break">
+<h4 id="611-fortigate-fortilink-type為physical">6.1.1. FortiGate FortiLink Type為Physical<a class="headerlink" href="#611-fortigate-fortilink-type%E7%82%BAphysical" title="Permanent link">#</a></h4>
+<p>直接將FortiGate與FortiSwitch連接即可，但此種方式較不建議，因為缺少上行鏈路的備援且擴充性也較差</p>
+<p></p><figure id="_figure-6"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-5.png"><img alt="FortiLink Type Physical" src="images/img-5.png"></a><figcaption>Figure 6: FortiLink Type Physical</figcaption></figure><p></p>
+<div class="page-break">
+<h4 id="612-fortigate-fortilink-type為aggregate">6.1.2. FortiGate FortiLink Type為Aggregate<a class="headerlink" href="#612-fortigate-fortilink-type%E7%82%BAaggregate" title="Permanent link">#</a></h4>
+<p>FortiGate與FortiSwitch之間允許多條線路，但若要每條線路都處於Active狀態則要關閉FortiLink split interface功能</p>
+<p></p><figure id="_figure-7"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-1.png"><img alt="Disable FortiLink Split Interface" src="images/img-1.png"></a><figcaption>Figure 7: Disable FortiLink Split Interface</figcaption></figure><p></p>
+<p>下圖為關閉FortiLink split interface後4條線路就都是處於Active狀態，若是沒有關閉則僅會有一條是處於Acitve狀態</p>
+<p></p><figure id="_figure-8"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-2.png"><img alt="FortiLink Type Aggregate" src="images/img-2.png"></a><figcaption>Figure 8: FortiLink Type Aggregate</figcaption></figure><p></p>
+<p></p><figure id="_figure-9"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-6.png"><img alt="FortiLink Type Aggregate" src="images/img-6.png"></a><figcaption>Figure 9: FortiLink Type Aggregate</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="62-多台fortiswitch">6.2. 多台FortiSwitch<a class="headerlink" href="#62-%E5%A4%9A%E5%8F%B0fortiswitch" title="Permanent link">#</a></h3>
+<p></p><figure id="_figure-10"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-3.png"><img alt="Single FortiGate unit managing a stack of several FortiSwitch units" src="images/img-3.png"></a><figcaption>Figure 10: Single FortiGate unit managing a stack of several FortiSwitch units</figcaption></figure><p></p>
+<p></p><figure id="_figure-11"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-39.png"><img alt="HA-mode FortiGate units managing a stack of several FortiSwitch units" src="images/img-39.png"></a><figcaption>Figure 11: HA-mode FortiGate units managing a stack of several FortiSwitch units</figcaption></figure><p></p>
+<ul>
+<li>FortiSwitch之間以Ring方式連接</li>
+<li>若FortiLink Type是Aggregate則可以將最後一台FortiSwitch連接到FortiLink Interface但是FortiLink split interface功能要打開，此時最後一台的連線會處於Standby狀態。<mark class="critic"><strong>僅有當第一台FortiSwitch介面Down時該介面才會被使用</strong></mark>，使用此方式可以提供上行鏈路的備援，切換會有10-15秒鐘左右的中斷時間</li>
+</ul>
+<p></p><figure id="_figure-12"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-9.png"><img alt="FortiLink split interface" src="images/img-9.png"></a><figcaption>Figure 12: FortiLink split interface</figcaption></figure><p></p>
+<p></p><figure id="_figure-13"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-8.png"><img alt="Single FortiGate unit managing a stack of several FortiSwitch units" src="images/img-8.png"></a><figcaption>Figure 13: Single FortiGate unit managing a stack of several FortiSwitch units</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="63-fortilink-type為hardware或software-switch">6.3. FortiLink Type為hardware或software switch<a class="headerlink" href="#63-fortilink-type%E7%82%BAhardware%E6%88%96software-switch" title="Permanent link">#</a></h3>
+<p></p><figure id="_figure-14"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-10.png"><img alt="Single FortiGate unit managing multiple FortiSwitch units" src="images/img-10.png"></a><figcaption>Figure 14: Single FortiGate unit managing multiple FortiSwitch units</figcaption></figure><p></p>
+<p></p><figure id="_figure-15"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-40.png"><img alt="HA-mode FortiGate units using hardware-switch interfaces and STP" src="images/img-40.png"></a><figcaption>Figure 15: HA-mode FortiGate units using hardware-switch interfaces and STP</figcaption></figure><p></p>
+<ul>
+<li>因為所有FortiSwitch都是直接連線到FortiGate故FortiSwitch之間的Layer 2流量都需經由FortiGate橋接進而增加FortiGate額外負擔<mark class="critic">故此種模式較不建議使用</mark></li>
+<li>這種模式下FortiGate上的Switch Interface可以接其他設備，但該設備要支援IEEE 802.1q VLAN tagging</li>
+</ul>
+<p></p><figure id="_figure-16"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-11.png"><img alt="FortiGate FortiLink Type VLAN Switch" src="images/img-11.png"></a><figcaption>Figure 16: FortiGate FortiLink Type VLAN Switch</figcaption></figure><p></p>
+<p></p><figure id="_figure-17"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-12.png"><img alt="Single FortiGate unit managing multiple FortiSwitch units" src="images/img-12.png"></a><figcaption>Figure 17: Single FortiGate unit managing multiple FortiSwitch units</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="64-fortilink-mode-over-a-layer-3-network">6.4. FortiLink mode over a layer-3 network<a class="headerlink" href="#64-fortilink-mode-over-a-layer-3-network" title="Permanent link">#</a></h3>
+<ul>
+<li>需先設定FortiSwitch IP及路由確保可以到達FortiGate的FortiLink Interface</li>
+<li>需先設定FortiGate Policy允許FortiSwitch及FortiGate的FortiLink Interface之間的流量</li>
+<li>若有Layer 3設定相關需求僅能連線至該FortiSwitch設定無法於FortiGate上設定，包含Vlan Interface及其IP</li>
+</ul>
+<p></p><figure id="_figure-18"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-61.png"><img alt="FortiLink mode over a layer-3 network" src="images/img-61.png"></a><figcaption>Figure 18: FortiLink mode over a layer-3 network</figcaption></figure><p></p>
+<div class="page-break">
+<h4 id="641-在fortiswitch上的設定">6.4.1. 在FortiSwitch上的設定<a class="headerlink" href="#641-%E5%9C%A8fortiswitch%E4%B8%8A%E7%9A%84%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h4>
+<p>設定IP Address</p>
+<p></p><figure id="_figure-19"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-62.png"><img alt="Assign IP Address" src="images/img-62.png"></a><figcaption>Figure 19: Assign IP Address</figcaption></figure><p></p>
+<p></p><figure id="_figure-20"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-63.png"><img alt="Assign IP Address" src="images/img-63.png"></a><figcaption>Figure 20: Assign IP Address</figcaption></figure><p></p>
+<p>新增靜態路由</p>
+<p></p><figure id="_figure-21"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-65.png"><img alt="Add Static Route" src="images/img-65.png"></a><figcaption>Figure 21: Add Static Route</figcaption></figure><p></p>
+<p></p><figure id="_figure-22"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-64.png"><img alt="Add Static Route" src="images/img-64.png"></a><figcaption>Figure 22: Add Static Route</figcaption></figure><p></p>
+<p>設定靜態查找FortiGate FortiLink Interface</p>
+<div class="highlight"><pre><span></span><code>config switch-controller global
+    set ac-discovery-type static
+        config ac-list
+        edit &lt;id&gt;
+        set ipv4-address &lt;IPv4_address&gt;
+        next
+    end
+end
+</code></pre></div>
+<p></p><figure id="_figure-23"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-67.png"><img alt="Static Discovery" src="images/img-67.png"></a><figcaption>Figure 23: Static Discovery</figcaption></figure><p></p>
+<p>設定Static ISL</p>
+<div class="highlight"><pre><span></span><code>config switch trunk
+    edit &lt;trunk_name&gt;
+        set static-isl enable
+        set static-isl-auto-vlan {enable | disable}
+        set members &lt;switch_ports&gt;
+    next
+end
+</code></pre></div>
+<p>此處static-isl-auto-vlan設定為enable故當連接上FortiGate並授權後，其member port的native vlan會被變更為管理vlan 4094並且也會自動建立相關預設vlan</p>
+<p></p><figure id="_figure-24"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-68.png"><img alt="Add Static ISL" src="images/img-68.png"></a><figcaption>Figure 24: Add Static ISL</figcaption></figure><p></p>
+<div class="page-break">
+<h4 id="642-在fortigate上的設定">6.4.2. 在FortiGate上的設定<a class="headerlink" href="#642-%E5%9C%A8fortigate%E4%B8%8A%E7%9A%84%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h4>
+<p>可以單獨使用一個physical port當作over layer3 FortiSwitch的FortiLink Interface，這樣在vlan建立時就可以與其他FortiLink區隔開來，這個physical port不一定要有接線，設定方式請參考<a href="#41-fortigate-interface%E5%95%9F%E7%94%A8fortilink%E5%8A%9F%E8%83%BD%E6%96%B9%E5%BC%8F">FortiGate Interface啟用FortiLink功能</a></p>
+<p></p><figure id="_figure-25"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-66.png"><img alt="Add FortiLink Interface" src="images/img-66.png"></a><figcaption>Figure 25: Add FortiLink Interface</figcaption></figure><p></p>
+<p>新增Policy允許FortiSwitch到FortLink Interface流量，設定方式請參考<a href="#11-%E8%A8%AD%E5%AE%9Asecurity-policy%E4%BB%A5%E5%85%81%E8%A8%B1%E8%A8%AA%E5%95%8Ffortilink-interface">設定Security Policy以允許訪問FortiLink Interface</a></p>
+<p></p><figure id="_figure-26"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-69.png"><img alt="Add Policy" src="images/img-69.png"></a><figcaption>Figure 26: Add Policy</figcaption></figure><p></p>
+<p>授權FortiSwitch，設定方式請參考<a href="#5-%E6%8E%88%E6%AC%8Afortiswitch">授權FortiSwitch</a></p>
+<p></p><figure id="_figure-27"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-70.png"><img alt="Authorizing the FortiSwitch unit" src="images/img-70.png"></a><figcaption>Figure 27: Authorizing the FortiSwitch unit</figcaption></figure><p></p>
+<div class="page-break">
+<h4 id="643-連接第二台fortiswitch">6.4.3. 連接第二台FortiSwitch<a class="headerlink" href="#643-%E9%80%A3%E6%8E%A5%E7%AC%AC%E4%BA%8C%E5%8F%B0fortiswitch" title="Permanent link">#</a></h4>
+<p>若over layer3的FortiSwitch不止一台則設定步驟與第一台相同僅不需要設定static ISL</p>
+<ul>
+<li>完成IP及路由設定</li>
+<li>將第二台FortiSwitch連接第一台FortiSwitch此時就會自動建立ISL Link</li>
+<li>設定靜態查找FortiGate FortiLink</li>
+<li>於FortiGate完成授權</li>
+</ul>
+<p></p><figure id="_figure-28"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-71.png"><img alt="Add Secodary FortiSwitch" src="images/img-71.png"></a><figcaption>Figure 28: Add Secodary FortiSwitch</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="7-vlan設定">7. VLAN設定<a class="headerlink" href="#7-vlan%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<h3 id="71-新增vlan">7.1. 新增VLAN<a class="headerlink" href="#71-%E6%96%B0%E5%A2%9Evlan" title="Permanent link">#</a></h3>
+<p></p><figure id="_figure-29"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-13.png"><img alt="Create VLAN" src="images/img-13.png"></a><figcaption>Figure 29: Create VLAN</figcaption></figure><p></p>
+<p></p><figure id="_figure-30"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-14.png"><img alt="Create VLAN" src="images/img-14.png"></a><figcaption>Figure 30: Create VLAN</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>Interface Name</strong></td>
+<td>VLAN Interface名稱，可自定義</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>VLAN ID</strong></td>
+<td>VLAN ID</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><strong>Addressing mode</strong></td>
+<td>IP設定方式</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;"><strong>IP/Netmask</strong></td>
+<td>IP及子網路遮罩</td>
+</tr>
+</tbody>
+</table>
+<p></p><figure id="_figure-31"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-15.png"><img alt="Create VLAN" src="images/img-15.png"></a><figcaption>Figure 31: Create VLAN</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>Administrative Access</strong></td>
+<td>Interface允許的功能。若要能夠連線此IP管理FortiGate需要勾選HTTPS</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>DHCP Server</strong></td>
+<td>是否要啟用DHCP服務，若啟用則需設定派發範圍等資訊</td>
+</tr>
+</tbody>
+</table>
+<p></p><figure id="_figure-32"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-16.png"><img alt="Create VLAN" src="images/img-16.png"></a><figcaption>Figure 32: Create VLAN</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>Network</strong></td>
+<td>網路安全相關功能。如DHCP snooping就是用來防止未授權的DHCP Server</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>Traffic Shaping</strong></td>
+<td>流量管控</td>
+</tr>
+</tbody>
+</table>
+<div class="page-break">
+<h3 id="72-刪除vlan">7.2. 刪除VLAN<a class="headerlink" href="#72-%E5%88%AA%E9%99%A4vlan" title="Permanent link">#</a></h3>
+<p>刪除VLAN時若Delete按鈕反灰則代表該介面有相關的關聯設定，需先將相關設定刪除才可以刪除此VLAN，相關設定可以使用Ref欄位查看，最常見的就是未關閉DHCP Server服務</p>
+<p></p><figure id="_figure-33"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-17.png"><img alt="Delete VLAN" src="images/img-17.png"></a><figcaption>Figure 33: Delete VLAN</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="73-賦予vlan到fortiswitch-port">7.3. 賦予VLAN到FortiSWitch Port<a class="headerlink" href="#73-%E8%B3%A6%E4%BA%88vlan%E5%88%B0fortiswitch-port" title="Permanent link">#</a></h3>
+<ul>
+<li>Native VLAN就是Untagged VLAN，此VLAN Frames傳送出去時不會加Tag其餘VLAN則會;收到Untagged Frames時則會轉發至此VLAN</li>
+<li>Allowed VLAN部分則是允許接收及傳送的VLAN，<mark class="critic">Native VLAN預設為允許傳送及接收故不需要額外加入Allowed VLAN清單裡面</mark></li>
+<li>FortiSwitch Port預設接收所有802.1Q Untagged或Tagged Frames，但會再比對Native VLAN及Allowed VLANs清單決定是否放行，若要變更此行為可使用CLI實施更改</li>
+</ul>
+<div class="highlight"><pre><span></span><code>config switch interface
+edit &lt;interface&gt;
+set discard-mode &lt;all-tagged | all-untagged | none&gt;
+end
+</code></pre></div>
+<p>修改Native VLAN</p>
+<p></p><figure id="_figure-34"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-18.png"><img alt="Modify Native VLAN" src="images/img-18.png"></a><figcaption>Figure 34: Modify Native VLAN</figcaption></figure><p></p>
+<p></p><figure id="_figure-35"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-19.png"><img alt="Modify Native VLAN" src="images/img-19.png"></a><figcaption>Figure 35: Modify Native VLAN</figcaption></figure><p></p>
+<p></p><figure id="_figure-36"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-20.png"><img alt="Modify Native VLAN" src="images/img-20.png"></a><figcaption>Figure 36: Modify Native VLAN</figcaption></figure><p></p>
+<div class="page-break">
+<p>要同時設定多個Interface可以使用shift範圍選取或ctrl特定選取來達到，此處為修改Allowed VLANs</p>
+<p></p><figure id="_figure-37"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-21.png"><img alt="Ｍodify Multiple Interface" src="images/img-21.png"></a><figcaption>Figure 37: Ｍodify Multiple Interface</figcaption></figure><p></p>
+<p></p><figure id="_figure-38"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-22.png"><img alt="Ｍodify Multiple Interface" src="images/img-22.png"></a><figcaption>Figure 38: Ｍodify Multiple Interface</figcaption></figure><p></p>
+<p></p><figure id="_figure-39"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-23.png"><img alt="Ｍodify Multiple Interface" src="images/img-23.png"></a><figcaption>Figure 39: Ｍodify Multiple Interface</figcaption></figure><p></p>
+<div class="page-break">
+<p>若Port是Trunk（Link Aggregation Group）介面的成員則VLAN僅需設定Trunk介面即可</p>
+<p></p><figure id="_figure-40"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-28.png"><img alt="Modify Trunk Interface" src="images/img-28.png"></a><figcaption>Figure 40: Modify Trunk Interface</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="8-trunklink-aggregation-group設定">8. Trunk（Link Aggregation Group）設定<a class="headerlink" href="#8-trunklink-aggregation-group%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<h3 id="81-新增trunk">8.1. 新增Trunk<a class="headerlink" href="#81-%E6%96%B0%E5%A2%9Etrunk" title="Permanent link">#</a></h3>
+<p></p><figure id="_figure-41"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-24.png"><img alt="Create Trunk" src="images/img-24.png"></a><figcaption>Figure 41: Create Trunk</figcaption></figure><p></p>
+<p></p><figure id="_figure-42"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-25.png"><img alt="New Trunk Group" src="images/img-25.png"></a><figcaption>Figure 42: New Trunk Group</figcaption></figure><p></p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">編號</th>
+<th style="text-align: center;">欄位名稱</th>
+<th>欄位描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>Name</strong></td>
+<td>Trunk Group名稱</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>MC-LAG</strong></td>
+<td>僅有在已經設定完成MCLAG Peer Group的交換器才可啟用此選項，啟用後Trunk即可跨兩台在MCLAG Group裡的FortiSwitch</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><strong>Mode</strong></td>
+<td>Trunk模式。<br>- <strong>Static：</strong> 不論對端是否有設定Link Aggregation一率啟用。<br> <strong>- Passive LACP：</strong> 僅有接受到對端發送的LACP封包時才會啟用。<br> <strong>- Active LACP：</strong> 主動發送給對端LACP封包協商啟用Link Aggregation</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;"><strong>Trunk Members</strong></td>
+<td>選擇要加入Link Aggregation的Port</td>
+</tr>
+</tbody>
+</table>
+<p>選擇Members</p>
+<p></p><figure id="_figure-43"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-26.png"><img alt="Select Members" src="images/img-26.png"></a><figcaption>Figure 43: Select Members</figcaption></figure><p></p>
+<p></p><figure id="_figure-44"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-27.png"><img alt="Apply Settings" src="images/img-27.png"></a><figcaption>Figure 44: Apply Settings</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="82-刪除trunk">8.2. 刪除Trunk<a class="headerlink" href="#82-%E5%88%AA%E9%99%A4trunk" title="Permanent link">#</a></h3>
+<p></p><figure id="_figure-45"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-29.png"><img alt="Delete Trunk" src="images/img-29.png"></a><figcaption>Figure 45: Delete Trunk</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="9-fortiswitch-port設定">9. FortiSwitch Port設定<a class="headerlink" href="#9-fortiswitch-port%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<ul>
+<li>STP建議都要啟用</li>
+<li>若是連接設備則建議可以設定Edge Port、BPDU Guard、DHCP Snopping</li>
+<li>若是連接第三方交換器則建議可以設定Loop Guard、DHCP Snopping</li>
+<li>實際設定功能仍需依照實際環境調整</li>
+</ul>
+<div class="page-break">
+<h3 id="91-dhcp-snopping">9.1. DHCP Snopping<a class="headerlink" href="#91-dhcp-snopping" title="Permanent link">#</a></h3>
+<ul>
+<li>此功能是用於防止未授權的DHCP Server，需先於VLAN啟用此功能然後再設定哪些Port為Trusted，僅有Trusted Port才會轉發DHCP OFFER及ACK封包，Untrusted Port則會丟棄，故Client就不會收到未授權的DHCP Server回覆</li>
+<li>預設FortiSwitch上的Port都是Untrsuted，故僅需要針對要變更為Trusted Port部分做設定</li>
+<li>預設FortiLink Interface為Trusted</li>
+</ul>
+<p>啟用DHCP Snooping功能</p>
+<p></p><figure id="_figure-46"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-30.png"><img alt="Enable DHCP Snooping" src="images/img-30.png"></a><figcaption>Figure 46: Enable DHCP Snooping</figcaption></figure><p></p>
+<p></p><figure id="_figure-47"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-31.png"><img alt="Enable DHCP Snooping" src="images/img-31.png"></a><figcaption>Figure 47: Enable DHCP Snooping</figcaption></figure><p></p>
+<p>設定Port為Untrusted</p>
+<p></p><figure id="_figure-48"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-32.png"><img alt="Setting Port DHCP Snooping Untrust" src="images/img-32.png"></a><figcaption>Figure 48: Setting Port DHCP Snooping Untrust</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="92-stp">9.2. STP<a class="headerlink" href="#92-stp" title="Permanent link">#</a></h3>
+<p>Spanning Tree Protocol (STP) 主要用於避免網路迴圈，當兩台交換器之間有多條線路連線時就僅會保持一條線路可轉發。此選項預設啟用。</p>
+<p></p><figure id="_figure-49"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-37.png"><img alt="Disable STP" src="images/img-37.png"></a><figcaption>Figure 49: Disable STP</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="93-loop-guard">9.3. Loop Guard<a class="headerlink" href="#93-loop-guard" title="Permanent link">#</a></h3>
+<ul>
+<li>當STP啟用時如果交換器從多個Port收到同一台交換器的BPDU，則判定兩者之間有多條線路故會block多餘的Port，但在某些情況可能無法阻止迴圈，例如AB兩台交換器彼此之間有兩條線路連接，但B交換器本身發生迴圈因而CPU負載過高造成無法發送BPDU時會讓A交換器認為它跟B之前沒有多條線路連接進而所有的Port都進入轉發狀態使得A交換器也有迴圈情形，</li>
+<li>為了避免這種情形可以設定Loop Guard。當在計數器到期之前若都未收到BPDU封包則Port會進入 Loop Inconsistent State狀態而不轉發封包。</li>
+<li>此選項預設停用。</li>
+<li>Edge Port無法設定Loop Guard</li>
+<li>Root Guard及Loop Guard不能同時設定</li>
+</ul>
+<p></p><figure id="_figure-50"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-34.png"><img alt="Enable Loop Guard" src="images/img-34.png"></a><figcaption>Figure 50: Enable Loop Guard</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="94-edge-port">9.4. Edge Port<a class="headerlink" href="#94-edge-port" title="Permanent link">#</a></h3>
+<ul>
+<li>所謂的Edge Port就是該Port會啟用Portfast功能可以在連接設備後不用經歷Spanning Tree的Listening及Learning直接就是Fordwarding狀態，但是若收到BPDU封包則就會依照正常程序進入Listening及Learning狀態</li>
+<li>預設所有的FortiSwitch Port都是設定為Edge Port</li>
+</ul>
+<p></p><figure id="_figure-51"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-33.png"><img alt="Disable Edge Port" src="images/img-33.png"></a><figcaption>Figure 51: Disable Edge Port</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="95-stp-bpdu-guard">9.5. STP BPDU Guard<a class="headerlink" href="#95-stp-bpdu-guard" title="Permanent link">#</a></h3>
+<ul>
+<li>若Port收到BPDU則會禁止轉發流量。可用於防止接入其他網路設備，但僅限於此網路設備會發送BPDU封包情況下。</li>
+<li>此選項預設停用。</li>
+</ul>
+<p></p><figure id="_figure-52"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-35.png"><img alt="Enable STP BPDU Guard" src="images/img-35.png"></a><figcaption>Figure 52: Enable STP BPDU Guard</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="96-stp-root-guard">9.6. STP Root Guard<a class="headerlink" href="#96-stp-root-guard" title="Permanent link">#</a></h3>
+<ul>
+<li>當Port啟用了STP Root Guard並收到優於現有 Root Bridge 的 BPDU 時，該Port會被block，進入 Root Inconsistent 狀態，以防止新接入的設備成為Root Bridge進而造成整體Spanning Tree變動。</li>
+<li>僅需於可能接入交換器的Port啟用，<mark class="critic">不可於連接既有Root Bridge的Port啟用，會造成所有的Port被block</mark>。</li>
+<li>此選項預設停用</li>
+</ul>
+<p></p><figure id="_figure-53"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-36.png"><img alt="Enable STP Root Guard" src="images/img-36.png"></a><figcaption>Figure 53: Enable STP Root Guard</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="10-quarantines">10. Quarantines<a class="headerlink" href="#10-quarantines" title="Permanent link">#</a></h2>
+<p>此功能可以用於隔離特定的Mac Address，當FortiSwitch Port偵測到被隔離的Mac Address時就會將該Port Vlan改成quarantine vlan</p>
+<div class="page-break">
+<h3 id="101-新增需隔離的mac-address">10.1. 新增需隔離的Mac Address<a class="headerlink" href="#101-%E6%96%B0%E5%A2%9E%E9%9C%80%E9%9A%94%E9%9B%A2%E7%9A%84mac-address" title="Permanent link">#</a></h3>
+<p></p><figure id="_figure-54"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-50.png"><img alt="Quarantines Mac Address" src="images/img-50.png"></a><figcaption>Figure 54: Quarantines Mac Address</figcaption></figure><p></p>
+<p></p><figure id="_figure-55"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-51.png"><img alt="Quarantines Mac Address" src="images/img-51.png"></a><figcaption>Figure 55: Quarantines Mac Address</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="102-刪除被隔離的mac-address">10.2. 刪除被隔離的Mac Address<a class="headerlink" href="#102-%E5%88%AA%E9%99%A4%E8%A2%AB%E9%9A%94%E9%9B%A2%E7%9A%84mac-address" title="Permanent link">#</a></h3>
+<p></p><figure id="_figure-56"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-52.png"><img alt="Delete Quarantines Mac Address" src="images/img-52.png"></a><figcaption>Figure 56: Delete Quarantines Mac Address</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="103-啟用bounce-the-switch-port">10.3. 啟用bounce the switch port<a class="headerlink" href="#103-%E5%95%9F%E7%94%A8bounce-the-switch-port" title="Permanent link">#</a></h3>
+<p>當設備被隔離後若是使用DHCP取得IP則在DHCP租約到期或者手動更新前IP都不會變更這會造成所取得的IP網段與當前VLAN不同，當啟用此功能後只要設備被設定隔離或解除隔離時，該設備連接的Port都會disable然後enable，這樣設備就會重新取得當前VLAN IP</p>
+<div class="highlight"><pre><span></span><code>config switch-controller global
+    set bounce-quarantined-link enable
+end
+</code></pre></div>
+<div class="page-break">
+<h2 id="11-設定security-policy以允許訪問fortilink-interface">11. 設定Security Policy以允許訪問FortiLink Interface<a class="headerlink" href="#11-%E8%A8%AD%E5%AE%9Asecurity-policy%E4%BB%A5%E5%85%81%E8%A8%B1%E8%A8%AA%E5%95%8Ffortilink-interface" title="Permanent link">#</a></h2>
+<p>在某些情形下需要能夠從外部訪問FortiSwitch（如需要使用SNMP監控FortiSwitch）這時就需要建立Security Policy，但在GUI上無法在Security Policy中選擇Interface是FortiLink Interface僅能於CLI設定，Policy建立後就可以到GUI修改其他設定</p>
+<div class="highlight"><pre><span></span><code>config firewall policy
+    edit &lt;policy_ID&gt;
+        set name &lt;policy_name&gt;
+        set srcintf &lt;FortiGate port&gt;
+        set dstintf &lt;FortiLink&gt;
+        set action accept
+        set srcaddr &lt;Source Address&gt;
+        set dstaddr &lt;Destination Address&gt;
+        set schedule "always"
+        set service &lt;Destination Service&gt;
+    next
+end
+</code></pre></div>
+<p></p><figure id="_figure-57"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-53.png"><img alt="Create Policy" src="images/img-53.png"></a><figcaption>Figure 57: Create Policy</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="12-設定fortiswitch可供存取的管理服務">12. 設定FortiSwitch可供存取的管理服務<a class="headerlink" href="#12-%E8%A8%AD%E5%AE%9Afortiswitch%E5%8F%AF%E4%BE%9B%E5%AD%98%E5%8F%96%E7%9A%84%E7%AE%A1%E7%90%86%E6%9C%8D%E5%8B%99" title="Permanent link">#</a></h2>
+<ul>
+<li>FortiGate預設是使用access profile名稱為"default"的設定套用到各台FortiSwitch，故可以直接修該此policy或新建一個policy關聯到要使用的FortiSwitch</li>
+<li>internal-allowaccess指的是使用data port當Fortilink的Fortiswitch</li>
+<li>mgmt-allowaccess指的是使用management port當Fortilink的Fortiswitch，通常是指FortiGate over Layer 3網路管理FortiSwitch且FortiSwitch是使用Management Port與FortiLink溝通情形</li>
+</ul>
+<p>新增或修改access profile</p>
+<div class="highlight"><pre><span></span><code>config switch-controller security-policy local-access
+    edit &lt;policy_name&gt;
+        set mgmt-allowaccess &lt;options&gt;
+        set internal-allowaccess &lt;options&gt;
+        next
+end
+</code></pre></div>
+<p></p><figure id="_figure-58"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-54.png"><img alt="local-access policy" src="images/img-54.png"></a><figcaption>Figure 58: local-access policy</figcaption></figure><p></p>
+<p>賦予FortiSwitch access profile</p>
+<div class="highlight"><pre><span></span><code>config switch-controller managed-switch
+    edit &lt;FrotiSwitch SN&gt;
+        set access-profile &lt;local access policy name&gt;
+        next
+end
+</code></pre></div>
+<p></p><figure id="_figure-59"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-55.png"><img alt="access-profile" src="images/img-55.png"></a><figcaption>Figure 59: access-profile</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="13-統一變更fortiswitch密碼">13. 統一變更FortiSwitch密碼<a class="headerlink" href="#13-%E7%B5%B1%E4%B8%80%E8%AE%8A%E6%9B%B4fortiswitch%E5%AF%86%E7%A2%BC" title="Permanent link">#</a></h2>
+<p>FortiSwitch預設帳號為admin，密碼為無，登入後即可修改密碼但若要所有FortiSwitch都使用相同密碼可於FortiGate設定switch profile</p>
+<div class="highlight"><pre><span></span><code>config switch-controller switch-profile
+    edit "default"
+
+        # 啟用密碼覆蓋功能以讓FortiGate上設定的密碼取代FortiSwitch本機設定的密碼
+        set login-passwd-override enable
+
+        # 設定要覆蓋FortiSwitch的密碼
+        set login-passwd &lt;new password&gt;
+    next
+end
+</code></pre></div>
+<p>預設所有FortiSwitch均使用switch profile名稱為"default"的設定檔但也可以針對特定FortiSwitch套用不同設定檔</p>
+<div class="highlight"><pre><span></span><code>config switch-controller managed-switch
+    edit "&lt;FortiSwitch SN&gt;"
+    set switch-profile &lt;profile name&gt;
+end
+</code></pre></div>
+<p>以上方式僅適用於修改admin帳號，若要建立額外帳號或設定額外帳號密碼僅能利用FortiGate Custom Script功能</p>
+<div class="page-break">
+<h2 id="14-snmp設定">14. SNMP設定<a class="headerlink" href="#14-snmp%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<ul>
+<li>需建立<a href="#11-%E8%A8%AD%E5%AE%9Asecurity-policy%E4%BB%A5%E5%85%81%E8%A8%B1%E8%A8%AA%E5%95%8Ffortilink-interface">Security Policy</a>以允許SNMP流量到FortiSwitch或FortiSwitch SNMP Trap流量到監控Server</li>
+<li>需<a href="#12-%E8%A8%AD%E5%AE%9Afortiswitch%E5%8F%AF%E4%BE%9B%E5%AD%98%E5%8F%96%E7%9A%84%E7%AE%A1%E7%90%86%E6%9C%8D%E5%8B%99">允許FortiSwitch Interface SNMP管理存取</a></li>
+<li>可選擇使用全域設定或針對特定FortiSwitch單獨設定</li>
+</ul>
+<h3 id="141-全域設定">14.1. 全域設定<a class="headerlink" href="#141-%E5%85%A8%E5%9F%9F%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h3>
+<h4 id="1411-snmp-system-info設定">14.1.1. SNMP System Info設定<a class="headerlink" href="#1411-snmp-system-info%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h4>
+<p>status需設定為enable才會開啟snmp功能</p>
+<div class="highlight"><pre><span></span><code>config switch-controller snmp-sysinfo
+    set status enable
+    set description &lt;system_description&gt;
+    set contact-info &lt;contact_information&gt;
+    set location &lt;FortiGate_location&gt;
+end
+</code></pre></div>
+<p></p><figure id="_figure-60"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-56.png"><img alt="SNMP System Info" src="images/img-56.png"></a><figcaption>Figure 60: SNMP System Info</figcaption></figure><p></p>
+<div class="page-break">
+<h4 id="1412-snmp-community設定">14.1.2. SNMP Community設定<a class="headerlink" href="#1412-snmp-community%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h4>
+<p>status要設定為enable才會啟用此community，hosts為允許的來源IP以及snmp trap要發送的主機，若單純只是要允許任意主機使用snmp監控可以設定為0.0.0.0/0</p>
+<div class="highlight"><pre><span></span><code>config switch-controller snmp-community
+    edit &lt;SNMP_community_entry_identifier&gt;
+        set name &lt;SNMP_community_name&gt;
+        set status enable
+        set query-v1-status enable
+        set query-v1-port &lt;0-65535; the default is 161&gt;
+        set query-v2c-status enable
+        set query-v2c-port &lt;0-65535; the default is 161&gt;
+        set trap-v1-status enable
+        set trap-v1-lport &lt;0-65535; the default is 162&gt;
+        set trap-v1-rport &lt;0-65535; the default is 162&gt;
+        set trap-v2c-status enable
+        set trap-v2c-lport &lt;0-65535; the default is 162&gt;
+        set trap-v2c-rport &lt;0-65535; the default is 162&gt;
+        set events {cpu-high mem-low log-full intf-ip ent-conf-change}
+        config hosts
+            edit &lt;host_entry_ID&gt;
+            set ip &lt;IPv4_address_of_the_SNMP_manager&gt;
+            end
+    next
+end
+</code></pre></div>
+<p></p><figure id="_figure-61"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-57.png"><img alt="SNMP Community" src="images/img-57.png"></a><figcaption>Figure 61: SNMP Community</figcaption></figure><p></p>
+<div class="page-break">
+<h3 id="142-針對特定fortiswitch設定">14.2. 針對特定FortiSwitch設定<a class="headerlink" href="#142-%E9%87%9D%E5%B0%8D%E7%89%B9%E5%AE%9Afortiswitch%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h3>
+<h4 id="1421-snmp-system-info設定">14.2.1. SNMP System Info設定<a class="headerlink" href="#1421-snmp-system-info%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h4>
+<div class="highlight"><pre><span></span><code>config switch-controller managed-switch
+    edit &lt;FortiSwitch_serial_number&gt;
+        set override-snmp-sysinfo enable
+        config snmp-sysinfo
+            set status enable
+            set description &lt;system_description&gt;
+            set contact-info &lt;contact_information&gt;
+            set location &lt;FortiGate_location&gt;
+        end
+    next
+end
+</code></pre></div>
+<div class="page-break">
+<h4 id="1422-snmp-community設定">14.2.2. SNMP Community設定<a class="headerlink" href="#1422-snmp-community%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h4>
+<div class="highlight"><pre><span></span><code>config switch-controller managed-switch
+    edit &lt;FortiSwitch_serial_number&gt;
+        set override-snmp-community enable
+        config snmp-community
+            edit &lt;SNMP_community_entry_identifier&gt;
+            set name &lt;SNMP_community_name&gt;
+            set status enable
+            set query-v1-status enable
+            set query-v1-port &lt;0-65535; the default is 161&gt;
+            set query-v2c-status enable
+            set query-v2c-port &lt;0-65535; the default is 161&gt;
+            set trap-v1-status enable
+            set trap-v1-lport &lt;0-65535; the default is 162&gt;
+            set trap-v1-rport &lt;0-65535; the default is 162&gt;
+            set trap-v2c-status enable
+            set trap-v2c-lport &lt;0-65535; the default is 162&gt;
+            set trap-v2c-rport &lt;0-65535; the default is 162&gt;
+            set events {cpu-high mem-low log-full intf-ip ent-conf-change}
+            config hosts
+            edit &lt;host_entry_ID&gt;
+            set ip &lt;IPv4_address_of_the_SNMP_manager&gt;
+            end
+        next
+    end
+</code></pre></div>
+<div class="page-break">
+<h2 id="15-syslog設定">15. Syslog設定<a class="headerlink" href="#15-syslog%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h2>
+<ul>
+<li>需建立<a href="#11-%E8%A8%AD%E5%AE%9Asecurity-policy%E4%BB%A5%E5%85%81%E8%A8%B1%E8%A8%AA%E5%95%8Ffortilink-interface">Security Policy</a>以允許FortiSwitch Syslog流量到Syslog Server</li>
+<li>可選擇使用全域設定或針對特定FortiSwitch單獨設定</li>
+</ul>
+<h3 id="151-全域設定">15.1. 全域設定<a class="headerlink" href="#151-%E5%85%A8%E5%9F%9F%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code>config switch-controller remote-log
+    edit {syslogd | syslogd2}
+    set status {enable | *disable}
+    set server &lt;IPv4_address_of_remote_syslog_server&gt;
+    set port &lt;remote_syslog_server_listening_port&gt;
+    set severity {emergency | alert | critical | error | warning | notification | *information | debug}
+    set csv {enable | *disable}
+    set facility {kernel | user | mail | daemon | auth | syslog | lpr | news | uucp | cron | authpriv | ftp | ntp | audit | alert | clock | local0 | local1 | local2 | local3 | local4 | local5 | local6 | *local7}
+    next
+end
+</code></pre></div>
+<div class="page-break">
+<h3 id="152-針對特定fortiswitch設定">15.2. 針對特定FortiSwitch設定<a class="headerlink" href="#152-%E9%87%9D%E5%B0%8D%E7%89%B9%E5%AE%9Afortiswitch%E8%A8%AD%E5%AE%9A" title="Permanent link">#</a></h3>
+<div class="highlight"><pre><span></span><code>config switch-controller managed-switch
+    edit &lt;FortiSwitch_serial_number&gt;
+        config remote-log
+        edit {edit syslogd | syslogd2}
+            set status {enable | *disable}
+            set server &lt;IPv4_address_of_remote_syslog_server&gt;
+            set port &lt;remote_syslog_server_listening_port&gt;
+            set severity {emergency | alert | critical | error | warning | notification | *information | debug}
+            set csv {enable | *disable}
+            set facility {kernel | user | mail | daemon | auth | syslog | lpr | news | uucp | cron | authpriv | ftp | ntp | audit | alert | clock | local0 | local1 | local2 | local3 | local4 | local5 | local6 | *local7}
+            next
+        end
+    next
+end
+</code></pre></div>
+<div class="page-break">
+<h2 id="16-port-mirroring">16. Port Mirroring<a class="headerlink" href="#16-port-mirroring" title="Permanent link">#</a></h2>
+<div class="highlight"><pre><span></span><code>config switch-controller managed-switch
+    edit &lt;FortiSwitch_serial_number&gt;
+        config mirror
+            edit &lt;mirror_name&gt;
+
+                # 設定此Mirror是否啟用
+                set status {active | inactive}
+
+                # 設定流量要複製到哪一個Port。需要先設定才可以設定src部分
+                set dst &lt;port_name&gt;
+
+                # 設定目的地Port是否要保留原有交換功能
+                set switching-packet {enable | disable}
+
+                # 設定流量從哪些Port進入時需複製
+                set src-ingress &lt;port_name&gt;
+
+                # 設定流量從哪些Port出去時需複製
+                set src-egress &lt;port_name&gt;
+            next
+        end
+    next
+</code></pre></div>
+<p></p><figure id="_figure-62"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-59.png"><img alt="Port Mirroring" src="images/img-59.png"></a><figcaption>Figure 62: Port Mirroring</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="17-更換fortiswitch">17. 更換FortiSwitch<a class="headerlink" href="#17-%E6%9B%B4%E6%8F%9Bfortiswitch" title="Permanent link">#</a></h2>
+<ul>
+<li>更換的FortiSwitch需要是相同型號</li>
+</ul>
+<h3 id="171-更換未使用mclag的fortiswitch">17.1. 更換未使用MCLAG的FortiSwitch<a class="headerlink" href="#171-%E6%9B%B4%E6%8F%9B%E6%9C%AA%E4%BD%BF%E7%94%A8mclag%E7%9A%84fortiswitch" title="Permanent link">#</a></h3>
+<ul>
+<li>移除故障的FortiSwitch</li>
+</ul>
+<p></p><figure id="_figure-63"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-44.png"><img alt="Remove the failed FortiSwitch" src="images/img-44.png"></a><figcaption>Figure 63: Remove the failed FortiSwitch</figcaption></figure><p></p>
+<ul>
+<li>取消故障的FortiSwitch授權</li>
+</ul>
+<div class="highlight"><pre><span></span><code>    config switch-controller managed-switch
+        edit &lt;failed_FortiSwitch_serial_number&gt;
+        set fsw-wan1-admin disable
+    end
+</code></pre></div>
+<p></p><figure id="_figure-64"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-45.png"><img alt="Deauthorize the failed switch" src="images/img-45.png"></a><figcaption>Figure 64: Deauthorize the failed switch</figcaption></figure><p></p>
+<div class="page-break">
+<ul>
+<li>若要更換的FortiSwitch並非全新設備請先恢復原廠預設值</li>
+</ul>
+<div class="highlight"><pre><span></span><code>    execute factoryreset
+</code></pre></div>
+<p></p><figure id="_figure-65"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-46.png"><img alt="Factory Reset" src="images/img-46.png"></a><figcaption>Figure 65: Factory Reset</figcaption></figure><p></p>
+<ul>
+<li>
+<p>將要更換的FortiSwitch升級到與故障FortiSwitch相同版本</p>
+</li>
+<li>
+<p>執行更換指令</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code>    execute replace-device fortiswitch &lt;failed_FortiSwitch_serial_number&gt; &lt;replacement_FortiSwitch_serial_number&gt;
+</code></pre></div>
+<p></p><figure id="_figure-66"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-47.png"><img alt="Replace Device Command" src="images/img-47.png"></a><figcaption>Figure 66: Replace Device Command</figcaption></figure><p></p>
+<div class="page-break">
+<ul>
+<li>授權更換的交換器</li>
+</ul>
+<div class="highlight"><pre><span></span><code>    config switch-controller managed-switch
+        edit &lt;replacement_FortiSwitch_serial_number&gt;
+        set fsw-wan1-admin enable
+    end
+</code></pre></div>
+<p></p><figure id="_figure-67"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-48.png"><img alt="Authorize the replacement switch" src="images/img-48.png"></a><figcaption>Figure 67: Authorize the replacement switch</figcaption></figure><p></p>
+<ul>
+<li>連接更換的FortiSwitch</li>
+</ul>
+<p></p><figure id="_figure-68"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-49.png"><img alt="Connect the replacement switch" src="images/img-49.png"></a><figcaption>Figure 68: Connect the replacement switch</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="18-重新開機">18. 重新開機<a class="headerlink" href="#18-%E9%87%8D%E6%96%B0%E9%96%8B%E6%A9%9F" title="Permanent link">#</a></h2>
+<p></p><figure id="_figure-69"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-58.png"><img alt="Reboot" src="images/img-58.png"></a><figcaption>Figure 69: Reboot</figcaption></figure><p></p>
+<div class="page-break">
+<h2 id="19-升級firmware">19. 升級Firmware<a class="headerlink" href="#19-%E5%8D%87%E7%B4%9Afirmware" title="Permanent link">#</a></h2>
+<p></p><figure id="_figure-70"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-41.png"><img alt="Upgrade" src="images/img-41.png"></a><figcaption>Figure 70: Upgrade</figcaption></figure><p></p>
+<p></p><figure id="_figure-71"><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="auto" href="images/img-60.png"><img alt="Upgrade" src="images/img-60.png"></a><figcaption>Figure 71: Upgrade</figcaption></figure><p></p>
+<div class="page-break">
+<h2 class="no-print">參考資料</h2>
+<ul>
+<li><a href="https://docs.fortinet.com/document/fortiswitch/7.2.9/fortilink-guide/950458/what-s-new-in-fortios-7-2-9" target="_blank">FortiLink Guide 7.2.9</a></li>
+</ul></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
+
+
+  
+
+
+
+  <h2 id="__comments" class="no-print">留言</h2>
+  <!-- Insert generated snippet here -->
+  <script src="https://giscus.app/client.js" data-repo="wilder640/blog-comment" data-repo-id="R_kgDOMXc0AQ" data-category="Announcements" data-category-id="DIC_kwDOMXc0Ac4Cg2f3" data-mapping="title" data-strict="0" data-reactions-enabled="1" data-emit-metadata="1" data-input-position="top" data-theme="preferred_color_scheme" data-lang="zh-TW" crossorigin="anonymous" async>
+</script>
+  <!-- Synchronize Giscus theme with palette -->
+  <script>
+    var giscus = document.querySelector("script[src*=giscus]")
+
+    // Set palette on initial load
+    var palette = __md_get("__palette")
+    if (palette && typeof palette.color === "object") {
+      var theme = palette.color.scheme === "slate"
+        ? "transparent_dark"
+        : "light"
+
+      // Instruct Giscus to set theme
+      giscus.setAttribute("data-theme", theme) 
+    }
+
+    // Register event handlers after documented loaded
+    document.addEventListener("DOMContentLoaded", function() {
+      var ref = document.querySelector("[data-md-component=palette]")
+      ref.addEventListener("change", function() {
+        var palette = __md_get("__palette")
+        if (palette && typeof palette.color === "object") {
+          var theme = palette.color.scheme === "slate"
+            ? "transparent_dark"
+            : "light"
+
+          // Instruct Giscus to change theme
+          var frame = document.querySelector(".giscus-frame")
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme } } },
+            "https://giscus.app"
+          )
+        }
+      })
+    })
+  </script>
+
+      
+    </article>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  回到頂端
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["search.suggest", "search.highlight", "navigation.tabs", "navigation.top", "navigation.indexes", "toc.integrate", "content.tooltips", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u5df2\u8907\u88fd", "clipboard.copy": "\u8907\u88fd", "search.result.more.one": "\u6b64\u9801\u5c1a\u6709 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.more.other": "\u6b64\u9801\u5c1a\u6709 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.none": "\u6c92\u6709\u7b26\u5408\u7684\u9805\u76ee", "search.result.one": "\u627e\u5230 1 \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.other": "\u627e\u5230 # \u500b\u7b26\u5408\u7684\u9805\u76ee", "search.result.placeholder": "\u6253\u5b57\u9032\u884c\u641c\u5c0b", "search.result.term.missing": "\u7f3a\u5c11\u5b57\u8a5e", "select.version": "\u9078\u64c7\u7248\u672c"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

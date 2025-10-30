@@ -1,0 +1,254 @@
+/* global variables */
+:root * {
+    --md-tasklist-icon: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m0 2v14H5V5h14z"/></svg>');
+    --md-tasklist-icon--checked: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m10 17-5-5 1.41-1.42L10 14.17l7.59-7.59L19 8m0-5H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/></svg>');
+    --md-admonition-icon--tip: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.45 4.73L5.82 21 12 17.27z"></path></svg>');
+    --md-admonition-icon--tag: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m21.41 11.58-9-9A2 2 0 0 0 11 2H4a2 2 0 0 0-2 2v7a2 2 0 0 0 .59 1.42l9 9A2 2 0 0 0 13 22a2 2 0 0 0 1.41-.59l7-7A2 2 0 0 0 22 13a2 2 0 0 0-.59-1.42M13 20l-9-9V4h7l9 9M6.5 5A1.5 1.5 0 1 1 5 6.5 1.5 1.5 0 0 1 6.5 5z"></path></svg>')
+}
+
+body[data-md-color-scheme="default"] {
+    --color: navy;
+}
+
+body[data-md-color-scheme="slate"] {
+    --color: CornflowerBlue;
+}
+
+/* 主題：Default */
+body[data-md-color-scheme="default"] [class^="markmap"] div {
+    color: black;
+    font-weight: bold;
+  }
+  
+  /* 主題：Slate (暗色主題) */
+  body[data-md-color-scheme="slate"] [class^="markmap"] div {
+    color: white;
+    font-weight: bold;
+  }
+  
+
+/* logo 
+.md-logo {
+    color: orangered;
+}*/
+/* main content */
+.md-main__inner {
+    margin-top: 0;
+}
+.md-grid {
+    max-width: 73rem;
+}  
+/* navigation */
+.md-tabs__link.md-tabs__link--active,
+.md-nav__link.md-nav__link--active {
+    font-weight: 700;
+}
+/* footer */
+.md-footer {
+    color: unset;
+    background-color: unset;
+}
+.md-footer-meta {
+    background-color: black;
+}
+.md-footer__link {
+    padding-top: 1em;
+    padding-bottom: 0;
+}
+/* tags */
+.md-tag {
+    font-weight: unset;
+}
+/* paragraph */
+.md-typeset {
+    font-size: 0.8rem;
+}
+/* headers */
+.md-typeset h1 {
+    color: var(--color);
+    font-size: 2em;
+    font-weight: bold;
+    margin: 0 0 0.5em 0;
+}
+.md-typeset h2 {
+    color: var(--color);
+    font-size: 1.6em;
+    font-weight: bold;
+    margin: 1.6em 0 0.5em 0;
+    padding-bottom: 0.125em;
+    border-bottom: 2px solid var(--color);
+}
+.md-typeset h3 {
+    color: var(--color);
+    font-size: 1.4em;
+    font-weight: bold;
+    margin: 1.6em 0 0.5em 0;
+    border-bottom: 1px dashed var(--color);
+}
+.md-typeset h4 {
+    color: var(--color);
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 1.6em 0 0.5em 0;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+}
+.md-typeset h5 {
+    color: var(--color);
+    font-size: 1em;
+    font-weight: bold;
+    margin: 1.6em 0 0.5em 0;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+}
+.md-typeset p {
+    text-align: justify;
+}
+.toctitle {
+    color: var(--color);
+    font-size: 1.6em;
+    margin: 1.6em 0 0.5em 0;
+    padding-bottom: 0.125em;
+    border-bottom: 2px solid var(--color);
+}
+
+/* lists */
+.md-typeset :is(ol,ul) li:last-child {
+    margin-bottom: 0.5em;
+}
+.md-typeset :is(ol,ul) li:not(:last-child) > *:last-child {
+    margin-bottom: 1em;
+}
+.md-typeset .packed :is(ol, ul) li,
+.md-typeset .packed :is(ol, ul) :is(ol, ul),
+.md-typeset .packed :is(ol, ul) :is(ol, ul) li {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.md-typeset li::marker {
+    font-weight: 700;
+}
+/* quotes */
+.md-typeset blockquote {
+    border-left: 2px solid lightgray !important;
+    font-size: 0.95em;
+}
+.md-typeset blockquote > :first-child {
+    margin-top: 0.25em;
+}
+.md-typeset blockquote > :last-child {
+    margin-bottom: 0.25em;
+}
+
+/* task list */
+.md-typeset .task-list-indicator:before {
+    background-color: gray;
+}
+.md-typeset [type="checkbox"]:checked + .task-list-indicator:before {
+    background-color: green;
+}
+.md-typeset dt {
+    margin-top: 2em;
+}
+.md-typeset li > .highlight pre {
+    margin-top: 0;
+}
+
+/* captions */
+.md-typeset figure:has(img) {
+    border: thin #c0c0c0 solid;
+    padding: 5px;
+    margin: 0 0 2em 0;
+}
+
+.md-typeset img {
+    max-width: 100%;
+    max-height: 80vh;
+}
+
+/* table */
+.md-typeset table:not([class]) {
+    font-size: 0.95em;
+    display: table;
+}
+.md-typeset table:not([class]) th {
+    background-color: var(--color);
+    color: white;
+}
+
+.md-typeset__table {
+    font-size: 0.95em;
+    width: 100%;
+    display: table;
+}
+
+/* columns */
+.md-typeset .row {
+    display: flex;
+    flex-direction: row;
+}
+.md-typeset .row .col {
+    width: 100%;
+    padding: 0 1em;
+}
+.md-typeset .row.bordered .col {
+    border: 1px solid lightgray;
+}
+.md-typeset .row.bordered .col {
+    border: 1px solid lightgray;
+}
+.md-typeset .row .col:first-of-type {
+    padding-left: 0;
+}
+.md-typeset .row .col:last-of-type {
+    padding-right: 0;
+}
+@media (max-width: 800px) {
+    .md-typeset .row {
+        flex-direction: column;
+    }
+    .md-typeset .row .col {
+        padding: 0;
+    }
+}
+
+/* button */
+.md-typeset .md-button {
+    /* background-color: orangered; */
+    color: var(--color);
+    border: 1px solid var(--color);
+    padding: 0.125em 0.5em;
+    font-weight: unset;
+    font-size: revert;
+}
+.md-typeset .md-button:hover {
+    background-color: var(--color);
+    border: 1px solid var(--color);
+    color: white;
+}
+.md-typeset :is(.emojione,.twemoji,.gemoji) {
+    vertical-align: sub;
+    height: 1.25em;
+    width: 1.25em;
+}
+
+/*Font Formating*/
+.critic {
+    color: red !important;
+    font-size: larger !important;
+    background-color: transparent !important;
+    font-weight: bold;
+}
+
+/*Print PDF*/
+@media print {
+    /* 隱藏不需要在列印時顯示的元素 */
+    .no-print {
+      display: none;
+    }
+  
+    /* 設定分頁點 */
+    .page-break {
+      page-break-before: always; /* 在此元素之前開始新頁 */
+    }
+  }
